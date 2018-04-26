@@ -1,13 +1,13 @@
 package com.edwinbustamante.gruposcochalos;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,24 +19,19 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
-import com.edwinbustamante.gruposcochalos.Objetos.FirebaseReferences;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class RegistrarUsuario extends AppCompatActivity implements Response.Listener<JSONObject>, Response.ErrorListener {
     LinearLayout linearLayoutanimacion;
     AnimationDrawable animacion;
-    private EditText nombreGrupoRegistro, correoRegistro, pasRegistro1, pasRegistro2;
+    private EditText nombreGrupoRegistro, nombreUsuario, pasRegistro1, pasRegistro2;
     private Button registarRegistro;
     private ProgressDialog mProgress;
 
@@ -59,7 +54,7 @@ public class RegistrarUsuario extends AppCompatActivity implements Response.List
         animacion.start();
         //############################################################################
         nombreGrupoRegistro = (EditText) findViewById(R.id.nombreGrupoRegistro);
-        correoRegistro = (EditText) findViewById(R.id.correoRegistro);
+        nombreUsuario = (EditText) findViewById(R.id.nombreUsuario);
         pasRegistro1 = (EditText) findViewById(R.id.contraseniaRegistro);
         pasRegistro2 = (EditText) findViewById(R.id.contraseniaRegistro2);
         registarRegistro = (Button) findViewById(R.id.btnRegistrarCuenta);
@@ -67,42 +62,147 @@ public class RegistrarUsuario extends AppCompatActivity implements Response.List
 
         //instanciamos el autentificador de fire base y tambien el progress Dialog
         mProgress = new ProgressDialog(this);
-        registarRegistro.setOnClickListener(new View.OnClickListener() {
+        pasRegistro1.addTextChangedListener(new TextWatcher() {
+
+
             @Override
-            public void onClick(View view) {
-                startRegister();
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                String tiempoRealNombreGrupo = String.valueOf(s);
+                if (!validarPassword(tiempoRealNombreGrupo)) {
+                    pasRegistro1.setError("Espacios no permitido");
+                }
+
+            }
+        });
+        pasRegistro2.addTextChangedListener(new TextWatcher() {
+
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                String tiempoRealNombreGrupo = String.valueOf(s);
+                if (!validarPassword(tiempoRealNombreGrupo)) {
+                    pasRegistro2.setError("Espacios no permitido");
+                }
+
+            }
+        });
+        nombreUsuario.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String tiempoRealUsuario = String.valueOf(s);
+                if (!validarUsuario(tiempoRealUsuario)) {
+                    nombreUsuario.setError("Caracteres especiales, espacios no permitido");
+                }
+
             }
         });
 
+        registarRegistro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                startRegister();
+            }
+        });
     }
 
     private void startRegister() {
 
         final String nombreGrupo = nombreGrupoRegistro.getText().toString().trim();// con e trim eliminamos los caracteres blancos al inicio y fin de la cadena
-        final String correoRegis = correoRegistro.getText().toString().trim();
+        final String usuario = nombreUsuario.getText().toString().trim();
         final String pas1 = pasRegistro1.getText().toString().trim();
         final String pas2 = pasRegistro2.getText().toString().trim();
-        if (!TextUtils.isEmpty(nombreGrupo) && !TextUtils.isEmpty(correoRegis) && !TextUtils.isEmpty(pas1) && !TextUtils.isEmpty(pas2)) {
-            if (pas1.equals(pas2)) {
-                mProgress.setMessage("Registrando, espere un momento por favor...");
-                mProgress.show();//lanzamos el progres Dialog
-                /*
-                * AQUI ESTAMOS INGRESANDO EL CORREO Y LA CONTRASEÑA
-                * */
-                cargarWebService();
+        if (!TextUtils.isEmpty(nombreGrupo) && !TextUtils.isEmpty(usuario) && !TextUtils.isEmpty(pas1) && !TextUtils.isEmpty(pas2)) {
+            if (usuario.length() > 6) {
+                if (pas1.length() > 6) {
+                    if (validarUsuario(usuario) && validarPassword(pas1) && validarPassword(pas2)) {
 
+                        if (pas1.equals(pas2)) {
 
+                            mProgress.setMessage("Registrando, espere un momento por favor...");
+                            mProgress.show();//lanzamos el progres Dialog
+
+                            cargarWebService();
+
+                        } else {
+                            Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } else {
+                    Toast.makeText(this, "La contraseña deber ser mayor a 6 Caracteres", Toast.LENGTH_SHORT).show();
+                }
             } else {
-                Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
+                nombreUsuario.setError("El nombre usuario de ser mayor a 6 caracteres");
+                Toast.makeText(this, "El nombre usuario de ser mayor a 6 caracteres", Toast.LENGTH_SHORT).show();
             }
         } else {
+            if (TextUtils.isEmpty(nombreGrupo)) {
+                nombreGrupoRegistro.setError("El campo esta vacio");
+            }
+            if (TextUtils.isEmpty(usuario)) {
+                nombreUsuario.setError("El campo esta vacio");
+            }
+            if (TextUtils.isEmpty(pas1)) {
+                pasRegistro1.setError("El campo esta vacio");
+            }
+            if (TextUtils.isEmpty(pas2)) {
+                pasRegistro2.setError("El campo esta vacio");
+            }
             Toast.makeText(this, "Debe llenar todos los campos de manera obligatoria", Toast.LENGTH_SHORT).show();
         }
     }
 
+    public boolean validarPassword(String cadena) {
+        Toast.makeText(this, cadena, Toast.LENGTH_SHORT).show();
+        Pattern pat = Pattern.compile("[a-zA-Z0-9]+");
+        Matcher mat = pat.matcher(cadena);
+        return mat.matches();
+    }
+
+    public boolean validarUsuario(String cadena) {
+        Toast.makeText(this, cadena, Toast.LENGTH_SHORT).show();
+        Pattern pat = Pattern.compile("[a-zA-Z0-9]+");
+        Matcher mat = pat.matcher(cadena);
+        return mat.matches();
+    }
+
     private void cargarWebService() {
-        // String url = "http://192.168.43.219/gruposcochalos/registro.php?nombre=" + nombreGrupoRegistro.getText().toString() + "&user=" + correoRegistro.getText().toString() + "&pwd=" + pasRegistro1.getText().toString();
-        String url = "http://192.168.1.9/gruposcochalos/registro.php?nombre=" + nombreGrupoRegistro.getText().toString() + "&user=" + correoRegistro.getText().toString() + "&pwd=" + pasRegistro1.getText().toString();
+        // String url = "http://192.168.43.219/gruposcochalos/registro.php?nombre=" + nombreGrupoRegistro.getText().toString() + "&user=" + nombreUsuario.getText().toString() + "&pwd=" + pasRegistro1.getText().toString();
+        String url = "http://192.168.43.219/gruposcochalos/registro.php?nombre=" + nombreGrupoRegistro.getText().toString() + "&user=" + nombreUsuario.getText().toString() + "&pwd=" + pasRegistro1.getText().toString();
         url = url.replace(" ", "%20");
         jsonObjectReques = new JsonObjectRequest(Request.Method.GET, url, null, this, this);//realiza el llamado ala url
         requestQueue.add(jsonObjectReques);
@@ -114,9 +214,9 @@ public class RegistrarUsuario extends AppCompatActivity implements Response.List
         JSONObject jsonObject = null;
         try {
             jsonObject = jsonArray.getJSONObject(0);
-            if (jsonObject.optString("user").equals("no registro")) {
-                correoRegistro.setError("El nombre de usuario ya existe..!!!");
-                Toast.makeText(this, "El Nombre de usuario ya existe", Toast.LENGTH_SHORT).show();
+            if (jsonObject.optString("user").equals("ya existe usuario")) {
+                nombreUsuario.setError("El nombre de usuario ya existe..");
+                Toast.makeText(this, "El nombre de usuario ya existe", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Su cuenta se registro correctamente", Toast.LENGTH_SHORT).show();
 

@@ -4,16 +4,13 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -25,10 +22,6 @@ import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
 import com.edwinbustamante.gruposcochalos.CuentaUsuarioArchivos.CuentaUsuario;
 import com.edwinbustamante.gruposcochalos.Objetos.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,7 +38,7 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
     LinearLayout linearLayoutanimacion;
     AnimationDrawable animacion;
 
-    private AutoCompleteTextView in_correo;
+    private AutoCompleteTextView in_usuario;
     private EditText in_contrasenia;
     private ProgressDialog mProgress;
     RequestQueue rq;
@@ -65,7 +58,7 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
         animacion.setExitFadeDuration(4500);
         animacion.start();
         //############################################################################
-        in_correo = (AutoCompleteTextView) findViewById(R.id.correo);
+        in_usuario = (AutoCompleteTextView) findViewById(R.id.usuario);
         in_contrasenia = (EditText) findViewById(R.id.contrasenia);
         mProgress = new ProgressDialog(this);
         rq = Volley.newRequestQueue(getApplicationContext());
@@ -76,12 +69,12 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
 
     public void iniciarSesion(View view) {
 
-        String correo = in_correo.getText().toString().trim();
+        String correo = in_usuario.getText().toString().trim();
         String contrasenia = in_contrasenia.getText().toString().trim();
         if (!TextUtils.isEmpty(correo) && !TextUtils.isEmpty(contrasenia)) {//compromamos que no este vacio
             mProgress.setMessage("Ingresando al sistema, espere un momento");
             mProgress.show();
-            String url = "http://192.168.1.9/gruposcochalos/sesion.php?user=" +in_correo.getText().toString()+ "&pwd=" + in_contrasenia.getText().toString();
+            String url = "http://192.168.43.219/gruposcochalos/sesion.php?user=" + in_usuario.getText().toString()+ "&pwd=" + in_contrasenia.getText().toString();
             //String url = "http://192.168.1.11/gruposcochalos/sesion.php?user=" + correo + "$pwd=" + contrasenia;
             jrq = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
             rq.add(jrq);

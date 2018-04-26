@@ -69,11 +69,11 @@
                 android:orientation="vertical">
 
                 <AutoCompleteTextView
-                    android:id="@+id/correo"
+                    android:id="@+id/usuario"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_action_user"
-                    android:hint="Ingrese su correo"
+                    android:hint="Ingrese su nombre de usuario"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:singleLine="true"

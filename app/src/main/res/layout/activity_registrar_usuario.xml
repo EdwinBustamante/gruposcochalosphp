@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fondoregistroanimacion"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/fondoregistroanimacion"
     android:background="@drawable/my_bg_anim"
+    android:orientation="vertical"
     tools:context="com.edwinbustamante.gruposcochalos.RegistrarUsuario">
 
     <android.support.design.widget.AppBarLayout
@@ -45,7 +45,8 @@
                 android:imeActionId="6"
                 android:imeActionLabel="@string/action_sign_in_short"
                 android:imeOptions="actionUnspecified"
-                android:inputType="textPersonName"
+                android:inputType="textEmailAddress"
+                android:maxLength="45"
                 android:maxLines="1"
                 android:singleLine="true" />
 
@@ -56,14 +57,15 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/correoRegistro"
+                android:id="@+id/nombreUsuario"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Correo electrònico"
+                android:hint="Nombre de usuario o numero de teléfono"
                 android:imeActionId="6"
                 android:imeActionLabel="@string/action_sign_in_short"
                 android:imeOptions="actionUnspecified"
                 android:inputType="textEmailAddress"
+                android:maxLength="20"
                 android:maxLines="1"
                 android:singleLine="true" />
 
@@ -82,6 +84,7 @@
                 android:imeActionLabel="@string/action_sign_in_short"
                 android:imeOptions="actionUnspecified"
                 android:inputType="textVisiblePassword"
+                android:maxLength="20"
                 android:maxLines="1"
                 android:singleLine="true" />
 
@@ -100,6 +103,7 @@
                 android:imeActionLabel="@string/action_sign_in_short"
                 android:imeOptions="actionUnspecified"
                 android:inputType="textVisiblePassword"
+                android:maxLength="20"
                 android:maxLines="1"
                 android:singleLine="true" />
 
