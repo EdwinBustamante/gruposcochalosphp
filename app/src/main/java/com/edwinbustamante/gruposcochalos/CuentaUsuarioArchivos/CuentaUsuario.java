@@ -56,13 +56,6 @@ public class CuentaUsuario extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_cuenta_usuario);
 
 
-        mAuth = FirebaseAuth.getInstance();//INSTANCIAMOS
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-        database = FirebaseDatabase.getInstance();
-
-
-        //database.setPersistenceEnabled(true);//Habilitamos la persistencia de datos de firebase
-        mDatabase = database.getReference().child(FirebaseReferences.USERS_REFERENCE);//hacemos referencia a la base de datos usuario tabla que tenemops como referencia en otra clase
         cuenta_perfil = (ImageView) findViewById(R.id.cuenta_perfil);
         progressDialogFotoSubir = new ProgressDialog(this);
         nombreGrupo = (TextView) findViewById(R.id.nombregrupo);
@@ -74,52 +67,13 @@ public class CuentaUsuario extends AppCompatActivity implements View.OnClickList
         cuenta_perfil.setOnClickListener(this);
         cerrarSesion.setOnClickListener(this);
 
-
-        /* ESTABLECEMOS UN ESCUCHADOR DE LOS CAMBIOS
-        * */
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (firebaseAuth.getCurrentUser() != null) {//verificamos que el usuario este logueado
-
-                    mDatabase.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {//obteniendo el identificador de usuario accedemos a su informacionn del usuario
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-                            /*
-                            ANIADIENDO LOS ATRIBUTOS DESDE LA BASE DE DATOS AL XML DE LA CUENTA DE UN USUARIO
-                            * */
-                            nombreGrupo.setText(dataSnapshot.child("nombre").getValue().toString());
-                            generoMusica.setText(dataSnapshot.child("genero").getValue().toString());
-
-                            String imageUrl = dataSnapshot.child("perfil").getValue().toString();
-                            if (!imageUrl.equals("default") || TextUtils.isEmpty(imageUrl)) {
-
-                                confotodeperfil = true;
-                                Glide.with(CuentaUsuario.this)
-                                        .load(imageUrl)
-                                        .fitCenter()
-                                        // .skipMemoryCache(true)//Almacenando en cache
-                                        .centerCrop()
-                                        .into(cuenta_perfil);
-                                // otro tipo Picasso.with(CuentaUsuario.this).load(Uri.parse(dataSnapshot.child("perfil").getValue().toString())).into(cuenta_perfil);
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                } else {
-                    //si el usuario no esta loguedo redireccionamos al login
-                    startActivity(new Intent(CuentaUsuario.this, LoginActivity.class));
-                    finish();
-                }
-            }
-        };
-
+        /*Glide.with(CuentaUsuario.this)
+                .load(imageUrl)
+                .fitCenter()
+                // .skipMemoryCache(true)//Almacenando en cache
+                .centerCrop()
+                .into(cuenta_perfil);
+*/
     }
 
     @Override
@@ -127,12 +81,6 @@ public class CuentaUsuario extends AppCompatActivity implements View.OnClickList
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);//una vez que se inicia la actividad verificara que si el usuario esta logueado
-    }
 
     /**
      * ################################################################################
@@ -160,10 +108,7 @@ public class CuentaUsuario extends AppCompatActivity implements View.OnClickList
                 dialogoEditNombre.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        //Agarramos el id del usuario siempre verificando que este logueado y cambiamos su atributo de nombre agarrando de los cambios
-                        DatabaseReference currentUserDB = mDatabase.child(mAuth.getCurrentUser().getUid());
-                        //en la tablas usuario cambiamos el valor del nombre
-                        currentUserDB.child("nombre").setValue(input.getText().toString());
+
                     }
                 });
                 dialogoEditNombre.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -192,10 +137,7 @@ public class CuentaUsuario extends AppCompatActivity implements View.OnClickList
                 dialogoEditGenero.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        //Agarramos el id del usuario siempre verificando que este logueado y cambiamos su atributo de nombre agarrando de los cambios
-                        DatabaseReference currentUserDB = mDatabase.child(mAuth.getCurrentUser().getUid());
-                        //en la tablas usuario cambiamos el valor del nombre
-                        currentUserDB.child("genero").setValue(inputGenero.getText().toString());
+
                     }
                 });
                 dialogoEditGenero.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -218,17 +160,13 @@ public class CuentaUsuario extends AppCompatActivity implements View.OnClickList
                 */
                 //pasando una imagen a otra actividad
                 Intent i = new Intent(CuentaUsuario.this, FulImagen.class);
-               // i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                // i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
-
 
 
                 break;
             case R.id.cerrar_sesion:
-                if (mAuth.getCurrentUser() != null) {
-
-                    mAuth.signOut();//si el usuario se desloguea cerramos sesion y el escuchador se encarga de cerrar la sesion
-                }
+                finish();
                 break;
         }
 
