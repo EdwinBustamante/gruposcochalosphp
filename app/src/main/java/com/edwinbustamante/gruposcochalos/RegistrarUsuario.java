@@ -125,7 +125,7 @@ public class RegistrarUsuario extends AppCompatActivity implements Response.List
             public void afterTextChanged(Editable s) {
                 String tiempoRealUsuario = String.valueOf(s);
                 if (!validarUsuario(tiempoRealUsuario)) {
-                    nombreUsuario.setError("Caracteres especiales, espacios no permitido");
+                    nombreUsuario.setError("Caracteres especiales y espacios no permitido");
                 }
 
             }
@@ -166,8 +166,8 @@ public class RegistrarUsuario extends AppCompatActivity implements Response.List
                     Toast.makeText(this, "La contraseña deber ser mayor a 6 Caracteres", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                nombreUsuario.setError("El nombre usuario de ser mayor a 6 caracteres");
-                Toast.makeText(this, "El nombre usuario de ser mayor a 6 caracteres", Toast.LENGTH_SHORT).show();
+                nombreUsuario.setError("El nombre usuario debe ser mayor a 6 caracteres");
+                Toast.makeText(this, "El nombre usuario debe ser mayor a 6 caracteres", Toast.LENGTH_SHORT).show();
             }
         } else {
             if (TextUtils.isEmpty(nombreGrupo)) {
@@ -187,14 +187,12 @@ public class RegistrarUsuario extends AppCompatActivity implements Response.List
     }
 
     public boolean validarPassword(String cadena) {
-        Toast.makeText(this, cadena, Toast.LENGTH_SHORT).show();
         Pattern pat = Pattern.compile("[a-zA-Z0-9]+");
         Matcher mat = pat.matcher(cadena);
         return mat.matches();
     }
 
     public boolean validarUsuario(String cadena) {
-        Toast.makeText(this, cadena, Toast.LENGTH_SHORT).show();
         Pattern pat = Pattern.compile("[a-zA-Z0-9]+");
         Matcher mat = pat.matcher(cadena);
         return mat.matches();
@@ -202,7 +200,7 @@ public class RegistrarUsuario extends AppCompatActivity implements Response.List
 
     private void cargarWebService() {
         // String url = "http://192.168.43.219/gruposcochalos/registro.php?nombre=" + nombreGrupoRegistro.getText().toString() + "&user=" + nombreUsuario.getText().toString() + "&pwd=" + pasRegistro1.getText().toString();
-        String url = "http://192.168.43.219/gruposcochalos/registro.php?nombre=" + nombreGrupoRegistro.getText().toString() + "&user=" + nombreUsuario.getText().toString() + "&pwd=" + pasRegistro1.getText().toString();
+        String url = "http://192.168.1.9/gruposcochalos/registro.php?nombre=" + nombreGrupoRegistro.getText().toString() + "&user=" + nombreUsuario.getText().toString() + "&pwd=" + pasRegistro1.getText().toString();
         url = url.replace(" ", "%20");
         jsonObjectReques = new JsonObjectRequest(Request.Method.GET, url, null, this, this);//realiza el llamado ala url
         requestQueue.add(jsonObjectReques);
@@ -218,7 +216,7 @@ public class RegistrarUsuario extends AppCompatActivity implements Response.List
                 nombreUsuario.setError("El nombre de usuario ya existe..");
                 Toast.makeText(this, "El nombre de usuario ya existe", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "Su cuenta se registro correctamente", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Su cuenta se registro correctamente...", Toast.LENGTH_SHORT).show();
 
                 finish();
             }

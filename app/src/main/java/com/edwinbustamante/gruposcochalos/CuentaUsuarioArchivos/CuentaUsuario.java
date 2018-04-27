@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -16,11 +17,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.edwinbustamante.gruposcochalos.ImagenFull.FulImagen;
 import com.edwinbustamante.gruposcochalos.LoginActivity;
 import com.edwinbustamante.gruposcochalos.Objetos.FirebaseReferences;
+import com.edwinbustamante.gruposcochalos.Objetos.User;
 import com.edwinbustamante.gruposcochalos.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -30,6 +33,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.joooonho.SelectableRoundedImageView;
+import com.squareup.picasso.Picasso;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -54,13 +59,16 @@ public class CuentaUsuario extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cuenta_usuario);
-
+        User USUARIO = (User) getIntent().getExtras().getSerializable("objetoUsuario");
 
         cuenta_perfil = (ImageView) findViewById(R.id.cuenta_perfil);
         progressDialogFotoSubir = new ProgressDialog(this);
         nombreGrupo = (TextView) findViewById(R.id.nombregrupo);
         generoMusica = (TextView) findViewById(R.id.texgeneroMusica);
         cerrarSesion = (Button) findViewById(R.id.cerrar_sesion);
+        nombreGrupo.setText(USUARIO.getNombre());
+        generoMusica.setText(USUARIO.getGenero());
+        Toast.makeText(this, USUARIO.getUser(), Toast.LENGTH_SHORT).show();
 
         nombreGrupo.setOnClickListener(this);
         generoMusica.setOnClickListener(this);
@@ -73,6 +81,7 @@ public class CuentaUsuario extends AppCompatActivity implements View.OnClickList
                 // .skipMemoryCache(true)//Almacenando en cache
                 .centerCrop()
                 .into(cuenta_perfil);
+
 */
     }
 

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -69,19 +70,24 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
 
     public void iniciarSesion(View view) {
 
-        String correo = in_usuario.getText().toString().trim();
+        String usuario = in_usuario.getText().toString().trim();
         String contrasenia = in_contrasenia.getText().toString().trim();
-        if (!TextUtils.isEmpty(correo) && !TextUtils.isEmpty(contrasenia)) {//compromamos que no este vacio
+        if (!TextUtils.isEmpty(usuario) && !TextUtils.isEmpty(contrasenia)) {//compromamos que no este vacio
             mProgress.setMessage("Ingresando al sistema, espere un momento");
             mProgress.show();
-            String url = "http://192.168.43.219/gruposcochalos/sesion.php?user=" + in_usuario.getText().toString()+ "&pwd=" + in_contrasenia.getText().toString();
+            String url = "http://192.168.1.9/gruposcochalos/sesion.php?user=" + in_usuario.getText().toString() + "&pwd=" + in_contrasenia.getText().toString();
             //String url = "http://192.168.1.11/gruposcochalos/sesion.php?user=" + correo + "$pwd=" + contrasenia;
             jrq = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
             rq.add(jrq);
 
 
         } else {
-            Toast.makeText(this, "LOS CAMPOS DEBEN SER LLENADOS CORRECTAMENTE PARA INGRESAR AL SISTEMA", Toast.LENGTH_SHORT).show();
+            if (TextUtils.isEmpty(usuario)) {
+                in_usuario.setError("Campo vacio");
+            }
+            if (TextUtils.isEmpty(contrasenia)) {
+                in_contrasenia.setError("Campo vacio");
+            }
         }
     }
 
@@ -94,35 +100,42 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
     @Override
     public void onErrorResponse(VolleyError error) {
         mProgress.dismiss();
-        Toast.makeText(this, "No se encontro usuario" + error.toString(), Toast.LENGTH_SHORT).show();
-
+        // Toast.makeText(this, "No se puede iniciar", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onResponse(JSONObject response) {
         mProgress.dismiss();
         User usuario = new User();
-        JSONArray jsonArray = response.optJSONArray("datos");//datos esta en el php
+        JSONArray jsonArray = response.optJSONArray("usuario");//datos esta en el php
         JSONObject jsonObject = null;
         try {
-
             jsonObject = jsonArray.getJSONObject(0);
             if (jsonObject.optString("user").equals("no inicia")) {
 
                 Toast.makeText(this, "No se pudo iniciar la sesion Revise Conexion", Toast.LENGTH_SHORT).show();
             } else {
-                if (jsonObject.optString("user").equals("fallo al iniciar")) {
-
+                if (jsonObject.optString("user").equals("existe usuario")) {
+                    in_contrasenia.setError("Contraseña incorrecta");
+                    Toast.makeText(this, "Contraseña incorrecta", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(this, "Se inicio Correctamente", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(LoginActivity.this, CuentaUsuario.class);
-                    startActivity(i);
+                    if (jsonObject.optString("user").equals("datos incorrectos")) {
+                        in_contrasenia.setError("Contraseña incorrecta");
+                        in_usuario.setError("Nombre de usuario incorrecto");
+                        Toast.makeText(this, "Los datos estan incorrectos", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Se inicio correctamente", Toast.LENGTH_SHORT).show();
+                        Intent i = new Intent(LoginActivity.this, CuentaUsuario.class);
+                        User usr = new User();
+                        usr.setUser(jsonObject.optString("user"));
+                        usr.setNombre(jsonObject.optString("nombre"));
+                        usr.setGenero(jsonObject.optString("genero"));
+                        i.putExtra("objetoUsuario",  usr);
+                        startActivity(i);
 
-
-                    usuario.setCorreo(jsonObject.optString("user"));
-                    usuario.setContrasenia(jsonObject.optString("pwd"));
-                    usuario.setGenero(jsonObject.optString("nombre"));
+                    }
                 }
+
 
             }
 
