@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <!-- permisos para internet-->
+    <!-- permisos para internet -->
 
     <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
 
@@ -55,8 +55,7 @@
             android:name=".CuentaUsuarioArchivos.CuentaUsuario"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_cuenta_usuario"
-            android:theme="@style/FullscreenTheme" />
-
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".ImagenFull.FulImagen"
             android:label="Foto de Perfil"

@@ -50,22 +50,22 @@ public class CuentaUsuario extends AppCompatActivity implements View.OnClickList
     private ProgressDialog progressDialogFotoSubir;
     private Toolbar toolbar;
     private ImageView cuenta_perfil;
-    private TextView nombreGrupo, generoMusica;
-    private Button cerrarSesion;
+        private TextView nombreGrupo, generoMusica;
+
     private LinearLayout editMainCuenta;
     private boolean confotodeperfil = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cuenta_usuario);
+        setContentView(R.layout.profile);
         User USUARIO = (User) getIntent().getExtras().getSerializable("objetoUsuario");
 
         cuenta_perfil = (ImageView) findViewById(R.id.cuenta_perfil);
         progressDialogFotoSubir = new ProgressDialog(this);
         nombreGrupo = (TextView) findViewById(R.id.nombregrupo);
         generoMusica = (TextView) findViewById(R.id.texgeneroMusica);
-        cerrarSesion = (Button) findViewById(R.id.cerrar_sesion);
+
         nombreGrupo.setText(USUARIO.getNombre());
         generoMusica.setText(USUARIO.getGenero());
         Toast.makeText(this, USUARIO.getUser(), Toast.LENGTH_SHORT).show();
@@ -73,7 +73,7 @@ public class CuentaUsuario extends AppCompatActivity implements View.OnClickList
         nombreGrupo.setOnClickListener(this);
         generoMusica.setOnClickListener(this);
         cuenta_perfil.setOnClickListener(this);
-        cerrarSesion.setOnClickListener(this);
+
 
         /*Glide.with(CuentaUsuario.this)
                 .load(imageUrl)
@@ -89,7 +89,6 @@ public class CuentaUsuario extends AppCompatActivity implements View.OnClickList
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
-
 
     /**
      * ################################################################################
@@ -174,9 +173,7 @@ public class CuentaUsuario extends AppCompatActivity implements View.OnClickList
 
 
                 break;
-            case R.id.cerrar_sesion:
-                finish();
-                break;
+
         }
 
     }

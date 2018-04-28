@@ -1,147 +1,115 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#bbd5de"
+    android:background="@color/fondodeuser"
     android:orientation="vertical"
     tools:context="com.edwinbustamante.gruposcochalos.CuentaUsuarioArchivos.CuentaUsuario">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/imageViewPoertada"
+        android:layout_width="0dp"
+        android:layout_height="220dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/portada" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+
+        android:id="@+id/cuenta_perfil"
+        android:layout_width="112dp"
+        android:layout_height="112dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/portada"
+        app:layout_constraintBottom_toBottomOf="@+id/imageViewPoertada"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewPoertada" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:orientation="horizontal">
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="@+id/cuenta_perfil"
+        app:layout_constraintEnd_toEndOf="@+id/cuenta_perfil"
+        app:layout_constraintStart_toEndOf="@+id/cuenta_perfil"
+        app:srcCompat="@android:drawable/ic_menu_camera" />
 
-        <Button
-            android:id="@+id/cerrar_sesion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cerrar Sesion" />
-    </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/edit_main_Cuenta"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/nombregrupo"
+        android:layout_width="0dp"
+        android:layout_height="21dp"
+        android:layout_gravity="bottom"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:gravity="left"
+        android:text="Añadir nombre de grupo: "
+        android:textAlignment="center"
+        android:textColor="@color/colorAccent"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cuenta_perfil" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="1dp"
-        android:background="@drawable/primero_layer"
-        android:orientation="horizontal">
+        android:layout_gravity="top"
+        android:gravity="left"
+        android:text="Género de Musica: "
+        android:textStyle="bold"
+        tools:layout_editor_absoluteX="44dp"
+        tools:layout_editor_absoluteY="414dp" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-
-            android:id="@+id/cuenta_perfil"
-            android:layout_width="90dp"
-            android:layout_height="90sp"
-            android:layout_marginBottom="9dp"
-            android:layout_marginLeft="9dp"
-            android:layout_marginRight="9dp"
-            android:layout_marginTop="9dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/perfilmusic" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="1dp"
-            android:layout_marginRight="5dp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginRight="2dp"
-                    android:gravity="left"
-                    android:text="Grupo Musical: "
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/nombregrupo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:gravity="left"
-                    android:text="Añadir nombre de grupo: "
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:background="@color/lightgray" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="0dp"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top"
-                    android:layout_marginRight="2dp"
-                    android:gravity="left"
-                    android:text="Género de Musica: "
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/texgeneroMusica"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top"
-                    android:gravity="left"
-                    android:text="Añadir género de música"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/texgeneroMusica"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:gravity="left"
+        android:text="Añadir género de música"
+        android:textStyle="bold"
+        tools:layout_editor_absoluteX="100dp"
+        tools:layout_editor_absoluteY="392dp" />
 
 
     <View
-        android:layout_width="match_parent"
+        android:id="@+id/view"
+        android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_marginBottom="0dp"
-        android:layout_marginLeft="1dp"
-        android:layout_marginRight="1dp"
-        android:layout_marginTop="3dp"
-        android:background="@color/lightgray" />
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@color/black_overlay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="461dp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+
+    <RelativeLayout
+        android:layout_width="368dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="357dp"></RelativeLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Mision rescate" />
 
-    </LinearLayout>
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
 
 
 
