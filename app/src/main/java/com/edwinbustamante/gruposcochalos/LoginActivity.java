@@ -75,7 +75,7 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
         if (!TextUtils.isEmpty(usuario) && !TextUtils.isEmpty(contrasenia)) {//compromamos que no este vacio
             mProgress.setMessage("Ingresando al sistema, espere un momento");
             mProgress.show();
-            String url = "http://192.168.1.9/gruposcochalos/sesion.php?user=" + in_usuario.getText().toString() + "&pwd=" + in_contrasenia.getText().toString();
+            String url = "http://192.168.1.5/gruposcochalos/sesion.php?user=" + in_usuario.getText().toString() + "&pwd=" + in_contrasenia.getText().toString();
             //String url = "http://192.168.1.11/gruposcochalos/sesion.php?user=" + correo + "$pwd=" + contrasenia;
             jrq = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
             rq.add(jrq);

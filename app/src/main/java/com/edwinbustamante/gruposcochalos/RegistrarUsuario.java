@@ -200,7 +200,7 @@ public class RegistrarUsuario extends AppCompatActivity implements Response.List
 
     private void cargarWebService() {
         // String url = "http://192.168.43.219/gruposcochalos/registro.php?nombre=" + nombreGrupoRegistro.getText().toString() + "&user=" + nombreUsuario.getText().toString() + "&pwd=" + pasRegistro1.getText().toString();
-        String url = "http://192.168.1.9/gruposcochalos/registro.php?nombre=" + nombreGrupoRegistro.getText().toString() + "&user=" + nombreUsuario.getText().toString() + "&pwd=" + pasRegistro1.getText().toString();
+        String url = "http://192.168.43.219/gruposcochalos/registro.php?nombre=" + nombreGrupoRegistro.getText().toString() + "&user=" + nombreUsuario.getText().toString() + "&pwd=" + pasRegistro1.getText().toString();
         url = url.replace(" ", "%20");
         jsonObjectReques = new JsonObjectRequest(Request.Method.GET, url, null, this, this);//realiza el llamado ala url
         requestQueue.add(jsonObjectReques);

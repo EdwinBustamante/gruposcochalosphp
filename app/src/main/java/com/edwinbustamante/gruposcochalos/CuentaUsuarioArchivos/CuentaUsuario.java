@@ -4,77 +4,69 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
-import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 
-import com.bumptech.glide.Glide;
+import com.edwinbustamante.gruposcochalos.HeaderDialogFragment;
 import com.edwinbustamante.gruposcochalos.ImagenFull.FulImagen;
+import com.edwinbustamante.gruposcochalos.InformacionProfileFragment;
 import com.edwinbustamante.gruposcochalos.LoginActivity;
-import com.edwinbustamante.gruposcochalos.Objetos.FirebaseReferences;
+import com.edwinbustamante.gruposcochalos.Main;
 import com.edwinbustamante.gruposcochalos.Objetos.User;
+import com.edwinbustamante.gruposcochalos.PublicacionesProfileFragment;
 import com.edwinbustamante.gruposcochalos.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.joooonho.SelectableRoundedImageView;
-import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class CuentaUsuario extends AppCompatActivity implements View.OnClickListener {
-    private FirebaseAuth.AuthStateListener mAuthListener;//se encarga de poder guardar la sesion iniciada sino se cierra la sesion
-    private FirebaseAuth mAuth;
-    private StorageReference mStorageRef;
-    private DatabaseReference mDatabase;
-    private FirebaseDatabase database;
-    private int CAMERA_REQUEST_CODE = 0;
-    private ProgressDialog progressDialogFotoSubir;
-    private Toolbar toolbar;
-    private ImageView cuenta_perfil;
-        private TextView nombreGrupo, generoMusica;
+public class CuentaUsuario extends AppCompatActivity {
 
-    private LinearLayout editMainCuenta;
-    private boolean confotodeperfil = false;
 
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile);
         User USUARIO = (User) getIntent().getExtras().getSerializable("objetoUsuario");
 
-        cuenta_perfil = (ImageView) findViewById(R.id.cuenta_perfil);
-        progressDialogFotoSubir = new ProgressDialog(this);
-        nombreGrupo = (TextView) findViewById(R.id.nombregrupo);
-        generoMusica = (TextView) findViewById(R.id.texgeneroMusica);
+        MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
+        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(myPagerAdapter);
 
-        nombreGrupo.setText(USUARIO.getNombre());
-        generoMusica.setText(USUARIO.getGenero());
-        Toast.makeText(this, USUARIO.getUser(), Toast.LENGTH_SHORT).show();
-
-        nombreGrupo.setOnClickListener(this);
-        generoMusica.setOnClickListener(this);
-        cuenta_perfil.setOnClickListener(this);
-
-
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
         /*Glide.with(CuentaUsuario.this)
                 .load(imageUrl)
                 .fitCenter()
@@ -82,99 +74,91 @@ public class CuentaUsuario extends AppCompatActivity implements View.OnClickList
                 .centerCrop()
                 .into(cuenta_perfil);
 
-*/
+     */
     }
+
+    /**
+     * ################################################################################
+     * TODOS DEL TAB Y FRAGMENT
+     * ##############################################################################
+     */
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    /**
-     * ################################################################################
-     * TODOS LOS CLICK AQUI ESTAN
-     * ##############################################################################
-     */
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.nombregrupo:
-                /*
-                ALERT DIALOG QUE SE LANZA PARA CAMBIAR EL NOMBRE DEL GRUPO MUSICAL
+    public void cerrarSesion(View view) {
 
-                **/
-                final EditText input;
-                AlertDialog.Builder dialogoEditNombre = new AlertDialog.Builder(this);
-                dialogoEditNombre.setMessage("Desea cambiar el nombre del Grupo Musical..?");
-                input = new EditText(this);
-                input.setText(nombreGrupo.getText().toString());
-                input.setSelection(nombreGrupo.getText().toString().length());
-                input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(40)});//maximo de caracterres
-                dialogoEditNombre.setView(input);
-
-                dialogoEditNombre.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                });
-                dialogoEditNombre.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-                AlertDialog editarNombre = dialogoEditNombre.create();
-                editarNombre.show();
-                break;
-            case R.id.texgeneroMusica:
-                 /*
-                ALERT DIALOG QUE SE LANZA PARA CAMBIAR EL NOMBRE DEL GRUPO MUSICAL
-
-                **/
-                final EditText inputGenero;
-                AlertDialog.Builder dialogoEditGenero = new AlertDialog.Builder(this);
-                dialogoEditGenero.setMessage("Desea cambiar el género música..?");
-                inputGenero = new EditText(this);
-                inputGenero.setText(generoMusica.getText().toString());
-                inputGenero.setSelection(generoMusica.getText().toString().length());
-                inputGenero.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});//maximo de caracterres
-                dialogoEditGenero.setView(inputGenero);
-
-                dialogoEditGenero.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                });
-                dialogoEditGenero.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-                AlertDialog editarGenero = dialogoEditGenero.create();
-                editarGenero.show();
-                break;
-            case R.id.cuenta_perfil:
-               /* Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(Intent.createChooser(intent, "Seleciona una imagen para el Perfil"), CAMERA_REQUEST_CODE);
-                    //aqui esperamos un resultado
-                }
-                */
-                //pasando una imagen a otra actividad
-                Intent i = new Intent(CuentaUsuario.this, FulImagen.class);
-                // i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
-
-
-                break;
-
-        }
 
     }
+
+    public void ShowDialog(View view) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        builder.setTitle("Grupos Cochalos");
+        builder.setMessage("Desea Cerrar Sesion..?");
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        builder.create().show();
+    }
+
+
+}
+
+
+/**
+ * ################################################################################
+ * Mi clase adaptador...
+ * ##############################################################################
+ */
+class MyPagerAdapter extends FragmentStatePagerAdapter {
+
+    public MyPagerAdapter(FragmentManager fm) {
+        super(fm);
+    }
+
+    @Override
+    public Fragment getItem(int i) {
+        Fragment fragment;
+        switch (i) {
+            case 0:
+                fragment = new InformacionProfileFragment();
+                break;
+            case 1:
+                fragment = new PublicacionesProfileFragment();
+                break;
+            default:
+                fragment = null;
+        }
+        return fragment;
+    }
+
+    @Override
+    public int getCount() {
+        return 2;
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        switch (position) {
+            case 0:
+                return "INFORMACIÓN";
+            case 1:
+                return "PUBLICACIONES";
+        }
+        return null;
+    }
+
 }

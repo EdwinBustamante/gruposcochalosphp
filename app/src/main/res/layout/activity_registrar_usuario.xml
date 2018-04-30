@@ -35,7 +35,8 @@
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:hintTextAppearance="@style/FloatingLabel">
 
             <EditText
                 android:id="@+id/nombreGrupoRegistro"
@@ -48,13 +49,15 @@
                 android:inputType="textEmailAddress"
                 android:maxLength="45"
                 android:maxLines="1"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:theme="@style/EditText" />
 
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:hintTextAppearance="@style/FloatingLabel">
 
             <EditText
                 android:id="@+id/nombreUsuario"
@@ -67,13 +70,15 @@
                 android:inputType="textEmailAddress"
                 android:maxLength="20"
                 android:maxLines="1"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:theme="@style/EditText" />
 
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:hintTextAppearance="@style/FloatingLabel">
 
             <EditText
                 android:id="@+id/contraseniaRegistro"
@@ -86,13 +91,15 @@
                 android:inputType="textVisiblePassword"
                 android:maxLength="20"
                 android:maxLines="1"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:theme="@style/EditText" />
 
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:hintTextAppearance="@style/FloatingLabel">
 
             <EditText
                 android:id="@+id/contraseniaRegistro2"
@@ -105,7 +112,8 @@
                 android:inputType="textVisiblePassword"
                 android:maxLength="20"
                 android:maxLines="1"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:theme="@style/EditText" />
 
             <Button
                 android:id="@+id/btnRegistrarCuenta"
