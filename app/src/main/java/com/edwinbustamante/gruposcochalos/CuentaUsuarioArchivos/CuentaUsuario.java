@@ -1,51 +1,25 @@
 package com.edwinbustamante.gruposcochalos.CuentaUsuarioArchivos;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.text.InputFilter;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
-import com.edwinbustamante.gruposcochalos.HeaderDialogFragment;
-import com.edwinbustamante.gruposcochalos.ImagenFull.FulImagen;
-import com.edwinbustamante.gruposcochalos.InformacionProfileFragment;
-import com.edwinbustamante.gruposcochalos.LoginActivity;
-import com.edwinbustamante.gruposcochalos.Main;
+
 import com.edwinbustamante.gruposcochalos.Objetos.User;
-import com.edwinbustamante.gruposcochalos.PublicacionesProfileFragment;
 import com.edwinbustamante.gruposcochalos.R;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -53,12 +27,14 @@ import java.util.List;
  */
 public class CuentaUsuario extends AppCompatActivity {
 
+    ImageView imageViewCerrarSesion;
 
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile);
+
         User USUARIO = (User) getIntent().getExtras().getSerializable("objetoUsuario");
 
         MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
@@ -67,6 +43,24 @@ public class CuentaUsuario extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+        imageViewCerrarSesion = (ImageView) findViewById(R.id.imageViewCerrarSesion);
+        imageViewCerrarSesion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder= new AlertDialog.Builder(getApplicationContext());
+                builder.setCancelable(true);
+                builder.setTitle("Grupos Cochalos");
+                builder.setMessage("Desea cerrar sesion");
+                builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+             builder.create().show();
+            }
+        });
+
         /*Glide.with(CuentaUsuario.this)
                 .load(imageUrl)
                 .fitCenter()
@@ -87,31 +81,6 @@ public class CuentaUsuario extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-
-    public void cerrarSesion(View view) {
-
-
-    }
-
-    public void ShowDialog(View view) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(false);
-        builder.setTitle("Grupos Cochalos");
-        builder.setMessage("Desea Cerrar Sesion..?");
-        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-        builder.create().show();
     }
 
 

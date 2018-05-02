@@ -2,6 +2,7 @@
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -17,7 +18,7 @@
             android:src="@drawable/perfilmusic" />
 
         <ImageButton
-            android:id="@+id/cuenta_perfil"
+            android:id="@+id/foto_perfil"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_below="@+id/header_cover_image"
@@ -36,7 +37,6 @@
             android:layout_below="@+id/header_cover_image"
             android:background="@drawable/my_profile_anim"
             android:elevation="4dp"
-
             android:paddingBottom="15dp">
 
             <TextView
@@ -79,137 +79,253 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/profile_layout"
+            android:layout_marginBottom="50dp"
             android:layout_marginTop="0dp"
             android:orientation="vertical">
 
 
             <android.support.v7.widget.CardView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="15dp"
                 android:layout_marginLeft="6dp"
                 android:layout_marginRight="6dp"
+                android:layout_marginTop="6dp"
                 android:clickable="true"
-                android:onClick="informacionDescripcion"
                 app:cardCornerRadius="5dp"
-                app:cardElevation="10dp">
+                app:cardElevation="5dp">
 
-                <TextView
-                    android:id="@+id/informacionGrupo"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:text="INFORMACIÓN Y DESCRIPCIÓN"
-                    android:textColor="@color/negro"
-                    android:textSize="18dp"
-                    android:textStyle="bold" />
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
 
-                <TextView
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="10dp"
+                        android:background="@color/informacion"
+                        android:orientation="horizontal">
 
-                    android:id="@+id/texViewInformacion"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/vieww"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="28dp"
-                    android:text="La información que debe contener este campo puedes ser: historia, trayectoria musical, número de integrantes, tipo de eventos que amenizan , etc."
-                    android:textSize="17dp" />
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/iconinfo" />
 
-                <View
-                    android:id="@+id/vieww"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="28dp"
-                    android:background="@color/black_overlay" />
+                        <TextView
+                            android:id="@+id/informacionGrupo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="2dp"
+                            android:text="INFORMACIÓN Y DESCRIPCIÓN"
+                            android:textColor="@color/negro"
+                            android:textSize="18dp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@color/black_overlay" />
+
+                    <TextView
+                        android:id="@+id/texViewInformacion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:text="La información que debe contener este campo puedes ser: historia, trayectoria musical, número de integrantes, tipo de eventos que amenizan , etc."
+                        android:textSize="17dp" />
+
+
+                </LinearLayout>
+
 
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="15dp"
                 android:layout_marginLeft="6dp"
                 android:layout_marginRight="6dp"
                 android:clickable="true"
-
                 app:cardCornerRadius="5dp"
-                app:cardElevation="10dp">
+                app:cardElevation="5dp">
 
-                <TextView
-
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:text="CONTACTOS"
-                    android:textColor="@color/negro"
-                    android:textSize="18dp"
-                    android:textStyle="bold" />
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
 
-                <TextView
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="10dp"
+                        android:background="@color/contactos"
+                        android:orientation="horizontal">
 
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="28dp"
-                    android:text="Solo puede publicar si el administrador valida la cuenta del Grupo Musical"
-                    android:textSize="17dp" />
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/icocontact" />
 
-                <View
-                    android:id="@+id/dir"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_below="@id/dir"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="28dp"
-                    android:background="@color/black_overlay" />
+                        <TextView
+                            android:id="@+id/contactos"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="2dp"
+                            android:text="CONTACTOS"
+                            android:textColor="@color/negro"
+                            android:textSize="18dp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@color/black_overlay" />
+
+                    <TextView
+                        android:id="@+id/texViewContactos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:text="Este campo debe contener números telefónicos de referencia ejemplo: 4###### - 75#######"
+                        android:textSize="17dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@color/black_overlay" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:weightSum="3">
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/contacto" />
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/whatsapp" />
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/facebook" />
+                    </LinearLayout>
+
+                </LinearLayout>
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="15dp"
                 android:layout_marginLeft="6dp"
                 android:layout_marginRight="6dp"
                 android:clickable="true"
                 app:cardCornerRadius="5dp"
-                app:cardElevation="10dp">
+                app:cardElevation="5dp">
 
-                <TextView
-                    android:id="@+id/dire"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:text="DIRECCIÓN"
-                    android:textColor="@color/negro"
-                    android:textSize="18dp"
-                    android:textStyle="bold" />
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
 
-                <TextView
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="10dp"
+                        android:background="@color/direccion"
+                        android:orientation="horizontal">
 
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/vie"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="28dp"
-                    android:text="Solo puede publicar si el administrador valida la cuenta del Grupo Musical"
-                    android:textSize="17dp" />
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/houselocation" />
 
-                <View
-                    android:id="@+id/vie"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="28dp"
-                    android:background="@color/black_overlay" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="2dp"
+                            android:text="DIRECCIÓN"
+                            android:textColor="@color/negro"
+                            android:textSize="18dp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@color/black_overlay" />
+
+                    <TextView
+                        android:id="@+id/texViewDireccion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:text="Este campo debe contener la direccion del grupo musical, adjuntado de una ubicacion en el icono de location  si es posible.."
+                        android:textSize="17dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@color/black_overlay" />
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/marcador_de_posicion" />
+
+                </LinearLayout>
             </android.support.v7.widget.CardView>
 
 

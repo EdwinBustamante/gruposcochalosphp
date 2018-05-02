@@ -44,13 +44,12 @@
     </android.support.v4.view.ViewPager>
 
     <ImageView
-        android:id="@+id/textViewCerrarSesion"
+        android:id="@+id/imageViewCerrarSesion"
         android:layout_width="50dp"
         android:layout_height="48dp"
         android:layout_marginEnd="2dp"
         android:layout_marginTop="0.5dp"
         android:background="@color/transparente"
-        android:onClick="cerrarSesion"
         android:src="@drawable/retire_usuario"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

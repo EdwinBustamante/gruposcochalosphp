@@ -59,12 +59,10 @@
         <activity
             android:name=".ImagenFull.FulImagen"
             android:label="Foto de Perfil"
-            android:parentActivityName=".CuentaUsuarioArchivos.CuentaUsuario"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.edwinbustamante.gruposcochalos.CuentaUsuarioArchivos.CuentaUsuario" />
-        </activity>
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+        <activity android:name=".CuentaUsuarioArchivos.EditInformacion" />
+        <activity android:name=".CuentaUsuarioArchivos.EditContactos" />
+        <activity android:name=".CuentaUsuarioArchivos.EditDireccion"></activity>
     </application>
 
 </manifest>

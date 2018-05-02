@@ -61,11 +61,8 @@ import static android.Manifest.permission_group.CAMERA;
 
 public class FulImagen extends AppCompatActivity {
 
-    private FirebaseAuth.AuthStateListener mAuthListener;//se encarga de poder guardar la sesion iniciada sino se cierra la sesion
-    private FirebaseAuth mAuth;
-    private StorageReference mStorageRef;
+
     private ProgressDialog progressDialog;
-    private DatabaseReference mDatabase;
     private int CAMERA_REQUEST_CODE = 0;
     PhotoViewAttacher mAttacher;//Para hacer Zoom en el imagen
     private static String APP_DIRECTORY = "GruposCochalos/";
@@ -80,29 +77,17 @@ public class FulImagen extends AppCompatActivity {
 
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);//una vez que se inicia la actividad verificara que si el usuario esta logueado
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_ful_imagen);
+        Bundle textoDireccion = this.getIntent().getExtras();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Foto de Perfil");
         setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        mAuth = FirebaseAuth.getInstance();//INSTANCIAMOS
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-        mDatabase = FirebaseDatabase.getInstance().getReference().child(FirebaseReferences.USERS_REFERENCE);//hacemos referencia a la base de datos usuario tabla que tenemops como referencia en otra clase
+        getSupportActionBar().setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
 
         iconoPerfil = (ImageView) findViewById(R.id.imagenfull);
         Display display = getWindowManager().getDefaultDisplay();
@@ -113,46 +98,6 @@ public class FulImagen extends AppCompatActivity {
         iconoPerfil.setMaxHeight(height);
         iconoPerfil.setMaxWidth(width);
 
-
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (firebaseAuth.getCurrentUser() != null) {//verificamos que el usuario este logueado
-
-                    mDatabase.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {//obteniendo el identificador de usuario accedemos a su informacionn del usuario
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                         /*
-                            ANIADIENDO LOS ATRIBUTOS DESDE LA BASE DE DATOS AL XML DE LA CUENTA DE UN USUARIO
-                            * */
-
-                            String imageUrl = dataSnapshot.child("perfil").getValue().toString();
-                            if (!imageUrl.equals("default") || TextUtils.isEmpty(imageUrl)) {
-
-
-                                Glide.with(FulImagen.this)
-                                        .load(imageUrl)
-                                        .fitCenter()
-                                        // .skipMemoryCache(true)//Almacenando en cache
-                                        .centerCrop()
-                                        .into(iconoPerfil);
-                                // otro tipo Picasso.with(CuentaUsuario.this).load(Uri.parse(dataSnapshot.child("perfil").getValue().toString())).into(cuenta_perfil);
-                            } else {
-                                Uri uriImage = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.perfilmusic);
-                                iconoPerfil.setImageURI(uriImage);
-                            }
-
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-            }
-        };
 
         //hace que la imagen sea expansible
         mAttacher = new PhotoViewAttacher(iconoPerfil);
@@ -179,10 +124,15 @@ public class FulImagen extends AppCompatActivity {
                     showOptions();
                 }
 
-                return true;
+                break;
+            case android.R.id.home:
+                finish();
+                break;
             default:
-                return super.onOptionsItemSelected(item);
+                break;
+
         }
+        return true;
     }
 
     private boolean mayRequestStoragePermission() {
@@ -288,64 +238,9 @@ public class FulImagen extends AppCompatActivity {
                     subiendoProgres.setMessage("Subiendo foto....");
                     subiendoProgres.show();
                     final Uri uri = data.getData();
-                    if (uri == null) {
-                        subiendoProgres.dismiss();
-                        return;
-                    }
-                    if (mStorageRef == null) {
-                        mStorageRef = FirebaseStorage.getInstance().getReference();
-                    }
-                    if (mDatabase == null) {
-                        mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
-                    }
-                    final StorageReference filepath = mStorageRef.child("fotosperfil").child(getRandomString());
-                    final DatabaseReference currentUserDB = mDatabase.child(mAuth.getCurrentUser().getUid());
-                    currentUserDB.child("perfil").addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            String perfilAntiguo = dataSnapshot.getValue().toString();
-                            if (!perfilAntiguo.equals("default") && !perfilAntiguo.isEmpty()) {
-                                Task<Void> task = FirebaseStorage.getInstance().getReferenceFromUrl(perfilAntiguo).delete();
-                                task.addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
 
-                                        if (task.isSuccessful()) {
-                                            Toast.makeText(FulImagen.this, "Eliminado Exitosamente", Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(FulImagen.this, "Fallo al eliminar la imagen", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
-                            }
-                            currentUserDB.child("perfil").removeEventListener(this);
-                            filepath.putFile(uri).addOnSuccessListener(FulImagen.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                                    Uri downloadUri = taskSnapshot.getDownloadUrl();
-
-                                    DatabaseReference currentUserDB = mDatabase.child(mAuth.getCurrentUser().getUid());
-                                    currentUserDB.child("perfil").setValue(downloadUri.toString());
-                                    Toast.makeText(FulImagen.this, "todo listo esta", Toast.LENGTH_SHORT).show();
-                                    subiendoProgres.dismiss();
-                                }
-                            }).addOnFailureListener(FulImagen.this, new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    subiendoProgres.dismiss();
-                                    Toast.makeText(FulImagen.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-
-                    // iconoPerfil.setImageURI(path);
+                    iconoPerfil.setImageURI(uri);
+                    subiendoProgres.dismiss();
                     break;
 
             }
@@ -403,17 +298,6 @@ public class FulImagen extends AppCompatActivity {
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Toast.makeText(this, "esty destruido", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Toast.makeText(this, "estoy stop", Toast.LENGTH_SHORT).show();
-    }
 
 }
 

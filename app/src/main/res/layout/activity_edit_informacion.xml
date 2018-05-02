@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.edwinbustamante.gruposcochalos.ImagenFull.FulImagen">
+    android:fitsSystemWindows="true"
+    tools:context="com.edwinbustamante.gruposcochalos.CuentaUsuarioArchivos.EditInformacion">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/negro"
         android:fitsSystemWindows="false"
         android:theme="@style/AppTheme">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
@@ -24,20 +23,18 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <LinearLayout
+
+    <EditText
+        android:id="@+id/editTextInformacionEdit"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/negro"
-        android:gravity="center_horizontal|center_vertical"
-        android:orientation="vertical">
-
-        <com.edwinbustamante.gruposcochalos.RenderizadorFotos.ResizableImageView
-            android:id="@+id/imagenfull"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bar"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="0dp"
+        android:overScrollMode="always"
+        android:scrollbarStyle="insideInset"
+        android:scrollbars="vertical" />
 
 
-</android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>
