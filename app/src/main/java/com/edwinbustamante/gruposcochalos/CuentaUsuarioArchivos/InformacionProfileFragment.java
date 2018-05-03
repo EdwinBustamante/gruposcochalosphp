@@ -23,11 +23,22 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
+import com.android.volley.toolbox.Volley;
 import com.edwinbustamante.gruposcochalos.ImagenFull.FulImagen;
 import com.edwinbustamante.gruposcochalos.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class InformacionProfileFragment extends Fragment implements View.OnClickListener {
+
+public class InformacionProfileFragment extends Fragment implements View.OnClickListener, Response.ErrorListener, Response.Listener<JSONObject> {
 
     // UI references. animacion
     RelativeLayout linearLayoutanimacion;
@@ -38,10 +49,13 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
     private ImageView cuenta_perfil;
     private TextView nombreGrupo, generoMusica;
     private TextView informacionEdit, contactosEdit, direccionEdit;
-    String FileName = "myUser";
+    String FileName = "myUserId";
 
     private LinearLayout editMainCuenta;
     private ImageView fotoPerfil;
+    RequestQueue rq;
+    JsonRequest jrq;
+    String idUsuarioInput;
 
     public InformacionProfileFragment() {
         // Required empty public constructor
@@ -54,6 +68,7 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                              Bundle savedInstanceState) {
 
         View vista = inflater.inflate(R.layout.fragment_informacion_profile, container, false);
+        rq = Volley.newRequestQueue(getActivity());
         //ANIMACION DEL FONDO
         //  linearLayoutanimacion = (RelativeLayout) findViewById(R.id.profile_layout);
         // animacion = (AnimationDrawable) linearLayoutanimacion.getBackground();
@@ -68,9 +83,8 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
         nombreGrupo = (TextView) vista.findViewById(R.id.nombregrupo);
         String defaultValue = "DefaultName";
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(FileName, Context.MODE_PRIVATE);
-        String name = sharedPreferences.getString("username", defaultValue);
-        nombreGrupo.setText(name);
-
+        idUsuarioInput = sharedPreferences.getString("idusuario", defaultValue);
+        Toast.makeText(getContext(), idUsuarioInput, Toast.LENGTH_SHORT).show();
         nombreGrupo.setOnClickListener(this);
         generoMusica = (TextView) vista.findViewById(R.id.texgeneroMusica);
         generoMusica.setOnClickListener(this);
@@ -89,8 +103,15 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
         //generoMusica.setOnClickListener(this);
         // cuenta_perfil.setOnClickListener(this);
         // Inflate the layout for this fragment
-
+        actualizarDatosUsuario();
         return vista;
+    }
+
+    private void actualizarDatosUsuario() {
+        String url = "http://192.168.43.219/gruposcochalos/traerdatosusuario.php?idusuario=" + idUsuarioInput;
+        jrq = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
+        rq.add(jrq);
+
     }
 
     @Override
@@ -175,4 +196,36 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
         }
     }
 
+
+    @Override
+    public void onErrorResponse(VolleyError error) {
+
+    }
+
+    @Override
+    public void onResponse(JSONObject response) {
+        JSONArray jsonArray = response.optJSONArray("usuariodatos");//datos esta en el php
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = jsonArray.getJSONObject(0);
+            if (jsonObject.getString("idgrupomusical").equals("datos incorrectos de entrada")) {
+                Toast.makeText(getContext(), "Datos incorrectos de entrada", Toast.LENGTH_SHORT).show();
+            } else {
+                if (jsonObject.getString("idgrupomusical").equals("error en la consulta")) {
+                    Toast.makeText(getContext(), "Fallo al actualizar los datos intenete nuevamente", Toast.LENGTH_SHORT).show();
+                } else {
+
+                    nombreGrupo.setText(jsonObject.getString("nombre"));
+                    generoMusica.setText(jsonObject.getString("genero"));
+                    informacionEdit.setText(jsonObject.getString("informaciondescripcion"));
+                    contactosEdit.setText(jsonObject.getString("descripcioncontactos"));
+                    direccionEdit.setText(jsonObject.getString("direcciondescripcion"));
+                }
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 }
