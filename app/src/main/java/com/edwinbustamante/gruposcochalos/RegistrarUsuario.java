@@ -200,7 +200,7 @@ public class RegistrarUsuario extends AppCompatActivity implements Response.List
 
     private void cargarWebService() {
         // String url = "http://192.168.43.219/gruposcochalos/registro.php?nombre=" + nombreGrupoRegistro.getText().toString() + "&user=" + nombreUsuario.getText().toString() + "&pwd=" + pasRegistro1.getText().toString();
-        String url = "http://192.168.43.219/gruposcochalos/registro.php?nombre=" + nombreGrupoRegistro.getText().toString() + "&user=" + nombreUsuario.getText().toString() + "&pwd=" + pasRegistro1.getText().toString();
+        String url = "http://192.168.43.219/gruposcochalos/registro.php?nombre=" + nombreGrupoRegistro.getText().toString() + "&usuario=" + nombreUsuario.getText().toString() + "&pwd=" + pasRegistro1.getText().toString();
         url = url.replace(" ", "%20");
         jsonObjectReques = new JsonObjectRequest(Request.Method.GET, url, null, this, this);//realiza el llamado ala url
         requestQueue.add(jsonObjectReques);
@@ -208,11 +208,11 @@ public class RegistrarUsuario extends AppCompatActivity implements Response.List
 
     @Override
     public void onResponse(JSONObject response) {
-        JSONArray jsonArray = response.optJSONArray("usuario");//datos esta en el php
+        JSONArray jsonArray = response.optJSONArray("usuariodatos");//datos esta en el php
         JSONObject jsonObject = null;
         try {
             jsonObject = jsonArray.getJSONObject(0);
-            if (jsonObject.optString("user").equals("ya existe usuario")) {
+            if (jsonObject.optString("usuario").equals("ya existe usuario")) {
                 nombreUsuario.setError("El nombre de usuario ya existe..");
                 Toast.makeText(this, "El nombre de usuario ya existe", Toast.LENGTH_SHORT).show();
             } else {

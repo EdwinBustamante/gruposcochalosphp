@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
         if (!TextUtils.isEmpty(usuario) && !TextUtils.isEmpty(contrasenia)) {//compromamos que no este vacio
             mProgress.setMessage("Ingresando al sistema, espere un momento");
             mProgress.show();
-            String url = "http://192.168.43.219/gruposcochalos/sesion.php?user=" + in_usuario.getText().toString() + "&pwd=" + in_contrasenia.getText().toString();
+            String url = "http://192.168.1.2/gruposcochalos/sesion.php?usuario=" + in_usuario.getText().toString() + "&pwd=" + in_contrasenia.getText().toString();
             //String url = "http://192.168.1.11/gruposcochalos/sesion.php?user=" + correo + "$pwd=" + contrasenia;
             jrq = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
             rq.add(jrq);
@@ -121,30 +121,28 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
     public void onResponse(JSONObject response) {
         mProgress.dismiss();
         User usuario = new User();
-        JSONArray jsonArray = response.optJSONArray("usuario");//datos esta en el php
+        JSONArray jsonArray = response.optJSONArray("usuariodatos");//datos esta en el php
         JSONObject jsonObject = null;
         try {
             jsonObject = jsonArray.getJSONObject(0);
-            if (jsonObject.optString("user").equals("no inicia")) {
+            if (jsonObject.optString("usuario").equals("no inicia")) {
 
                 Toast.makeText(this, "No se pudo iniciar la sesion Revise Conexion", Toast.LENGTH_SHORT).show();
             } else {
-                if (jsonObject.optString("user").equals("existe usuario")) {
+                if (jsonObject.optString("usuario").equals("existe usuario")) {
                     in_contrasenia.setError("Contraseña incorrecta");
                     Toast.makeText(this, "Contraseña incorrecta", Toast.LENGTH_SHORT).show();
                 } else {
-                    if (jsonObject.optString("user").equals("datos incorrectos")) {
+                    if (jsonObject.optString("usuario").equals("datos incorrectos")) {
                         in_contrasenia.setError("Contraseña incorrecta");
                         in_usuario.setError("Nombre de usuario incorrecto");
                         Toast.makeText(this, "Los datos estan incorrectos", Toast.LENGTH_SHORT).show();
                     } else {
-                        guardarUsuario(jsonObject.optString("user"));//guardando en SharePreference
+                        guardarUsuario(jsonObject.optString("usuario"));//guardando en SharePreference
                         Toast.makeText(this, "Se inicio correctamente", Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(LoginActivity.this, CuentaUsuario.class);
                         User usr = new User();
-                        usr.setUser(jsonObject.optString("user"));
-                        usr.setNombre(jsonObject.optString("nombre"));
-                        usr.setGenero(jsonObject.optString("genero"));
+                        usr.setUser(jsonObject.optString("usuario"));
                         i.putExtra("objetoUsuario", usr);
                         startActivity(i);
 
