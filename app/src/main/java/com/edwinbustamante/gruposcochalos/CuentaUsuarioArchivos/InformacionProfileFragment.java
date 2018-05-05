@@ -13,6 +13,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +48,7 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
     private ProgressDialog progressDialogFotoSubir;
     private Toolbar toolbar;
     private ImageView cuenta_perfil;
-    private TextView nombreGrupo, generoMusica;
+    private TextView nombreGrupo, generoMusica, movil1, movil2, movilWhatsApp, linkFacebook;
     private TextView informacionEdit, contactosEdit, direccionEdit;
     String FileName = "myUserId";
 
@@ -90,6 +91,15 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
         generoMusica.setOnClickListener(this);
         informacionEdit = vista.findViewById(R.id.texViewInformacion);
         informacionEdit.setOnClickListener(this);
+        movil1 = (TextView) vista.findViewById(R.id.texViewMovil1);
+        movil1.setOnClickListener(this);
+        movil2 = (TextView) vista.findViewById(R.id.texViewMovil2);
+        movil2.setOnClickListener(this);
+        movilWhatsApp = (TextView) vista.findViewById(R.id.texViewMovilWhatsApp);
+        movilWhatsApp.setOnClickListener(this);
+        linkFacebook = (TextView) vista.findViewById(R.id.texViewLinkFacebook);
+       // linkFacebook.setOnClickListener(this);
+
         contactosEdit = (TextView) vista.findViewById(R.id.texViewContactos);
         contactosEdit.setOnClickListener(this);
         direccionEdit = (TextView) vista.findViewById(R.id.texViewDireccion);
@@ -108,7 +118,7 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
     }
 
     private void actualizarDatosUsuario() {
-        String url = "http://192.168.43.219/gruposcochalos/traerdatosusuario.php?idusuario=" + idUsuarioInput;
+        String url = "http://192.168.1.11/gruposcochalos/traerdatosusuario.php?idusuario=" + idUsuarioInput;
         jrq = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
         rq.add(jrq);
 
@@ -127,7 +137,7 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                 input = new EditText(getContext());
                 input.setText(nombreGrupo.getText().toString());
                 input.setSelection(nombreGrupo.getText().toString().length());
-                input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(40)});//maximo de caracterres
+                input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(50)});//maximo de caracterres
                 dialogoEditNombre.setView(input);
 
                 dialogoEditNombre.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
@@ -154,7 +164,7 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                 inputGenero = new EditText(getContext());
                 inputGenero.setText(generoMusica.getText().toString());
                 inputGenero.setSelection(generoMusica.getText().toString().length());
-                inputGenero.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});//maximo de caracterres
+                inputGenero.setFilters(new InputFilter[]{new InputFilter.LengthFilter(70)});//maximo de caracterres
                 dialogoEditGenero.setView(inputGenero);
 
                 dialogoEditGenero.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
@@ -172,6 +182,84 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                 AlertDialog editarGenero = dialogoEditGenero.create();
                 editarGenero.show();
                 break;
+            case R.id.texViewMovil1:
+                final EditText inputMovil1;
+                AlertDialog.Builder dialogoEditMovil1 = new AlertDialog.Builder(getContext());
+                dialogoEditMovil1.setTitle("Desea cambiar el número de movil 1..?");
+                inputMovil1 = new EditText(getContext());
+                inputMovil1.setText(movil1.getText().toString());
+                inputMovil1.setSelection(movil1.getText().toString().length());
+                inputMovil1.setFilters(new InputFilter[]{new InputFilter.LengthFilter(9)});//maximo de caracterres
+                inputMovil1.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+                dialogoEditMovil1.setView(inputMovil1);
+
+                dialogoEditMovil1.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(getContext(), inputMovil1.getText().toString(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+                dialogoEditMovil1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                AlertDialog editarMovil1 = dialogoEditMovil1.create();
+                editarMovil1.show();
+                break;
+            case R.id.texViewMovil2:
+                final EditText inputMovil2;
+                AlertDialog.Builder dialogoEditMovil2 = new AlertDialog.Builder(getContext());
+                dialogoEditMovil2.setTitle("Desea cambiar el número de movil 2..?");
+                inputMovil2 = new EditText(getContext());
+                inputMovil2.setText(movil2.getText().toString());
+                inputMovil2.setSelection(movil2.getText().toString().length());
+                inputMovil2.setFilters(new InputFilter[]{new InputFilter.LengthFilter(9)});//maximo de caracterres
+                inputMovil2.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+                dialogoEditMovil2.setView(inputMovil2);
+
+                dialogoEditMovil2.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(getContext(), inputMovil2.getText().toString(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+                dialogoEditMovil2.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                AlertDialog editarMovil2 = dialogoEditMovil2.create();
+                editarMovil2.show();
+                break;
+            case R.id.texViewMovilWhatsApp:
+                final EditText inputMovilWhatsApp;
+                AlertDialog.Builder dialogoEditMovilWhatsApp = new AlertDialog.Builder(getContext());
+                dialogoEditMovilWhatsApp.setTitle("Desea cambiar el número de movil para WhatsApp?");
+                inputMovilWhatsApp = new EditText(getContext());
+                inputMovilWhatsApp.setText(movil2.getText().toString());
+                inputMovilWhatsApp.setSelection(movil2.getText().toString().length());
+                inputMovilWhatsApp.setFilters(new InputFilter[]{new InputFilter.LengthFilter(9)});//maximo de caracterres
+                inputMovilWhatsApp.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+                dialogoEditMovilWhatsApp.setView(inputMovilWhatsApp);
+
+                dialogoEditMovilWhatsApp.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(getContext(), inputMovilWhatsApp.getText().toString(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+                dialogoEditMovilWhatsApp.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                AlertDialog editarMovilWhatsApp = dialogoEditMovilWhatsApp.create();
+                editarMovilWhatsApp.show();
+                break;
             case R.id.texViewInformacion:
                 Intent i = new Intent(getActivity(), EditInformacion.class);
                 i.putExtra("informacion", informacionEdit.getText().toString());
@@ -188,7 +276,6 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                 startActivity(direccionIntent);
                 break;
             case R.id.foto_perfil:
-
                 Intent imagenFu = new Intent(getActivity(), FulImagen.class);
                 startActivity(imagenFu);
             default:
@@ -220,6 +307,11 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                     informacionEdit.setText(jsonObject.getString("informaciondescripcion"));
                     contactosEdit.setText(jsonObject.getString("descripcioncontactos"));
                     direccionEdit.setText(jsonObject.getString("direcciondescripcion"));
+                    movil1.setText(jsonObject.getString("numtelefono"));
+                    movil2.setText(jsonObject.getString("numtelefonodos"));
+                    movilWhatsApp.setText(jsonObject.getString("numwhatsapp'"));
+                    linkFacebook.setText(jsonObject.getString("linkfacebook"));
+
                 }
 
             }

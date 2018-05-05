@@ -18,7 +18,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Interpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -35,6 +37,7 @@ public class CuentaUsuario extends AppCompatActivity {
 
     ImageView imageViewCerrarSesion;
     FloatingActionButton fab;
+    boolean click = false;
 
     @Override
 
@@ -47,6 +50,16 @@ public class CuentaUsuario extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                click = !click;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    Interpolator interpolador = AnimationUtils.loadInterpolator(getBaseContext(),
+                            android.R.interpolator.fast_out_slow_in);
+
+                    view.animate()
+                            .rotation(click ? 360f : 0)
+                            .setInterpolator(interpolador)
+                            .start();
+                }
                 Toast.makeText(CuentaUsuario.this, "Lista para publicar", Toast.LENGTH_SHORT).show();
             }
         });
