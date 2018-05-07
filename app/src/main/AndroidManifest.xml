@@ -59,10 +59,17 @@
         <activity
             android:name=".ImagenFull.FulImagen"
             android:label="Foto de Perfil"
-            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity android:name=".CuentaUsuarioArchivos.EditInformacion" />
+        <activity
+            android:name=".CuentaUsuarioArchivos.Publicar"
+            android:configChanges="screenSize|orientation"
+            android:label="@string/title_activity_login"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".CuentaUsuarioArchivos.EditContactos" />
-        <activity android:name=".CuentaUsuarioArchivos.EditDireccion"></activity>
+        <activity android:name=".CuentaUsuarioArchivos.EditDireccion" />
+        <activity android:name=".CuentaUsuarioArchivos.EditUsuario"></activity>
     </application>
 
 </manifest>

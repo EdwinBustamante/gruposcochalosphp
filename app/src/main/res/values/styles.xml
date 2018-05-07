@@ -30,15 +30,19 @@
     </style>
 
 
-
-
-
-
     <style name="EditText" parent="AppTheme">
         <item name="android:colorControlNormal">@color/yello</item>
         <item name="android:colorControlActivated">@color/blanco</item>
     </style>
 
+    <style name="PublicarPublicacion" parent="AppTheme">
+        <item name="android:colorControlNormal">@color/negro</item>
+        <item name="android:colorControlActivated">@color/yello</item>
+    </style>
+    <style name="FloatingPublicaciones" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">17dp</item>
+    </style>
     <style name="FloatingLabel" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/blanco</item>
         <item name="android:textSize">17dp</item>

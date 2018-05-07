@@ -1,14 +1,10 @@
 package com.edwinbustamante.gruposcochalos.CuentaUsuarioArchivos;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -72,7 +68,7 @@ public class CuentaUsuario extends AppCompatActivity {
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-               // Toast.makeText(CuentaUsuario.this, "" + tab.getPosition(), Toast.LENGTH_SHORT).show();
+                // Toast.makeText(CuentaUsuario.this, "" + tab.getPosition(), Toast.LENGTH_SHORT).show();
                 if (tab.getPosition() != 0) {
                     fab.show();//aparecer
                     viewPager.setCurrentItem(tab.getPosition());
@@ -112,7 +108,6 @@ public class CuentaUsuario extends AppCompatActivity {
                 builder.create().show();
             }
         });
-
         /*Glide.with(CuentaUsuario.this)
                 .load(imageUrl)
                 .fitCenter()
@@ -155,7 +150,6 @@ public class CuentaUsuario extends AppCompatActivity {
                 expand.setDuration(100);     // animation duration in milliseconds
                 expand.setInterpolator(new AccelerateInterpolator());
                 fab.startAnimation(expand);
-
             }
 
             @Override
@@ -170,8 +164,6 @@ public class CuentaUsuario extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
-
-
 }
 
 /*
@@ -211,8 +203,10 @@ class MyPagerAdapter extends FragmentStatePagerAdapter {
         switch (position) {
             case 0:
                 return "INFORMACIÓN";
+
             case 1:
                 return "PUBLICACIONES";
+            default:
         }
         return null;
     }

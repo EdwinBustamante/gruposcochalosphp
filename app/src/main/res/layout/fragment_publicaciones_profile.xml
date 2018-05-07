@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.edwinbustamante.gruposcochalos.CuentaUsuarioArchivos.InformacionProfileFragment">
+    android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/buttonPublicar"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/ic_camara_de_fotos"
-        android:text="Publicar" />
+        android:layout_height="match_parent">
 
 
-</android.support.design.widget.CoordinatorLayout>
+        <Button
+            android:id="@+id/buttonPublicar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Publicar" />
+    </RelativeLayout>
+</ScrollView>

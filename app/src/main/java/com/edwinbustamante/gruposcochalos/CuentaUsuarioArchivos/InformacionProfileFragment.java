@@ -48,7 +48,7 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
     private ProgressDialog progressDialogFotoSubir;
     private Toolbar toolbar;
     private ImageView cuenta_perfil;
-    private TextView nombreGrupo, generoMusica, movil1, movil2, movilWhatsApp, linkFacebook;
+    private TextView usuario, nombreGrupo, generoMusica, movil1, movil2, movilWhatsApp, linkFacebook;
     private TextView informacionEdit, contactosEdit, direccionEdit;
     String FileName = "myUserId";
 
@@ -80,7 +80,8 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
         fotoPerfil = (ImageView) vista.findViewById(R.id.foto_perfil);
         fotoPerfil.setOnClickListener(this);
         //progressDialogFotoSubir = new ProgressDialog(this);
-
+        usuario = (TextView) vista.findViewById(R.id.usuario);
+        usuario.setOnClickListener(this);
         nombreGrupo = (TextView) vista.findViewById(R.id.nombregrupo);
         String defaultValue = "DefaultName";
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(FileName, Context.MODE_PRIVATE);
@@ -98,7 +99,7 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
         movilWhatsApp = (TextView) vista.findViewById(R.id.texViewMovilWhatsApp);
         movilWhatsApp.setOnClickListener(this);
         linkFacebook = (TextView) vista.findViewById(R.id.texViewLinkFacebook);
-       // linkFacebook.setOnClickListener(this);
+        // linkFacebook.setOnClickListener(this);
 
         contactosEdit = (TextView) vista.findViewById(R.id.texViewContactos);
         contactosEdit.setOnClickListener(this);
@@ -118,7 +119,7 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
     }
 
     private void actualizarDatosUsuario() {
-        String url = "http://192.168.1.11/gruposcochalos/traerdatosusuario.php?idusuario=" + idUsuarioInput;
+        String url = "http://192.168.43.219/gruposcochalos/traerdatosusuario.php?idusuario=" + idUsuarioInput;
         jrq = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
         rq.add(jrq);
 
@@ -127,6 +128,11 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.usuario:
+                Intent usuarioIntent = new Intent(getActivity(), EditUsuario.class);
+                usuarioIntent.putExtra("usuario", usuario.getText().toString());
+                startActivity(usuarioIntent);
+                break;
             case R.id.nombregrupo:
                 /*
                 ALERT DIALOG QUE SE LANZA PARA CAMBIAR EL NOMBRE DEL GRUPO MUSICAL

@@ -38,6 +38,14 @@
             android:background="@drawable/my_profile_anim"
             android:elevation="4dp"
             android:paddingBottom="15dp">
+            <TextView
+                android:id="@+id/usuario"
+                android:textColor="@color/colorPrimary"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="usuario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/nombregrupo"
@@ -81,6 +89,7 @@
             android:layout_below="@+id/profile_layout"
             android:layout_marginBottom="50dp"
             android:layout_marginTop="0dp"
+            android:background="@drawable/fondo_publicaciones"
             android:orientation="vertical">
 
 

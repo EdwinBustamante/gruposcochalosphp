@@ -26,6 +26,9 @@
     <color name="informacion">#649bec9f</color>
     <color name="contactos">#64d0e608</color>
     <color name="direccion">#64d96466</color>
+    <color name="publicar">#FF208098</color>
+    <color name="cardview_color_publicaciones">#FFFDFFCE</color>
+    <color name="fondo_editTex_Publicar">#FFADD7C9</color>
 
 
 </resources>
