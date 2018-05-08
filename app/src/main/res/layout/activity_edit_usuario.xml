@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context="com.edwinbustamante.gruposcochalos.CuentaUsuarioArchivos.EditUsuario">
 
     <android.support.design.widget.AppBarLayout
@@ -23,19 +24,36 @@
 
     </android.support.design.widget.AppBarLayout>
 
-
-    <EditText
-        android:id="@+id/editTextContraseniaEdit"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/bar"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:maxLength="150"
-        android:layout_marginTop="0dp"
-        android:overScrollMode="always"
-        android:scrollbarStyle="insideInset"
-        android:scrollbars="vertical" />
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:text="Usuario" />
+
+        <EditText
+            android:id="@+id/editContraseniaAntigua"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nombre de grupo musical"
+            android:maxLength="50"
+            android:maxLines="1"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/editContraseniaNueva"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nombre de grupo musical"
+            android:maxLength="50"
+            android:maxLines="1"
+            android:singleLine="true" />
+
+    </LinearLayout>
 
 
-</RelativeLayout>
+</LinearLayout>

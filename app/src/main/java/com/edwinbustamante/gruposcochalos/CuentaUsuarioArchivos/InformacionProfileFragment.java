@@ -71,11 +71,11 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
         View vista = inflater.inflate(R.layout.fragment_informacion_profile, container, false);
         rq = Volley.newRequestQueue(getActivity());
         //ANIMACION DEL FONDO
-        //  linearLayoutanimacion = (RelativeLayout) findViewById(R.id.profile_layout);
-        // animacion = (AnimationDrawable) linearLayoutanimacion.getBackground();
-        //animacion.setEnterFadeDuration(4500);
-        //animacion.setExitFadeDuration(4500);
-        //animacion.start();
+        linearLayoutanimacion = (RelativeLayout) vista.findViewById(R.id.profile_layout);
+        animacion = (AnimationDrawable) linearLayoutanimacion.getBackground();
+        animacion.setEnterFadeDuration(4500);
+        animacion.setExitFadeDuration(4500);
+        animacion.start();
 
         fotoPerfil = (ImageView) vista.findViewById(R.id.foto_perfil);
         fotoPerfil.setOnClickListener(this);

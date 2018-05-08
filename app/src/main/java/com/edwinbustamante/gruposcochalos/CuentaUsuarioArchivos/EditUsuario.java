@@ -25,7 +25,7 @@ public class EditUsuario extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
-        editTextContraseniaEdit = (EditText) findViewById(R.id.editTextContraseniaEdit);
+        editTextContraseniaEdit = (EditText) findViewById(R.id.editContraseniaAntigua);
         editTextContraseniaEdit.setText(textoInformacion.getString("usuario"));
         editTextContraseniaEdit.setSelection(textoInformacion.getString("usuario").toString().length());
 
