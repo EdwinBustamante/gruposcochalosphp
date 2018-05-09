@@ -26,32 +26,39 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:background="@color/cardview_color_publicaciones"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
-            android:text="Usuario" />
+            android:layout_margin="20dp"
+            android:text="Usuario"
+            android:textSize="19sp" />
 
         <EditText
             android:id="@+id/editContraseniaAntigua"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nombre de grupo musical"
+            android:layout_margin="20dp"
+            android:hint="Introduzca la contrasena antigua"
             android:maxLength="50"
             android:maxLines="1"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textSize="19sp" />
 
         <EditText
             android:id="@+id/editContraseniaNueva"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nombre de grupo musical"
+            android:layout_margin="20dp"
+            android:hint="Introduzca la contraseña nueva"
             android:maxLength="50"
             android:maxLines="1"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textSize="19sp" />
 
     </LinearLayout>
 

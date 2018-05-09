@@ -76,6 +76,7 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener 
         imageViewPublicacionPrevio = (ImageView) findViewById(R.id.imageViewPublicacionPrevio);
         imageViewPublicacionPrevio = (ImageView) findViewById(R.id.imageViewPublicacionPrevio);
         mAttacher = new PhotoViewAttacher(imageViewPublicacionPrevio);
+
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);

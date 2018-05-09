@@ -32,6 +32,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
 import com.edwinbustamante.gruposcochalos.ImagenFull.FulImagen;
+import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
 import com.edwinbustamante.gruposcochalos.R;
 
 import org.json.JSONArray;
@@ -41,6 +42,7 @@ import org.json.JSONObject;
 
 public class InformacionProfileFragment extends Fragment implements View.OnClickListener, Response.ErrorListener, Response.Listener<JSONObject> {
 
+    private String idGrupoMusical = "";
     // UI references. animacion
     RelativeLayout linearLayoutanimacion;
     AnimationDrawable animacion;
@@ -68,6 +70,7 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
         View vista = inflater.inflate(R.layout.fragment_informacion_profile, container, false);
         rq = Volley.newRequestQueue(getActivity());
         //ANIMACION DEL FONDO
@@ -86,7 +89,7 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
         String defaultValue = "DefaultName";
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(FileName, Context.MODE_PRIVATE);
         idUsuarioInput = sharedPreferences.getString("idusuario", defaultValue);
-        Toast.makeText(getContext(), idUsuarioInput, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), idUsuarioInput, Toast.LENGTH_SHORT).show();
         nombreGrupo.setOnClickListener(this);
         generoMusica = (TextView) vista.findViewById(R.id.texgeneroMusica);
         generoMusica.setOnClickListener(this);
@@ -114,12 +117,15 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
         //generoMusica.setOnClickListener(this);
         // cuenta_perfil.setOnClickListener(this);
         // Inflate the layout for this fragment
-        actualizarDatosUsuario();
+        String urlActualizacionTraerDatos = Constantes.IP_SERVIDOR + "gruposcochalos/traerdatosusuario.php?idusuario=" + idUsuarioInput;
+        actualizarDatosUsuario(urlActualizacionTraerDatos);
+
         return vista;
     }
 
-    private void actualizarDatosUsuario() {
-        String url = "http://192.168.43.219/gruposcochalos/traerdatosusuario.php?idusuario=" + idUsuarioInput;
+    private void actualizarDatosUsuario(String urls) {
+        String url = urls;
+        url = url.replace(" ", "%20");
         jrq = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
         rq.add(jrq);
 
@@ -149,9 +155,12 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                 dialogoEditNombre.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        //Agarramos el id del usuario siempre verificando que este logueado y cambiamos su atributo de nombre agarrando de los cambios
-                        Toast.makeText(getContext(), input.getText().toString(), Toast.LENGTH_SHORT).show();
-
+                        String defaultValue = "DefaultName";
+                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
+                        String idGrupoMusical = sharedPreferences.getString("idgrupomusical", defaultValue);
+                        String urlActualizacionNombre = Constantes.IP_SERVIDOR + "gruposcochalos/actualizarinformacion/actualizarnombre.php?idgrupomusical=" + idGrupoMusical + "&nombre=" + input.getText().toString();
+                        actualizarDatosUsuario(urlActualizacionNombre);
+                       // Toast.makeText(getContext(), input.getText().toString(), Toast.LENGTH_SHORT).show();
                     }
                 });
                 dialogoEditNombre.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -176,7 +185,11 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                 dialogoEditGenero.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(getContext(), inputGenero.getText().toString(), Toast.LENGTH_SHORT).show();
+                        String defaultValue = "DefaultName";
+                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
+                        String idGrupoMusical = sharedPreferences.getString("idgrupomusical", defaultValue);
+                        String urlActualizacionNombre = Constantes.IP_SERVIDOR + "gruposcochalos/actualizarinformacion/actualizargenero.php?idgrupomusical=" + idGrupoMusical + "&genero=" + inputGenero.getText().toString();
+                        actualizarDatosUsuario(urlActualizacionNombre);
                     }
                 });
                 dialogoEditGenero.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -202,7 +215,13 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                 dialogoEditMovil1.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(getContext(), inputMovil1.getText().toString(), Toast.LENGTH_SHORT).show();
+                        String defaultValue = "DefaultName";
+                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
+                        String idGrupoMusical = sharedPreferences.getString("idgrupomusical", defaultValue);
+                        String urlActualizacionMovil2 = Constantes.IP_SERVIDOR + "gruposcochalos/actualizarinformacion/actualizarnumtelefono.php?idgrupomusical=" + idGrupoMusical + "&numtelefono=" + inputMovil1.getText().toString();
+                        actualizarDatosUsuario(urlActualizacionMovil2);
+
+                 //       Toast.makeText(getContext(), inputMovil1.getText().toString(), Toast.LENGTH_SHORT).show();
                     }
                 });
                 dialogoEditMovil1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -228,7 +247,13 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                 dialogoEditMovil2.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(getContext(), inputMovil2.getText().toString(), Toast.LENGTH_SHORT).show();
+                        String defaultValue = "DefaultName";
+                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
+                        String idGrupoMusical = sharedPreferences.getString("idgrupomusical", defaultValue);
+                        String urlActualizacionMovil2 = Constantes.IP_SERVIDOR + "gruposcochalos/actualizarinformacion/actualizarnumtelefonodos.php?idgrupomusical=" + idGrupoMusical + "&numtelefonodos=" + inputMovil2.getText().toString();
+                        actualizarDatosUsuario(urlActualizacionMovil2);
+
+                        //Toast.makeText(getContext(), inputMovil2.getText().toString(), Toast.LENGTH_SHORT).show();
                     }
                 });
                 dialogoEditMovil2.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -245,8 +270,8 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                 AlertDialog.Builder dialogoEditMovilWhatsApp = new AlertDialog.Builder(getContext());
                 dialogoEditMovilWhatsApp.setTitle("Desea cambiar el número de movil para WhatsApp?");
                 inputMovilWhatsApp = new EditText(getContext());
-                inputMovilWhatsApp.setText(movil2.getText().toString());
-                inputMovilWhatsApp.setSelection(movil2.getText().toString().length());
+                inputMovilWhatsApp.setText(movilWhatsApp.getText().toString());
+                inputMovilWhatsApp.setSelection(movilWhatsApp.getText().toString().length());
                 inputMovilWhatsApp.setFilters(new InputFilter[]{new InputFilter.LengthFilter(9)});//maximo de caracterres
                 inputMovilWhatsApp.setRawInputType(InputType.TYPE_CLASS_NUMBER);
                 dialogoEditMovilWhatsApp.setView(inputMovilWhatsApp);
@@ -254,7 +279,7 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                 dialogoEditMovilWhatsApp.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(getContext(), inputMovilWhatsApp.getText().toString(), Toast.LENGTH_SHORT).show();
+                          //Toast.makeText(getContext(), inputMovilWhatsApp.getText().toString(), Toast.LENGTH_SHORT).show();
                     }
                 });
                 dialogoEditMovilWhatsApp.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -307,7 +332,8 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                 if (jsonObject.getString("idgrupomusical").equals("error en la consulta")) {
                     Toast.makeText(getContext(), "Fallo al actualizar los datos intenete nuevamente", Toast.LENGTH_SHORT).show();
                 } else {
-
+                    /// idGrupoMusical = jsonObject.getString("idgrupomusical");
+                    guardarIdGrupoMusical(jsonObject.optString("idgrupomusical"));//guardando en SharePreference
                     nombreGrupo.setText(jsonObject.getString("nombre"));
                     generoMusica.setText(jsonObject.getString("genero"));
                     informacionEdit.setText(jsonObject.getString("informaciondescripcion"));
@@ -325,5 +351,17 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    /*
+    *BASE DE DATOS SHAREPREFRENCE PARA GUARDAR EN USUARIO
+     */
+    String FileNameGrupo = "IdGrupo";
+
+    private void guardarIdGrupoMusical(String idgrupomusical) {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("idgrupomusical", idgrupomusical);
+        editor.commit();
     }
 }
