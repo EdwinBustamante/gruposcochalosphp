@@ -279,6 +279,11 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                 dialogoEditMovilWhatsApp.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        String defaultValue = "DefaultName";
+                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
+                        String idGrupoMusical = sharedPreferences.getString("idgrupomusical", defaultValue);
+                        String urlActualizacionWhatsApp = Constantes.IP_SERVIDOR + "gruposcochalos/actualizarinformacion/actualizarnumwhatsapp.php?idgrupomusical=" + idGrupoMusical + "&numwhatsapp=" + inputMovilWhatsApp.getText().toString();
+                        actualizarDatosUsuario(urlActualizacionWhatsApp);
                           //Toast.makeText(getContext(), inputMovilWhatsApp.getText().toString(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -341,7 +346,7 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                     direccionEdit.setText(jsonObject.getString("direcciondescripcion"));
                     movil1.setText(jsonObject.getString("numtelefono"));
                     movil2.setText(jsonObject.getString("numtelefonodos"));
-                    movilWhatsApp.setText(jsonObject.getString("numwhatsapp'"));
+                    movilWhatsApp.setText(jsonObject.getString("numwhatsapp"));
                     linkFacebook.setText(jsonObject.getString("linkfacebook"));
 
                 }

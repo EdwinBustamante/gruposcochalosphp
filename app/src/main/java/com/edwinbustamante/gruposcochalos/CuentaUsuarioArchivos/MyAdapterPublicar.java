@@ -72,14 +72,16 @@ public class MyAdapterPublicar extends RecyclerView.Adapter<MyAdapterPublicar.Vi
             fechaPublicacion = (TextView) itemView.findViewById(R.id.fechaPublicacion);
             descripcionPublicacion = (TextView) itemView.findViewById(R.id.textViewDescripcionPublicacion);
             fotoPublicacion = (ImageView) itemView.findViewById(R.id.imageViewPublicacion);
-           /* Display display = getWindowManager().getDefaultDisplay();
+           /*
+            Display display = getWindowManager().getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);
             int width = size.x;
             int height = size.y;
             fotoPublicacion.setMaxHeight(height);
             fotoPublicacion.setMaxWidth(width);
-        */
+
+         */
         }
 
 

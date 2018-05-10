@@ -56,6 +56,8 @@ public class CuentaUsuario extends AppCompatActivity {
                             .setInterpolator(interpolador)
                             .start();
                 }
+                Intent intent = new Intent(view.getContext(), Publicar.class);
+                startActivity(intent);
                 Toast.makeText(CuentaUsuario.this, "Lista para publicar", Toast.LENGTH_SHORT).show();
             }
         });
@@ -95,7 +97,8 @@ public class CuentaUsuario extends AppCompatActivity {
         imageViewCerrarSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                 builder.setCancelable(true);
                 builder.setTitle("Grupos Cochalos");
                 builder.setMessage("Desea cerrar sesion");
