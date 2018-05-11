@@ -12,7 +12,7 @@
 
     <item
         android:id="@+id/ingresar_al_sistema"
-        android:icon="@drawable/ic_person_outline"
+        android:icon="@drawable/ic_usuario_login"
         android:orderInCategory="115"
         android:title="Buscar"
         app:showAsAction="always|collapseActionView" />

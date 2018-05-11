@@ -127,7 +127,7 @@ public class CuentaUsuario extends AppCompatActivity {
      * ##############################################################################
      */
     int[] colorIntArray = {R.color.green, R.color.pink};
-    int[] iconIntArray = {R.drawable.ic_camara_de_fotos, R.drawable.ic_action_user};
+    int[] iconIntArray = {R.drawable.ic_camara_de_fotos, R.drawable.ic_publicar};
 
     protected void animateFab(final int position) {
         fab.clearAnimation();

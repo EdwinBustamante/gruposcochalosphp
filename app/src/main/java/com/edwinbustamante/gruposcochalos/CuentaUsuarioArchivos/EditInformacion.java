@@ -30,6 +30,7 @@ public class EditInformacion extends AppCompatActivity implements  Response.Erro
     String FileNameGrupo = "IdGrupo";
     RequestQueue rq;
     JsonRequest jrq;
+    private boolean exito=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +75,6 @@ public class EditInformacion extends AppCompatActivity implements  Response.Erro
                 String urlActualizacioninformacion = Constantes.IP_SERVIDOR + "gruposcochalos/actualizarinformacion/actualizarinformaciondescripcion.php?idgrupomusical=" + idGrupoMusical + "&informaciondescripcion=" + editTextInformacionEdit.getText().toString();
                 actualizarDatosUsuario(urlActualizacioninformacion);
 
-                Toast.makeText(this, editTextInformacionEdit.getText().toString(), Toast.LENGTH_SHORT).show();
 
                 break;
 
@@ -90,6 +90,7 @@ public class EditInformacion extends AppCompatActivity implements  Response.Erro
     private void actualizarDatosUsuario(String urls) {
         String url = urls;
         url = url.replace(" ", "%20");
+        url = url.replace("\n", "%20");
         jrq = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
         rq.add(jrq);
 
@@ -113,8 +114,18 @@ public class EditInformacion extends AppCompatActivity implements  Response.Erro
                     Toast.makeText(this, "Fallo al actualizar los datos intenete nuevamente", Toast.LENGTH_SHORT).show();
                 } else {
                     /// idGrupoMusical = jsonObject.getString("idgrupomusical");
+                    String defaultValue = "DefaultName";
+                    SharedPreferences sharedPreferences = getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
+                    String idGrupoMusical = sharedPreferences.getString("idgrupomusical", defaultValue);
 
-                    jsonObject.optString("idgrupomusical");//obteniendo resultado
+                   String idRespuesta= jsonObject.optString("idgrupomusical");//obteniendo resultado
+                    if (idGrupoMusical.equals(idRespuesta)){
+                        Toast.makeText(this, "Información actualizada exitosamente...", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }else {
+                        Toast.makeText(this, "Se produjo un error al actualizar la información, intente nuevamente", Toast.LENGTH_SHORT).show();
+                    }
+
 
 
                 }

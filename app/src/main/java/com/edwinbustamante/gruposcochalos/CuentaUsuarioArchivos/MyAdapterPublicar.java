@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.edwinbustamante.gruposcochalos.Objetos.Publicacion;
 import com.edwinbustamante.gruposcochalos.R;
@@ -60,7 +61,7 @@ public class MyAdapterPublicar extends RecyclerView.Adapter<MyAdapterPublicar.Vi
     /**
      * LA INER CLASE ESTA ABAJO QUE ENCARGA DE DIBUJAR
      */
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private ImageView fotoPerfilPublicacion, fotoPublicacion;
         private TextView nombreGrupoPublicacion, fechaPublicacion, descripcionPublicacion;
 
@@ -82,8 +83,14 @@ public class MyAdapterPublicar extends RecyclerView.Adapter<MyAdapterPublicar.Vi
             fotoPublicacion.setMaxWidth(width);
 
          */
+           itemView.setOnClickListener(this);// esto es a todo
+
         }
 
 
+        @Override
+        public void onClick(View view) {
+            Toast.makeText(view.getContext(), "se presiono", Toast.LENGTH_SHORT).show();
+        }
     }
 }

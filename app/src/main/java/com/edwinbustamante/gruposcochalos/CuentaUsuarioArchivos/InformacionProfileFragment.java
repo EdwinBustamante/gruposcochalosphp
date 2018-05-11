@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
@@ -65,6 +66,14 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
     }
 
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        String urlActualizacionTraerDatos = Constantes.IP_SERVIDOR + "gruposcochalos/traerdatosusuario.php?idusuario=" + idUsuarioInput;
+        actualizarDatosUsuario(urlActualizacionTraerDatos);
+    }
+
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -117,8 +126,7 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
         //generoMusica.setOnClickListener(this);
         // cuenta_perfil.setOnClickListener(this);
         // Inflate the layout for this fragment
-        String urlActualizacionTraerDatos = Constantes.IP_SERVIDOR + "gruposcochalos/traerdatosusuario.php?idusuario=" + idUsuarioInput;
-        actualizarDatosUsuario(urlActualizacionTraerDatos);
+
 
         return vista;
     }
@@ -160,7 +168,7 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                         String idGrupoMusical = sharedPreferences.getString("idgrupomusical", defaultValue);
                         String urlActualizacionNombre = Constantes.IP_SERVIDOR + "gruposcochalos/actualizarinformacion/actualizarnombre.php?idgrupomusical=" + idGrupoMusical + "&nombre=" + input.getText().toString();
                         actualizarDatosUsuario(urlActualizacionNombre);
-                       // Toast.makeText(getContext(), input.getText().toString(), Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(getContext(), input.getText().toString(), Toast.LENGTH_SHORT).show();
                     }
                 });
                 dialogoEditNombre.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -221,7 +229,7 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                         String urlActualizacionMovil2 = Constantes.IP_SERVIDOR + "gruposcochalos/actualizarinformacion/actualizarnumtelefono.php?idgrupomusical=" + idGrupoMusical + "&numtelefono=" + inputMovil1.getText().toString();
                         actualizarDatosUsuario(urlActualizacionMovil2);
 
-                 //       Toast.makeText(getContext(), inputMovil1.getText().toString(), Toast.LENGTH_SHORT).show();
+                        //       Toast.makeText(getContext(), inputMovil1.getText().toString(), Toast.LENGTH_SHORT).show();
                     }
                 });
                 dialogoEditMovil1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -284,7 +292,7 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                         String idGrupoMusical = sharedPreferences.getString("idgrupomusical", defaultValue);
                         String urlActualizacionWhatsApp = Constantes.IP_SERVIDOR + "gruposcochalos/actualizarinformacion/actualizarnumwhatsapp.php?idgrupomusical=" + idGrupoMusical + "&numwhatsapp=" + inputMovilWhatsApp.getText().toString();
                         actualizarDatosUsuario(urlActualizacionWhatsApp);
-                          //Toast.makeText(getContext(), inputMovilWhatsApp.getText().toString(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), inputMovilWhatsApp.getText().toString(), Toast.LENGTH_SHORT).show();
                     }
                 });
                 dialogoEditMovilWhatsApp.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
