@@ -5,6 +5,6 @@ package com.edwinbustamante.gruposcochalos.Objetos;
  */
 
 public class Constantes {
-    final public static String IP_SERVIDOR="http://192.168.1.35/";
+    final public static String IP_SERVIDOR="http://192.168.43.219/";
 
 }

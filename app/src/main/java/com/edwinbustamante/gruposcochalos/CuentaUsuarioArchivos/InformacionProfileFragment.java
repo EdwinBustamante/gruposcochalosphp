@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -32,9 +33,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.edwinbustamante.gruposcochalos.ImagenFull.FulImagen;
 import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
 import com.edwinbustamante.gruposcochalos.R;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,13 +53,14 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
     private int CAMERA_REQUEST_CODE = 0;
     private ProgressDialog progressDialogFotoSubir;
     private Toolbar toolbar;
-    private ImageView cuenta_perfil;
+    private ImageView foto_perfil, foto_portada;
     private TextView usuario, nombreGrupo, generoMusica, movil1, movil2, movilWhatsApp, linkFacebook;
     private TextView informacionEdit, contactosEdit, direccionEdit;
+    private ImageView imageViewMovil1, imageViewMovil2, imageViewMovilWhasapp;
     String FileName = "myUserId";
 
     private LinearLayout editMainCuenta;
-    private ImageView fotoPerfil;
+
     RequestQueue rq;
     JsonRequest jrq;
     String idUsuarioInput;
@@ -88,9 +92,9 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
         animacion.setEnterFadeDuration(4500);
         animacion.setExitFadeDuration(4500);
         animacion.start();
-
-        fotoPerfil = (ImageView) vista.findViewById(R.id.foto_perfil);
-        fotoPerfil.setOnClickListener(this);
+        foto_portada = (ImageView) vista.findViewById(R.id.header_cover_image);
+        foto_perfil = (ImageView) vista.findViewById(R.id.foto_perfil);
+        foto_perfil.setOnClickListener(this);
         //progressDialogFotoSubir = new ProgressDialog(this);
         usuario = (TextView) vista.findViewById(R.id.usuario);
         usuario.setOnClickListener(this);
@@ -117,6 +121,12 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
         contactosEdit.setOnClickListener(this);
         direccionEdit = (TextView) vista.findViewById(R.id.texViewDireccion);
         direccionEdit.setOnClickListener(this);
+        imageViewMovil1 = (ImageView) vista.findViewById(R.id.imageViewMovil1);
+        imageViewMovil1.setOnClickListener(this);
+        imageViewMovil2 = (ImageView) vista.findViewById(R.id.imageViewMovil2);
+        imageViewMovil2.setOnClickListener(this);
+        imageViewMovilWhasapp = (ImageView) vista.findViewById(R.id.imageViewMovilWhatsapp);
+        imageViewMovilWhasapp.setOnClickListener(this);
 
         //nombreGrupo.setText(USUARIO.getNombre());
         // generoMusica.setText(USUARIO.getGenero());
@@ -322,11 +332,29 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
             case R.id.foto_perfil:
                 Intent imagenFu = new Intent(getActivity(), FulImagen.class);
                 startActivity(imagenFu);
+                break;
+            case R.id.imageViewMovil1:
+                llamar(movil1.getText().toString());
+                break;
+            case R.id.imageViewMovil2:
+                llamar(movil2.getText().toString());
+                break;
+            case R.id.imageViewMovilWhatsapp:
+                break;
             default:
                 break;
         }
     }
 
+    public void llamar(String numero) {
+        Intent i = new Intent(Intent.ACTION_DIAL);
+        if (numero.trim().isEmpty()) {
+            i.setData(Uri.parse("tel:000000000"));
+        } else {
+            i.setData(Uri.parse("tel:" + numero));
+        }
+        startActivity(i);
+    }
 
     @Override
     public void onErrorResponse(VolleyError error) {
@@ -356,7 +384,15 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                     movil2.setText(jsonObject.getString("numtelefonodos"));
                     movilWhatsApp.setText(jsonObject.getString("numwhatsapp"));
                     linkFacebook.setText(jsonObject.getString("linkfacebook"));
+                    try {
+                        Toast.makeText(getContext(), jsonObject.getString("fotoperfil"), Toast.LENGTH_SHORT).show();
 
+                        Glide.with(getContext()).load(jsonObject.getString("fotoperfil")).centerCrop().into(foto_perfil);
+                        Glide.with(getContext()).load(jsonObject.getString("fotoperfil")).placeholder(R.drawable.ic_camara_de_fotos).centerCrop().into(foto_portada);
+
+                    } catch (Exception e) {
+
+                    }
                 }
 
             }

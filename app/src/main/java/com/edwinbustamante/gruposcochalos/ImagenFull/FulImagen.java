@@ -4,8 +4,10 @@ package com.edwinbustamante.gruposcochalos.ImagenFull;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -33,26 +35,24 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.edwinbustamante.gruposcochalos.Objetos.FirebaseReferences;
-import com.edwinbustamante.gruposcochalos.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
 
+import com.edwinbustamante.gruposcochalos.R;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.Base64;
+import java.util.Hashtable;
+import java.util.Map;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -70,6 +70,13 @@ public class FulImagen extends AppCompatActivity {
     private final int MY_PERMISSIONS = 100;
     private final int PHOTO_CODE = 100;
     private final int SELECT_PICTURE = 200;
+    String FileNameGrupo = "IdGrupo";
+    private String UPLOAD_URL = Constantes.IP_SERVIDOR + "gruposcochalos/actualizarinformacion/actualizarfotoperfil.php?";
+    private String KEY_IMAGEN = "fotoperfil";
+    private String KEY_NOMBRE = "nombre";
+    File fileImagen;
+    Bitmap bitmap;
+
     private ImageView iconoPerfil;
     private Button mOptionButton;
     private RelativeLayout mRlView;
@@ -81,6 +88,7 @@ public class FulImagen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_ful_imagen);
+
         Bundle textoDireccion = this.getIntent().getExtras();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Foto de Perfil");
@@ -125,6 +133,8 @@ public class FulImagen extends AppCompatActivity {
                 }
 
                 break;
+            case R.id.guardarperfil:
+                uploadImage();
             case android.R.id.home:
                 finish();
                 break;
@@ -134,6 +144,70 @@ public class FulImagen extends AppCompatActivity {
         }
         return true;
     }
+
+    public String getStringImagen(Bitmap bmp) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageBytes = baos.toByteArray();
+        String encodedImage = android.util.Base64.encodeToString(imageBytes, android.util.Base64.DEFAULT);
+        //Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        return encodedImage;
+    }
+
+    private void uploadImage() {
+        //Mostrar el diálogo de progreso
+        final ProgressDialog loading = ProgressDialog.show(this, "Subiendo...", "Espere por favor...", false, false);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, UPLOAD_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String s) {
+                        //Descartar el diálogo de progreso
+                        loading.dismiss();
+                        //Mostrando el mensaje de la respuesta
+                        Toast.makeText(FulImagen.this, s, Toast.LENGTH_LONG).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        //Descartar el diálogo de progreso
+                        loading.dismiss();
+
+                        //Showing toast
+                        Toast.makeText(FulImagen.this, volleyError.getMessage().toString(), Toast.LENGTH_LONG).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                //Convertir bits a cadena
+                String imagen = getStringImagen(bitmap);
+
+
+                String defaultValue = "DefaultName";
+                SharedPreferences sharedPreferences = getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
+                String idGrupoMusical = sharedPreferences.getString("idgrupomusical", defaultValue);
+                //Obtener el nombre de la imagen
+                String nombre = idGrupoMusical;
+
+                //Creación de parámetros
+                Map<String, String> params = new Hashtable<String, String>();
+
+                //Agregando de parámetros
+                params.put(KEY_IMAGEN, imagen);
+                params.put(KEY_NOMBRE, nombre);
+
+                //Parámetros de retorno
+                return params;
+            }
+        };
+
+        //Creación de una cola de solicitudes
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        //Agregar solicitud a la cola
+        requestQueue.add(stringRequest);
+    }
+
 
     private boolean mayRequestStoragePermission() {
 
@@ -170,6 +244,7 @@ public class FulImagen extends AppCompatActivity {
                 if (option[which] == "Tomar foto") {
                     openCamera();
                 } else if (option[which] == "Elegir de galeria") {
+
                     Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     intent.setType("image/*");
                     startActivityForResult(intent.createChooser(intent, "Selecciona app de imagen"), SELECT_PICTURE);
@@ -218,8 +293,7 @@ public class FulImagen extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case PHOTO_CODE:
-                    MediaScannerConnection.scanFile(this,
-                            new String[]{mPath}, null,
+                    MediaScannerConnection.scanFile(this, new String[]{mPath}, null,
                             new MediaScannerConnection.OnScanCompletedListener() {
                                 @Override
                                 public void onScanCompleted(String path, Uri uri) {
@@ -229,18 +303,24 @@ public class FulImagen extends AppCompatActivity {
                             });
 
 
-                    Bitmap bitmap = BitmapFactory.decodeFile(mPath);
+                    bitmap = BitmapFactory.decodeFile(mPath);
                     iconoPerfil.setImageBitmap(rotateImage(bitmap, 90));
                     break;
                 case SELECT_PICTURE:
 
-                    final ProgressDialog subiendoProgres = new ProgressDialog(FulImagen.this);
-                    subiendoProgres.setMessage("Subiendo foto....");
-                    subiendoProgres.show();
-                    final Uri uri = data.getData();
-
-                    iconoPerfil.setImageURI(uri);
-                    subiendoProgres.dismiss();
+                    // final ProgressDialog subiendoProgres = new ProgressDialog(FulImagen.this);
+                    // subiendoProgres.setMessage("Subiendo foto....");
+                    //subiendoProgres.show();
+                    Uri filePath = data.getData();
+                    try {
+                        //Cómo obtener el mapa de bits de la Galería
+                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                        //Configuración del mapa de bits en ImageView
+                        iconoPerfil.setImageBitmap(bitmap);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    //subiendoProgres.dismiss();
                     break;
 
             }
@@ -251,6 +331,7 @@ public class FulImagen extends AppCompatActivity {
         SecureRandom random = new SecureRandom();
         return new BigInteger(130, random).toString(32);
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
