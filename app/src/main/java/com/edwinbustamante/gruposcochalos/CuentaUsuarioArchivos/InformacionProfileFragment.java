@@ -37,6 +37,7 @@ import com.bumptech.glide.Glide;
 import com.edwinbustamante.gruposcochalos.ImagenFull.FulImagen;
 import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
 import com.edwinbustamante.gruposcochalos.R;
+import com.edwinbustamante.gruposcochalos.SubirFoto;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -330,7 +331,7 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                 startActivity(direccionIntent);
                 break;
             case R.id.foto_perfil:
-                Intent imagenFu = new Intent(getActivity(), FulImagen.class);
+                Intent imagenFu = new Intent(getActivity(), SubirFoto.class);
                 startActivity(imagenFu);
                 break;
             case R.id.imageViewMovil1:
@@ -386,9 +387,11 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                     linkFacebook.setText(jsonObject.getString("linkfacebook"));
                     try {
                         Toast.makeText(getContext(), jsonObject.getString("fotoperfil"), Toast.LENGTH_SHORT).show();
+                        if (!jsonObject.getString("fotoperfil").equals("null")){
+                            Glide.with(getContext()).load(jsonObject.getString("fotoperfil")).centerCrop().into(foto_perfil);
+                            Glide.with(getContext()).load(jsonObject.getString("fotoperfil")).placeholder(R.drawable.ic_camara_de_fotos).centerCrop().into(foto_portada);
+                        }
 
-                        Glide.with(getContext()).load(jsonObject.getString("fotoperfil")).centerCrop().into(foto_perfil);
-                        Glide.with(getContext()).load(jsonObject.getString("fotoperfil")).placeholder(R.drawable.ic_camara_de_fotos).centerCrop().into(foto_portada);
 
                     } catch (Exception e) {
 

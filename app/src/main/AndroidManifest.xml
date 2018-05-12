@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-   <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- permisos para internet -->
 
@@ -70,7 +70,8 @@
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".CuentaUsuarioArchivos.EditContactos" />
         <activity android:name=".CuentaUsuarioArchivos.EditDireccion" />
-        <activity android:name=".CuentaUsuarioArchivos.EditUsuario"></activity>
+        <activity android:name=".CuentaUsuarioArchivos.EditUsuario" />
+        <activity android:name=".SubirFoto"></activity>
     </application>
 
 </manifest>

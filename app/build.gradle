@@ -40,11 +40,16 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.firebaseui:firebase-ui-storage:0.6.0'
     compile 'com.android.volley:volley:1.0.0'
-       compile 'com.joooonho:selectableroundedimageview:1.0.1'
+    compile 'com.joooonho:selectableroundedimageview:1.0.1'
     compile 'com.getbase:floatingactionbutton:1.10.1'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
     implementation 'com.google.android.gms:play-services-maps:11.0.4'
+    compile 'com.loopj.android:android-async-http:1.4.9'
+    compile 'net.gotev:uploadservice:3.0'
+    compile 'net.gotev:uploadservice:2.1'
+    compile 'com.github.snowdream.android:smartimageview:0.0.2'
 }
+
 
 
 
