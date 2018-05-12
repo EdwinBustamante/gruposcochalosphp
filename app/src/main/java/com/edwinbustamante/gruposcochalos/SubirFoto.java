@@ -1,15 +1,21 @@
 package com.edwinbustamante.gruposcochalos;
 
-import android.app.ProgressDialog;
+
+import android.*;
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
+
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -20,138 +26,108 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.loopj.android.http.Base64;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.Hashtable;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Map;
 
-public class SubirFoto extends AppCompatActivity implements View.OnClickListener  {
 
-    private Button btnBuscar;
-    private Button btnSubir;
+public class SubirFoto extends AppCompatActivity {
 
-    private ImageView imageView;
-
-    private EditText editTextName;
-
-    private Bitmap bitmap;
-
-    private int PICK_IMAGE_REQUEST = 1;
-
-    private String UPLOAD_URL ="http://192.168.1.15/gruposcochalos/actualizarinformacion/actualizarfotoperfiphp";
-
-    private String KEY_IMAGEN = "foto";
-    private String KEY_NOMBRE = "nombre";
+    Button btnChoose, btnUpload;
+    ImageView imageUpload;
+    final int CODE_GALLERY_REQUEST = 999;
+    String urlUpload = "";
+    Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subir_foto);
-
-        btnBuscar = (Button) findViewById(R.id.btnBuscar);
-        btnSubir = (Button) findViewById(R.id.btnSubir);
-
-        editTextName = (EditText) findViewById(R.id.editText);
-
-        imageView  = (ImageView) findViewById(R.id.imageView);
-
-        btnBuscar.setOnClickListener(this);
-        btnSubir.setOnClickListener(this);
-    }
-
-    public String getStringImagen(Bitmap bmp){
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] imageBytes = baos.toByteArray();
-        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-        return encodedImage;
-    }
-
-    private void uploadImage(){
-        //Mostrar el diálogo de progreso
-        final ProgressDialog loading = ProgressDialog.show(this,"Subiendo...","Espere por favor...",false,false);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, UPLOAD_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String s) {
-                        //Descartar el diálogo de progreso
-                        loading.dismiss();
-                        //Mostrando el mensaje de la respuesta
-                        Toast.makeText(SubirFoto.this, s , Toast.LENGTH_LONG).show();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        //Descartar el diálogo de progreso
-                        loading.dismiss();
-
-                        //Showing toast
-                        Toast.makeText(SubirFoto.this, volleyError.getMessage().toString(), Toast.LENGTH_LONG).show();
-                    }
-                }){
+        btnChoose = (Button) findViewById(R.id.btnChoose);
+        btnUpload = (Button) findViewById(R.id.btnUpload);
+        imageUpload = (ImageView) findViewById(R.id.imageUpload);
+        btnChoose.setOnClickListener(new View.OnClickListener() {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                //Convertir bits a cadena
-                String imagen = getStringImagen(bitmap);
-
-                //Obtener el nombre de la imagen
-                String nombre = editTextName.getText().toString().trim();
-
-                //Creación de parámetros
-                Map<String,String> params = new Hashtable<String, String>();
-
-                //Agregando de parámetros
-                params.put(KEY_IMAGEN, imagen);
-                params.put(KEY_NOMBRE, nombre);
-
-                //Parámetros de retorno
-                return params;
+            public void onClick(View v) {
+                ActivityCompat.requestPermissions(
+                        SubirFoto.this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, CODE_GALLERY_REQUEST
+                );
             }
-        };
+        });
+        btnUpload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, urlUpload, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
 
-        //Creación de una cola de solicitudes
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
 
-        //Agregar solicitud a la cola
-        requestQueue.add(stringRequest);
+                    }
+                }) {
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<>();
+                        String imageData = imageToString(bitmap);//se encarga de convertir a cadena el metodo
+                        params.put("image", imageData);
+                        return params;
+                    }
+                };
+                RequestQueue requestQueue= Volley.newRequestQueue(SubirFoto.this);
+                requestQueue.add(stringRequest);
+            }
+        });
+
     }
 
-    private void showFileChooser() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Imagen"), PICK_IMAGE_REQUEST);
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == CODE_GALLERY_REQUEST) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(Intent.createChooser(intent, "Selecciona una imagen"), CODE_GALLERY_REQUEST);
+            } else {
+                Toast.makeText(this, "No tienes permisos para aceder a Galeria", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+        if (requestCode == CODE_GALLERY_REQUEST && resultCode == RESULT_OK && data != null) {
             Uri filePath = data.getData();
             try {
-                //Cómo obtener el mapa de bits de la Galería
-                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                //Configuración del mapa de bits en ImageView
-                imageView.setImageBitmap(bitmap);
-            } catch (IOException e) {
+                InputStream inputStream = getContentResolver().openInputStream(filePath);
+                bitmap = BitmapFactory.decodeStream(inputStream);
+                imageUpload.setImageBitmap(bitmap);
+            } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
+
+
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
-    @Override
-    public void onClick(View v) {
+    private String imageToString(Bitmap bitmap) {
 
-        if(v == btnBuscar){
-            showFileChooser();
-        }
-
-        if(v == btnSubir){
-            uploadImage();
-        }
+        //metodo que se encarga de convertir el bitmap  a string
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+        byte[] imageBytes = outputStream.toByteArray();
+        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        return encodedImage;
     }
 }

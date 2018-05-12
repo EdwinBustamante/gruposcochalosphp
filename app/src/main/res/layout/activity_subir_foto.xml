@@ -1,38 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".SubirFoto">
+    tools:context=".SubirFoto">
 
 
     <Button
+        android:id="@+id/btnChoose"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Elegir imagen"
-        android:id="@+id/btnBuscar" />
+        android:text="Elegir imagen" />
 
 
     <ImageView
+        android:id="@+id/imageUpload"
+        android:src="@drawable/portada"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:id="@+id/imageView" />
+        android:layout_weight="1" />
 
 
     <EditText
         android:id="@+id/editText"
-        android:hint="Ingresa un Nombre"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Subir Imagen"
-        android:id="@+id/btnSubir" />
+        android:hint="Ingresa un Nombre" />
+
+    <Button
+        android:id="@+id/btnUpload"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Subir Imagen" />
 
 
 </LinearLayout>
