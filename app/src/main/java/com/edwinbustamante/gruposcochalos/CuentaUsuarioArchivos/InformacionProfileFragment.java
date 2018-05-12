@@ -331,7 +331,9 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                 startActivity(direccionIntent);
                 break;
             case R.id.foto_perfil:
-                Intent imagenFu = new Intent(getActivity(), SubirFoto.class);
+
+                Intent imagenFu = new Intent(getActivity(), FulImagen.class);
+                //imagenFu.putExtra("foto", foto_perfil.getImageMatrix());
                 startActivity(imagenFu);
                 break;
             case R.id.imageViewMovil1:
