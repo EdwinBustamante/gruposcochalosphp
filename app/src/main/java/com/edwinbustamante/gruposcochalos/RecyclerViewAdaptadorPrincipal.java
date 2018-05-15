@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.edwinbustamante.gruposcochalos.Objetos.GrupoMusical;
+import com.edwinbustamante.gruposcochalos.domain.GrupoMusical;
 
 import java.util.List;
 
@@ -49,9 +49,9 @@ public class RecyclerViewAdaptadorPrincipal extends RecyclerView.Adapter<Recycle
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         //modificaciones del cntenido de cada item
-        holder.fotoPortada.setImageResource(gruposMusicalesLista.get(position).getUrlFotoPortada());
-        holder.nombreGrupo.setText(gruposMusicalesLista.get(position).getNombreGrupoMusical());
-        holder.tipoMusica.setText(gruposMusicalesLista.get(position).getTipoDeMusica());
+      //  holder.fotoPortada.setImageResource(gruposMusicalesLista.get(position).getFotoperil());
+        holder.nombreGrupo.setText(gruposMusicalesLista.get(position).getTrackName());
+        holder.tipoMusica.setText(gruposMusicalesLista.get(position).getCollectionName() );
 
     }
 

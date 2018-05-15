@@ -83,10 +83,10 @@ public class FulImagen extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
 
-        Intent i = getIntent();
-        int imgPortada = i.getExtras().getInt("foto");///recibiendo la imagen del fragmente anterior
+//        Intent i = getIntent();
+        //      int imgPortada = i.getExtras().getInt("foto");///recibiendo la imagen del fragmente anterior
         imageUpload = (ImageView) findViewById(R.id.imagenfull);
-        imageUpload.setImageResource(imgPortada);
+        //    imageUpload.setImageResource(imgPortada);
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -117,7 +117,8 @@ public class FulImagen extends AppCompatActivity {
 
                 break;
             case R.id.guardarperfil:
-                subirFoto();
+                    subirFoto();
+
                 break;
             case android.R.id.home:
                 finish();
@@ -190,7 +191,9 @@ public class FulImagen extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, urlUpload, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                String respuesta = response.toString();
                 Toast.makeText(FulImagen.this, response, Toast.LENGTH_SHORT).show();
+
             }
         }, new Response.ErrorListener() {
             @Override

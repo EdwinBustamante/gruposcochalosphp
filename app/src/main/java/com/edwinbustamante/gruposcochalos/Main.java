@@ -11,25 +11,26 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
-import com.edwinbustamante.gruposcochalos.Objetos.FirebaseReferences;
-import com.edwinbustamante.gruposcochalos.Objetos.GrupoMusical;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.edwinbustamante.gruposcochalos.domain.GrupoMusical;
+import com.edwinbustamante.gruposcochalos.domain.Resultado;
+import com.edwinbustamante.gruposcochalos.service.ItunesAPI;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class Main extends AppCompatActivity {
 
-    private RecyclerView recyclerViewGrupos;
+    List<GrupoMusical> grupoMusicales = new ArrayList<>();
     private RecyclerViewAdaptadorPrincipal recyclerViewAdaptadorPrincipal;
-
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference gruposCochalosRef = database.getReference(FirebaseReferences.GRUPOS_COCHALOS_REFERENCE);
+    private RecyclerView recyclerViewGrupos;
+    private RecyclerView.LayoutManager layoutManager;
     private String TAG;
 
 
@@ -38,23 +39,11 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        gruposCochalosRef.child(FirebaseReferences.GRUPO_MUSICAL_REFERENCE).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
         recyclerViewGrupos = (RecyclerView) findViewById(R.id.recyclerGrupos);
-        recyclerViewGrupos.setLayoutManager(new LinearLayoutManager(this));
+        layoutManager = new LinearLayoutManager(this);
+        recyclerViewGrupos.setLayoutManager(layoutManager);
 
-        recyclerViewAdaptadorPrincipal = new RecyclerViewAdaptadorPrincipal(obtenerGruposMusicales());
+        recyclerViewAdaptadorPrincipal = new RecyclerViewAdaptadorPrincipal(grupoMusicales);
         recyclerViewGrupos.setAdapter(recyclerViewAdaptadorPrincipal);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -68,30 +57,53 @@ public class Main extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        obtenerCanciones();
     }
 
-    public List<GrupoMusical> obtenerGruposMusicales() {
-        List<GrupoMusical> listagrupos = new ArrayList<>();
-        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
-        listagrupos.add(new GrupoMusical(R.drawable.portada, "BONANZA", "Cumbia Tropical"));
-        listagrupos.add(new GrupoMusical(R.drawable.portada, "PANDORA DE COLOMI", "Cumbia Tropical"));
-        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
-        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
-        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
-        listagrupos.add(new GrupoMusical(R.drawable.portada, "BONANZA", "Cumbia Tropical"));
-        listagrupos.add(new GrupoMusical(R.drawable.portada, "PANDORA DE COLOMI", "Cumbia Tropical"));
-        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
-        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
-        listagrupos.add(new GrupoMusical(R.drawable.portada, "BONANZA", "Cumbia Tropical"));
-        listagrupos.add(new GrupoMusical(R.drawable.portada, "PANDORA DE COLOMI", "Cumbia Tropical"));
-        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
-        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
-        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
-        listagrupos.add(new GrupoMusical(R.drawable.portada, "BONANZA", "Cumbia Tropical"));
-        listagrupos.add(new GrupoMusical(R.drawable.portada, "PANDORA DE COLOMI", "Cumbia Tropical"));
-        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
-        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
-        return listagrupos;
+    public void obtenerGruposMusicales() {
+//        List<GrupoMusical> listagrupos = new ArrayList<>();
+//        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
+//        listagrupos.add(new GrupoMusical(R.drawable.portada, "BONANZA", "Cumbia Tropical"));
+//        listagrupos.add(new GrupoMusical(R.drawable.portada, "PANDORA DE COLOMI", "Cumbia Tropical"));
+//        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
+//        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
+//        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
+//        listagrupos.add(new GrupoMusical(R.drawable.portada, "BONANZA", "Cumbia Tropical"));
+//        listagrupos.add(new GrupoMusical(R.drawable.portada, "PANDORA DE COLOMI", "Cumbia Tropical"));
+//        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
+//        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
+//        listagrupos.add(new GrupoMusical(R.drawable.portada, "BONANZA", "Cumbia Tropical"));
+//        listagrupos.add(new GrupoMusical(R.drawable.portada, "PANDORA DE COLOMI", "Cumbia Tropical"));
+//        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
+//        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
+//        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
+//        listagrupos.add(new GrupoMusical(R.drawable.portada, "BONANZA", "Cumbia Tropical"));
+//        listagrupos.add(new GrupoMusical(R.drawable.portada, "PANDORA DE COLOMI", "Cumbia Tropical"));
+//        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
+//        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
+//        return listagrupos;
+
+    }
+
+    private void obtenerCanciones() {
+        Call<Resultado> resultadoCall = ItunesAPI.getItunesService().getCanciones("beatles", "song");
+
+        resultadoCall.enqueue(new Callback<Resultado>() {
+            @Override
+            public void onResponse(Call<Resultado> call, Response<Resultado> response) {
+                Resultado body = response.body();
+                List<GrupoMusical> results = body.getResults();
+
+                grupoMusicales.addAll(results);
+                recyclerViewAdaptadorPrincipal.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<Resultado> call, Throwable t) {
+                Toast.makeText(Main.this, "Ha ocurrido un error", Toast.LENGTH_LONG).show();
+            }
+        });
 
     }
 
@@ -123,7 +135,5 @@ public class Main extends AppCompatActivity {
         return true;
     }
 
-    private void obtenerCanciones() {
-        private
-    }
+
 }
