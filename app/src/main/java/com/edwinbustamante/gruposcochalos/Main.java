@@ -112,7 +112,7 @@ public class Main extends AppCompatActivity {
 
             case R.id.ingresar_al_sistema:
 
-                Intent ingresar= new Intent(Main.this,LoginActivity.class);
+                Intent ingresar = new Intent(Main.this, LoginActivity.class);
                 startActivity(ingresar);
 
                 break;
@@ -121,5 +121,9 @@ public class Main extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    private void obtenerCanciones() {
+        private
     }
 }

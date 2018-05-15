@@ -48,6 +48,8 @@ dependencies {
     compile 'net.gotev:uploadservice:3.0'
     compile 'net.gotev:uploadservice:2.1'
     compile 'com.github.snowdream.android:smartimageview:0.0.2'
+    compile 'com.squareup.retrofit2:retrofit:2.4.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.4.0'
 }
 
 
