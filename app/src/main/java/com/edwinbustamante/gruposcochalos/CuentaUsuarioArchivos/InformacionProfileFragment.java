@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -43,6 +45,8 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.Serializable;
 
 
 public class InformacionProfileFragment extends Fragment implements View.OnClickListener, Response.ErrorListener, Response.Listener<JSONObject> {
@@ -333,6 +337,7 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
             case R.id.foto_perfil:
 
                 Intent imagenFu = new Intent(getActivity(), FulImagen.class);
+              ;
                 //imagenFu.putExtra("foto", foto_perfil.getImageMatrix());
                 startActivity(imagenFu);
                 break;
@@ -343,6 +348,18 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                 llamar(movil2.getText().toString());
                 break;
             case R.id.imageViewMovilWhatsapp:
+                try {
+                    // Intent launchIntent =getContext().getPackageManager().getLaunchIntentForPackage("com.whatsapp");
+                    //startActivity(launchIntent);
+
+                    Uri uri = Uri.parse("smsto:" + movilWhatsApp.getText().toString());
+                    Intent ir = new Intent(Intent.ACTION_SENDTO, uri);
+                    ir.setPackage("com.whatsapp");
+                    startActivity(ir);
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), "Por favor instale WhatsApp Oficial.." + e.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                }
+
                 break;
             default:
                 break;
@@ -389,9 +406,10 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                     linkFacebook.setText(jsonObject.getString("linkfacebook"));
                     try {
                         Toast.makeText(getContext(), jsonObject.getString("fotoperfil"), Toast.LENGTH_SHORT).show();
-                        if (!jsonObject.getString("fotoperfil").equals("null")){
-                            Glide.with(getContext()).load(jsonObject.getString("fotoperfil")).centerCrop().into(foto_perfil);
-                            Glide.with(getContext()).load(jsonObject.getString("fotoperfil")).placeholder(R.drawable.ic_camara_de_fotos).centerCrop().into(foto_portada);
+                        if (!jsonObject.getString("fotoperfil").equals("null")) {
+                            String urlImagen = jsonObject.getString("fotoperfil").toString();
+                            Glide.with(getContext()).load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagen).centerCrop().into(foto_perfil);
+                            Glide.with(getContext()).load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagen).placeholder(R.drawable.ic_camara_de_fotos).centerCrop().into(foto_portada);
                         }
 
 

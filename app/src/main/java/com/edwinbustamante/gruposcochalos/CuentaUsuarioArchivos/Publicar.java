@@ -33,6 +33,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.edwinbustamante.gruposcochalos.ImagenFull.FulImagen;
+import com.edwinbustamante.gruposcochalos.MapsActivityAdjuntarUbicacion;
 import com.edwinbustamante.gruposcochalos.R;
 
 import java.io.File;
@@ -128,7 +129,8 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener 
 
                 break;
             case R.id.imageViewAdjuntarUbicacionPublicacion:
-                Toast.makeText(this, "ubicacion adjuntar", Toast.LENGTH_SHORT).show();
+                 Intent adjuntar= new Intent(Publicar.this, MapsActivityAdjuntarUbicacion.class);
+                 startActivity(adjuntar);
                 break;
             default:
                 Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();

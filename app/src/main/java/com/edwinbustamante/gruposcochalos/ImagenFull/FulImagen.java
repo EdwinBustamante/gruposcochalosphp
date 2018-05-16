@@ -4,6 +4,7 @@ package com.edwinbustamante.gruposcochalos.ImagenFull;
 import android.Manifest;
 import android.app.AlertDialog;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -68,6 +69,7 @@ public class FulImagen extends AppCompatActivity {
     String urlUpload = Constantes.IP_SERVIDOR + "/gruposcochalos/actualizarfotoperfi.php?";
     Bitmap bitmap;
     String FileNameGrupo = "IdGrupo";
+    ProgressDialog cargarImagen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,8 +85,8 @@ public class FulImagen extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
 
-//        Intent i = getIntent();
-        //      int imgPortada = i.getExtras().getInt("foto");///recibiendo la imagen del fragmente anterior
+    // Intent i = getIntent();
+      //      int imgPortada = i.getExtras().getInt("foto");///recibiendo la imagen del fragmente anterior
         imageUpload = (ImageView) findViewById(R.id.imagenfull);
         //    imageUpload.setImageResource(imgPortada);
 
@@ -97,6 +99,7 @@ public class FulImagen extends AppCompatActivity {
         imageUpload.setMaxWidth(width);
         //hace que la imagen sea expansible
         mAttacher = new PhotoViewAttacher(imageUpload);
+        cargarImagen = new ProgressDialog(FulImagen.this);
 
 
     }
@@ -117,7 +120,8 @@ public class FulImagen extends AppCompatActivity {
 
                 break;
             case R.id.guardarperfil:
-                    subirFoto();
+                subirFoto();
+
 
                 break;
             case android.R.id.home:
@@ -188,9 +192,13 @@ public class FulImagen extends AppCompatActivity {
     }
 
     public void subirFoto() {
+        cargarImagen.setTitle("Grupos Cochalos");
+        cargarImagen.setMessage("Cambiando foto de perfil");
+        cargarImagen.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, urlUpload, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                cargarImagen.dismiss();
                 String respuesta = response.toString();
                 Toast.makeText(FulImagen.this, response, Toast.LENGTH_SHORT).show();
 
@@ -199,6 +207,7 @@ public class FulImagen extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(FulImagen.this, "error" + error.toString(), Toast.LENGTH_SHORT).show();
+                cargarImagen.dismiss();
             }
         }) {
             @Override
