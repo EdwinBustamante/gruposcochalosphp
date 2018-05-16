@@ -79,7 +79,7 @@
                     android:orientation="vertical">
 
                     <EditText
-                        android:id="@+id/editTextContraseniaEdit"
+                        android:id="@+id/editTextPublicacionPrevio"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/fondo_editTex_Publicar"

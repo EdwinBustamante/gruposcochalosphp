@@ -6,7 +6,7 @@
 
         android:id="@+id/guardarContrasenia"
         android:orderInCategory="100"
-        android:title="Guardar"
+        android:title="CAMBIAR"
         app:showAsAction="always|withText" />
 
 </menu>

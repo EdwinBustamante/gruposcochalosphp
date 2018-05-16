@@ -3,8 +3,10 @@ package com.edwinbustamante.gruposcochalos.CuentaUsuarioArchivos;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,6 +23,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
@@ -32,13 +35,26 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.edwinbustamante.gruposcochalos.ImagenFull.FulImagen;
 import com.edwinbustamante.gruposcochalos.MapsActivityAdjuntarUbicacion;
+import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
 import com.edwinbustamante.gruposcochalos.R;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.HashMap;
+import java.util.Map;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -47,7 +63,7 @@ import static android.Manifest.permission_group.CAMERA;
 
 public class Publicar extends AppCompatActivity implements View.OnClickListener {
     PhotoViewAttacher mAttacher;//Para hacer Zoom en el imagen
-    private EditText editTextPublicarEdit;
+    private EditText editTextPublicacionPrevio;
     private ImageView fotoAdjuntarPublicacion, ubicacionAdjuntarPublicacion, imageViewPublicacionPrevio;
     private final int MY_PERMISSIONS = 100;
     private RelativeLayout mRlView;
@@ -57,6 +73,10 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener 
     private final int PHOTO_CODE = 100;
     private final int SELECT_PICTURE = 200;
     private Button mOptionButton;
+    ProgressDialog cargarImagen;
+    Bitmap bitmap;
+    String FileNameGrupo = "IdGrupo";
+    String urlUpload = Constantes.IP_SERVIDOR + "/gruposcochalos/publicarpublicacion.php?";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +89,7 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
-
+        editTextPublicacionPrevio = (EditText) findViewById(R.id.editTextPublicacionPrevio);
         fotoAdjuntarPublicacion = (ImageView) findViewById(R.id.imageViewAdjuntarImagenPublicacion);
         fotoAdjuntarPublicacion.setOnClickListener(this);
         ubicacionAdjuntarPublicacion = (ImageView) findViewById(R.id.imageViewAdjuntarUbicacionPublicacion);
@@ -85,6 +105,8 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener 
         int height = size.y;
         imageViewPublicacionPrevio.setMaxHeight(height);
         imageViewPublicacionPrevio.setMaxWidth(width);
+        cargarImagen = new ProgressDialog(Publicar.this);
+
     }
 
 
@@ -105,6 +127,11 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener 
         switch (item.getItemId()) {
 
             case R.id.publicar:
+                if (editTextPublicacionPrevio.getText().toString().isEmpty()) {
+                    Toast.makeText(this, "Debes escribir una publicacion para poder publicar", Toast.LENGTH_SHORT).show();
+                } else {
+                    publicarPublicacion();
+                }
 
                 Toast.makeText(this, "lista para publicar", Toast.LENGTH_SHORT).show();
                 break;
@@ -129,8 +156,8 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener 
 
                 break;
             case R.id.imageViewAdjuntarUbicacionPublicacion:
-                 Intent adjuntar= new Intent(Publicar.this, MapsActivityAdjuntarUbicacion.class);
-                 startActivity(adjuntar);
+                Intent adjuntar = new Intent(Publicar.this, MapsActivityAdjuntarUbicacion.class);
+                startActivity(adjuntar);
                 break;
             default:
                 Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
@@ -173,9 +200,9 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener 
                 if (option[which] == "Tomar foto") {
                     openCamera();
                 } else if (option[which] == "Elegir de galeria") {
-                    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    Intent intent = new Intent(Intent.ACTION_PICK);
                     intent.setType("image/*");
-                    startActivityForResult(intent.createChooser(intent, "Selecciona app de imagen"), SELECT_PICTURE);
+                    startActivityForResult(Intent.createChooser(intent, "Selecciona una imagen"), SELECT_PICTURE);
                 } else {
                     dialog.dismiss();
                 }
@@ -232,20 +259,23 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener 
                             });
 
 
-                    Bitmap bitmap = BitmapFactory.decodeFile(mPath);
+                    bitmap = BitmapFactory.decodeFile(mPath);
                     imageViewPublicacionPrevio.setImageBitmap(rotateImage(bitmap, 90));
                     break;
                 case SELECT_PICTURE:
 
-                    final ProgressDialog subiendoProgres = new ProgressDialog(Publicar.this);
-                    subiendoProgres.setMessage("Añadiendo foto para vista previa....");
-                    subiendoProgres.show();
-                    final Uri uri = data.getData();
+                    if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK && data != null) {
+                        Uri filePath = data.getData();
+                        try {
+                            InputStream inputStream = getContentResolver().openInputStream(filePath);
+                            bitmap = BitmapFactory.decodeStream(inputStream);
+                            imageViewPublicacionPrevio.setImageBitmap(bitmap);
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        break;
 
-                    imageViewPublicacionPrevio.setImageURI(uri);
-                    subiendoProgres.dismiss();
-                    break;
-
+                    }
             }
         }
     }
@@ -301,5 +331,52 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener 
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
+    public void publicarPublicacion() {
+        cargarImagen.setTitle("Grupos Cochalos");
+        cargarImagen.setMessage("Publicando publicacion, espere un momento por favor...");
+        cargarImagen.show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, urlUpload, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                cargarImagen.dismiss();
+                String respuesta = response.toString();
+                Toast.makeText(Publicar.this, response, Toast.LENGTH_SHORT).show();
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(Publicar.this, "error" + error.toString(), Toast.LENGTH_SHORT).show();
+                cargarImagen.dismiss();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+
+                /// idGrupoMusical = jsonObject.getString("idgrupomusical");
+                String defaultValue = "DefaultName";
+                SharedPreferences sharedPreferences = getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
+                String idGrupoMusical = sharedPreferences.getString("idgrupomusical", defaultValue);
+                String imageData = imageToString(bitmap);//se encarga de convertir a cadena el metodo metodo to String
+                params.put("idgrupomusical", idGrupoMusical);
+                params.put("textopublicacion", editTextPublicacionPrevio.getText().toString());
+                params.put("image", imageData);//el nombre image es la clave para recibir en el php
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(Publicar.this);
+        requestQueue.add(stringRequest);
+    }
+
+    private String imageToString(Bitmap bitmap) {
+
+        //metodo que se encarga de convertir el bitmap  a string
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+        byte[] imageBytes = outputStream.toByteArray();
+        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        return encodedImage;
+    }
 
 }

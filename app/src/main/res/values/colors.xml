@@ -29,6 +29,8 @@
     <color name="publicar">#FF208098</color>
     <color name="cardview_color_publicaciones">#FFFDFFCE</color>
     <color name="fondo_editTex_Publicar">#FFADD7C9</color>
-
+    <color name="blue_300">#64B5F6</color>
+    <color name="teal_A700">#00BFA5</color>
+    <color name="grey_400">#BDBDBD</color>
 
 </resources>

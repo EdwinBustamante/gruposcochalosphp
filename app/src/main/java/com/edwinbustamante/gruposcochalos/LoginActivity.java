@@ -51,13 +51,20 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
     *BASE DE DATOS SHAREPREFRENCE PARA GUARDAR EN USUARIO
      */
     String FileName = "myUserId";
+    String FileNameUsuario = "usuario";
 
-    public void guardarUsuario(String idusername) {
+    public void guardarIdUsuario(String idusername) {
         SharedPreferences sharedPreferences = getSharedPreferences(FileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("idusuario", idusername);
         editor.commit();
+    }
 
+    public void guardarUsuario(String usuario) {
+        SharedPreferences sharedPreferences = getSharedPreferences(FileNameUsuario, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("usuario", usuario);
+        editor.commit();
     }
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +97,7 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
         if (!TextUtils.isEmpty(usuario) && !TextUtils.isEmpty(contrasenia)) {//compromamos que no este vacio
             mProgress.setMessage("Ingresando al sistema, espere un momento");
             mProgress.show();
-            String url = Constantes.IP_SERVIDOR+"gruposcochalos/sesion.php?usuario=" + in_usuario.getText().toString() + "&pwd=" + in_contrasenia.getText().toString();
+            String url = Constantes.IP_SERVIDOR + "gruposcochalos/sesion.php?usuario=" + in_usuario.getText().toString() + "&pwd=" + in_contrasenia.getText().toString();
             //String url = "http://192.168.1.11/gruposcochalos/sesion.php?user=" + correo + "$pwd=" + contrasenia;
             jrq = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
             rq.add(jrq);
@@ -139,7 +146,9 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
                         in_usuario.setError("Nombre de usuario incorrecto");
                         Toast.makeText(this, "Los datos estan incorrectos", Toast.LENGTH_SHORT).show();
                     } else {
-                        guardarUsuario(jsonObject.optString("idusuario"));//guardando en SharePreference
+                        guardarIdUsuario(jsonObject.optString("idusuario"));//guardando en SharePreference
+                        guardarUsuario(jsonObject.optString("usuario"));//guardando en SharePreference
+
                         Toast.makeText(this, "Se inicio correctamente", Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(LoginActivity.this, CuentaUsuario.class);
                         User usr = new User();

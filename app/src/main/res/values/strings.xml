@@ -25,6 +25,9 @@
     <string name="title_activity_edit_main_cuenta">Editar Perfil</string>
     <string name="title_activity_ful_imagen">FulImagen</string>
     <string name="title_activity_user_cuenta">UserCuenta</string>
+    <string name="mensaje_cambio_contracenia">En Grupos Cochalos nos tomamos muy en serio la seguridad de las cuentas.
+                                        Para proteger tu cuenta, te recomendamos que cambies periódicamente la contraseña de tu cuenta,
+        sobre todo si observas en tu cuenta cambios que no hayas hecho tú.</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 

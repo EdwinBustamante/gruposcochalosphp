@@ -17,15 +17,19 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Point;
 
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import android.util.Base64;
+import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,6 +54,7 @@ import com.edwinbustamante.gruposcochalos.SubirFoto;
 
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -66,10 +71,14 @@ public class FulImagen extends AppCompatActivity {
     Button btnChoose, btnUpload;
     ImageView imageUpload;
     final int CODE_GALLERY_REQUEST = 999;
+    final int CODE_CAMARA_REQUEST = 100;
     String urlUpload = Constantes.IP_SERVIDOR + "/gruposcochalos/actualizarfotoperfi.php?";
     Bitmap bitmap;
     String FileNameGrupo = "IdGrupo";
     ProgressDialog cargarImagen;
+    private String mPath;
+    private static String APP_DIRECTORY = "GruposCochalos/";
+    private static String MEDIA_DIRECTORY = APP_DIRECTORY + "GruposCochalosImages";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,8 +94,8 @@ public class FulImagen extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
 
-    // Intent i = getIntent();
-      //      int imgPortada = i.getExtras().getInt("foto");///recibiendo la imagen del fragmente anterior
+        // Intent i = getIntent();
+        //      int imgPortada = i.getExtras().getInt("foto");///recibiendo la imagen del fragmente anterior
         imageUpload = (ImageView) findViewById(R.id.imagenfull);
         //    imageUpload.setImageResource(imgPortada);
 
@@ -121,8 +130,6 @@ public class FulImagen extends AppCompatActivity {
                 break;
             case R.id.guardarperfil:
                 subirFoto();
-
-
                 break;
             case android.R.id.home:
                 finish();
@@ -143,6 +150,10 @@ public class FulImagen extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (option[which] == "Tomar foto") {
+                    ActivityCompat.requestPermissions(
+                            FulImagen.this,
+                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, CODE_CAMARA_REQUEST
+                    );
 
                 } else if (option[which] == "Elegir de galeria") {
                     ActivityCompat.requestPermissions(
@@ -170,8 +181,44 @@ public class FulImagen extends AppCompatActivity {
                 Toast.makeText(this, "No tienes permisos para aceder a Galeria", Toast.LENGTH_SHORT).show();
             }
             return;
+        } else {
+            if (requestCode == CODE_CAMARA_REQUEST) {
+
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    abrirCamara();
+                } else {
+                    Toast.makeText(this, "No tienes permisos para aceder a Camara", Toast.LENGTH_SHORT).show();
+
+                }
+
+            }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+
+    private void abrirCamara() {
+        Toast.makeText(this, "hola", Toast.LENGTH_SHORT).show();
+        File file = new File(Environment.getExternalStorageDirectory(), MEDIA_DIRECTORY);
+        boolean isDirectoryCreated = file.exists();
+
+        if (!isDirectoryCreated)
+            isDirectoryCreated = file.mkdirs();
+
+        if (isDirectoryCreated) {
+            Long timestamp = System.currentTimeMillis() / 1000;
+            String imageName = timestamp.toString() + ".jpg";
+
+            mPath = Environment.getExternalStorageDirectory() + File.separator + MEDIA_DIRECTORY
+                    + File.separator + imageName;
+
+            File newFile = new File(mPath);
+
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(newFile));
+            startActivityForResult(intent, CODE_CAMARA_REQUEST);
+        }
     }
 
     @Override
@@ -187,10 +234,30 @@ public class FulImagen extends AppCompatActivity {
             }
 
 
+        } else {
+            if (requestCode == CODE_CAMARA_REQUEST && resultCode == RESULT_OK ) {
+                MediaScannerConnection.scanFile(this,
+                        new String[]{mPath}, null,
+                        new MediaScannerConnection.OnScanCompletedListener() {
+                            @Override
+                            public void onScanCompleted(String path, Uri uri) {
+                                Log.i("ExternalStorage", "Scanned " + path + ":");
+                                Log.i("ExternalStorage", "-> Uri = " + uri);
+                            }
+                        });
+
+
+                bitmap = BitmapFactory.decodeFile(mPath);
+                imageUpload.setImageBitmap(bitmap);
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("file_path", mPath);
+    }
     public void subirFoto() {
         cargarImagen.setTitle("Grupos Cochalos");
         cargarImagen.setMessage("Cambiando foto de perfil");

@@ -47,5 +47,9 @@
         <item name="android:textColor">@color/blanco</item>
         <item name="android:textSize">17dp</item>
     </style>
+    <style name="FloatingLabelCambiar" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/yello</item>
+        <item name="android:textSize">17dp</item>
+    </style>
 
 </resources>

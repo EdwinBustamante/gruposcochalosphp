@@ -98,6 +98,7 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
         animacion.setExitFadeDuration(4500);
         animacion.start();
         foto_portada = (ImageView) vista.findViewById(R.id.header_cover_image);
+        foto_portada.setOnClickListener(this);
         foto_perfil = (ImageView) vista.findViewById(R.id.foto_perfil);
         foto_perfil.setOnClickListener(this);
         //progressDialogFotoSubir = new ProgressDialog(this);
@@ -337,10 +338,16 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
             case R.id.foto_perfil:
 
                 Intent imagenFu = new Intent(getActivity(), FulImagen.class);
-              ;
                 //imagenFu.putExtra("foto", foto_perfil.getImageMatrix());
                 startActivity(imagenFu);
                 break;
+            case R.id.header_cover_image:
+
+                Intent imagenPortada = new Intent(getActivity(), FulImagen.class);
+                //imagenFu.putExtra("foto", foto_perfil.getImageMatrix());
+                startActivity(imagenPortada);
+                break;
+
             case R.id.imageViewMovil1:
                 llamar(movil1.getText().toString());
                 break;
@@ -405,7 +412,7 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                     movilWhatsApp.setText(jsonObject.getString("numwhatsapp"));
                     linkFacebook.setText(jsonObject.getString("linkfacebook"));
                     try {
-                        Toast.makeText(getContext(), jsonObject.getString("fotoperfil"), Toast.LENGTH_SHORT).show();
+                        //  Toast.makeText(getContext(), jsonObject.getString("fotoperfil"), Toast.LENGTH_SHORT).show();
                         if (!jsonObject.getString("fotoperfil").equals("null")) {
                             String urlImagen = jsonObject.getString("fotoperfil").toString();
                             Glide.with(getContext()).load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagen).centerCrop().into(foto_perfil);
