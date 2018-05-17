@@ -10,7 +10,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public class ItunesAPI {
-    private static final String url = "https://itunes.apple.com";
+    private static final String url = "http://192.168.1.9/gruposcochalos/";
 
     public static ItunesService itunesService = null;
 
@@ -28,8 +28,8 @@ public class ItunesAPI {
     }
 
     public interface ItunesService {
-        @GET("/search")
-        Call<Resultado> getCanciones(@Query("term") String artista, @Query("entity") String tipo);
+        @GET("listargrupos.php")
+        Call<Resultado> getCanciones();
     }
 
 }

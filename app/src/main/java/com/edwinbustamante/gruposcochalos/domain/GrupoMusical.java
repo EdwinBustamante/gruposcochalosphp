@@ -4,7 +4,8 @@ package com.edwinbustamante.gruposcochalos.domain;
  * Created by Admin on 22/2/2018.
  */
 
-public class GrupoMusical {
+public class
+GrupoMusical {
     private String nombre;
     private String fotoperil;
     private String genero;

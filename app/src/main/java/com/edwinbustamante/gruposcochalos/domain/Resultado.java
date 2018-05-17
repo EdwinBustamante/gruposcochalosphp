@@ -9,14 +9,14 @@ import java.util.List;
 public class Resultado {
 
    // private String resultCount;
-    private List<GrupoMusical> results;
+    private List<GrupoMusical> listagrupos;
 
 //    public String getResultCount() {
 //        return resultCount;
 //    }
 
-    public List<GrupoMusical> getResults() {
-        return results;
 
+    public List<GrupoMusical> getListagrupos() {
+        return listagrupos;
     }
 }

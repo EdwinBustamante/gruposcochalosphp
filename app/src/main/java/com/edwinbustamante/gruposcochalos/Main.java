@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -87,13 +88,13 @@ public class Main extends AppCompatActivity {
     }
 
     private void obtenerCanciones() {
-        Call<Resultado> resultadoCall = ItunesAPI.getItunesService().getCanciones("beatles", "song");
+        Call<Resultado> resultadoCall = ItunesAPI.getItunesService().getCanciones();
 
         resultadoCall.enqueue(new Callback<Resultado>() {
             @Override
             public void onResponse(Call<Resultado> call, Response<Resultado> response) {
                 Resultado body = response.body();
-                List<GrupoMusical> results = body.getResults();
+                List<GrupoMusical> results = body.getListagrupos();
 
                 grupoMusicales.addAll(results);
                 recyclerViewAdaptadorPrincipal.notifyDataSetChanged();
@@ -102,6 +103,8 @@ public class Main extends AppCompatActivity {
             @Override
             public void onFailure(Call<Resultado> call, Throwable t) {
                 Toast.makeText(Main.this, "Ha ocurrido un error", Toast.LENGTH_LONG).show();
+                Log.e("error",t.getMessage());
+                t.printStackTrace();
             }
         });
 

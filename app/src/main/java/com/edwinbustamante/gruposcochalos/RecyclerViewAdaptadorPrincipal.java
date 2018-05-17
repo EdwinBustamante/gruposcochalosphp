@@ -7,7 +7,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
 import com.edwinbustamante.gruposcochalos.domain.GrupoMusical;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -48,10 +51,14 @@ public class RecyclerViewAdaptadorPrincipal extends RecyclerView.Adapter<Recycle
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        GrupoMusical grupoMusical=gruposMusicalesLista.get(position);
+        String  urlImagenPerfil=grupoMusical.getFotoperil();
+     //   Glide.with(getContext()).load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagenPerfil ).centerCrop().into(foto_perfil);
         //modificaciones del cntenido de cada item
-      //  holder.fotoPortada.setImageResource(gruposMusicalesLista.get(position).getFotoperil());
-        holder.nombreGrupo.setText(gruposMusicalesLista.get(position).getTrackName());
-        holder.tipoMusica.setText(gruposMusicalesLista.get(position).getCollectionName() );
+       // holder.fotoPortada.setImageResource();
+        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagenPerfil ).into(holder.fotoPortada);
+        holder.nombreGrupo.setText(grupoMusical.getNombre());
+        holder.tipoMusica.setText(grupoMusical.getGenero());
 
     }
 
