@@ -1,19 +1,17 @@
 package com.edwinbustamante.gruposcochalos.CuentaUsuarioArchivos;
 
-import android.content.Context;
-import android.graphics.Point;
 import android.support.v7.widget.RecyclerView;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.edwinbustamante.gruposcochalos.Objetos.Publicacion;
+import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
+import com.edwinbustamante.gruposcochalos.domain.Publicacion;
 import com.edwinbustamante.gruposcochalos.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -43,13 +41,13 @@ public class MyAdapterPublicar extends RecyclerView.Adapter<MyAdapterPublicar.Vi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        Publicacion publicacion=publicacionLista.get(position);
         //modificaciones del cntenido de cada item...despues de recibir del ViewHolder
-        holder.fotoPerfilPublicacion.setImageResource(publicacionLista.get(position).getFotoPerfil());
-        holder.nombreGrupoPublicacion.setText(publicacionLista.get(position).getNombreGrupo());
-        holder.fechaPublicacion.setText(publicacionLista.get(position).getFechaPublicacion());
-        holder.descripcionPublicacion.setText(publicacionLista.get(position).getDescripcionPublicacion());
-        holder.fotoPublicacion.setImageResource(publicacionLista.get(position).getFotoPublicacion());
-
+       // holder.fotoPerfilPublicacion.setImageResource(publicacionLista.get(position).getFotoPerfil());
+       // holder.nombreGrupoPublicacion.setText(publicacionLista.get(position).getNombreGrupo());
+       // holder.fechaPublicacion.setText(publicacionLista.get(position).getFechaPublicacion());
+        holder.descripcionPublicacion.setText(publicacion.getDescripcion());
+        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + publicacion.getFoto()).into(holder.fotoPublicacion);
     }
 
     @Override

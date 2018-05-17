@@ -51,6 +51,7 @@ import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
 
 import com.edwinbustamante.gruposcochalos.R;
 import com.edwinbustamante.gruposcochalos.SubirFoto;
+import com.squareup.picasso.Picasso;
 
 
 import java.io.ByteArrayOutputStream;
@@ -94,10 +95,11 @@ public class FulImagen extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
 
-        // Intent i = getIntent();
-        //      int imgPortada = i.getExtras().getInt("foto");///recibiendo la imagen del fragmente anterior
+         Intent i = getIntent();
+        String imgPerfil = i.getExtras().getString("foto");///recibiendo la imagen del fragmente anterior
         imageUpload = (ImageView) findViewById(R.id.imagenfull);
-        //    imageUpload.setImageResource(imgPortada);
+        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + imgPerfil).into(imageUpload);
+        //   imageUpload.setImageResource(imgPortada);
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -265,9 +267,9 @@ public class FulImagen extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, urlUpload, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+
                 cargarImagen.dismiss();
-                String respuesta = response.toString();
-                Toast.makeText(FulImagen.this, response, Toast.LENGTH_SHORT).show();
+
 
             }
         }, new Response.ErrorListener() {

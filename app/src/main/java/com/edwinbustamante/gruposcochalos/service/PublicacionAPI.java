@@ -1,36 +1,32 @@
 package com.edwinbustamante.gruposcochalos.service;
-
 import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
-import com.edwinbustamante.gruposcochalos.domain.Resultado;
+import com.edwinbustamante.gruposcochalos.domain.ResultadoPublicacion;
 
-import java.util.List;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
-import retrofit2.http.Query;
 
-public class ItunesAPI {
+public class PublicacionAPI {
     private static final String url = Constantes.IP_SERVIDOR + "gruposcochalos/";
 
-    public static ItunesService itunesService = null;
+    public static PublicacionService publicacionService = null;
 
-    public static ItunesService getItunesService() {
-        if (itunesService == null) {
+    public static PublicacionService getPublicacionService() {
+        if (publicacionService == null) {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(url)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
-
-            itunesService = retrofit.create(ItunesService.class);
+            publicacionService = retrofit.create(PublicacionService.class);
 
         }
-        return itunesService;
+        return publicacionService;
     }
 
-    public interface ItunesService {
-        @GET("listargrupos.php")
-        Call<Resultado> getCanciones();
+    public interface PublicacionService {
+        @GET("listarpublicacionesusuario.php")
+        Call<ResultadoPublicacion> getCanciones();
     }
 
 }

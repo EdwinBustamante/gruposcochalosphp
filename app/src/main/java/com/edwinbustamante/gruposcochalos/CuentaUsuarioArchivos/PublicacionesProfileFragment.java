@@ -1,65 +1,48 @@
 package com.edwinbustamante.gruposcochalos.CuentaUsuarioArchivos;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.text.InputFilter;
-import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.JsonRequest;
-import com.android.volley.toolbox.Volley;
-import com.edwinbustamante.gruposcochalos.ImagenFull.FulImagen;
-import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
-import com.edwinbustamante.gruposcochalos.Objetos.Publicacion;
-import com.edwinbustamante.gruposcochalos.R;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.edwinbustamante.gruposcochalos.domain.Publicacion;
+import com.edwinbustamante.gruposcochalos.R;
+import com.edwinbustamante.gruposcochalos.domain.ResultadoPublicacion;
+import com.edwinbustamante.gruposcochalos.service.PublicacionAPI;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
 
-public class PublicacionesProfileFragment extends Fragment implements View.OnClickListener, Response.ErrorListener, Response.Listener<JSONObject> {
+
+public class PublicacionesProfileFragment extends Fragment implements View.OnClickListener {
 
 
     String FileName = "myUserId";
     Button publicar;
     private LinearLayout editMainCuenta;
-    RequestQueue rq;
-    JsonRequest jrq;
     String idUsuarioInput;
     //A CONTINUACION SE DECLARA LAS VARIABLES DEL RECYCLERVIEW
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    List<Publicacion> publicacionlista = new ArrayList<>();
 
     public PublicacionesProfileFragment() {
         // Required empty public constructor
@@ -72,7 +55,6 @@ public class PublicacionesProfileFragment extends Fragment implements View.OnCli
                              Bundle savedInstanceState) {
 
         View vista = inflater.inflate(R.layout.fragment_publicaciones_profile, container, false);
-        rq = Volley.newRequestQueue(getActivity());
         //ANIMACION DEL FONDO
         //  linearLayoutanimacion = (RelativeLayout) findViewById(R.id.profile_layout);
         // animacion = (AnimationDrawable) linearLayoutanimacion.getBackground();
@@ -85,7 +67,7 @@ public class PublicacionesProfileFragment extends Fragment implements View.OnCli
         String defaultValue = "DefaultName";
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(FileName, Context.MODE_PRIVATE);
         idUsuarioInput = sharedPreferences.getString("idusuario", defaultValue);
-      //  Toast.makeText(getContext(), idUsuarioInput, Toast.LENGTH_SHORT).show();
+        //  Toast.makeText(getContext(), idUsuarioInput, Toast.LENGTH_SHORT).show();
         //     actualizarDatosUsuario();
         publicar = (Button) vista.findViewById(R.id.buttonPublicar);
         publicar.setOnClickListener(this);
@@ -97,28 +79,43 @@ public class PublicacionesProfileFragment extends Fragment implements View.OnCli
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new MyAdapterPublicar(obtenerListaPublicaciones());
+        mAdapter = new MyAdapterPublicar(publicacionlista);
         mRecyclerView.setAdapter(mAdapter);
+        obtenerCanciones();
         return vista;
     }
 
     public List<Publicacion> obtenerListaPublicaciones() {
         List<Publicacion> listapublicacion = new ArrayList<>();
-        listapublicacion.add(new Publicacion(R.drawable.portada, R.drawable.portada, "Nombre Grupo Musical", "la fecha de publicacion es",
-                "HOy estamos en tiraque en un evento musical no falten"));
-        listapublicacion.add(new Publicacion(R.drawable.portada, R.drawable.portada, "Nombre Grupo Musical", "la fecha de publicacion es",
-                "HOy estamos en tiraque en un evento musical no falten"));
-        listapublicacion.add(new Publicacion(R.drawable.portada, R.drawable.portada, "Nombre Grupo Musical", "la fecha de publicacion es",
-                "HOy estamos en tiraque en un evento musical no falten"));
+
+        listapublicacion.add(new Publicacion("2", "HOy estamos en tiraque en un evento musical no falten", "540S", "Url", "2", "FEFW", "EF"));
+
         return listapublicacion;
     }
 
-    private void actualizarDatosUsuario() {
-        String url = Constantes.IP_SERVIDOR+"gruposcochalos/traerdatosusuario.php?idusuario=" + idUsuarioInput;
-        jrq = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
-        rq.add(jrq);
+    private void obtenerCanciones() {
+        Call<ResultadoPublicacion> resultadoPublicacionCall = PublicacionAPI.getPublicacionService().getCanciones();
+        resultadoPublicacionCall.enqueue(new Callback<ResultadoPublicacion>() {
+            @Override
+            public void onResponse(Call<ResultadoPublicacion> call, retrofit2.Response<ResultadoPublicacion> response) {
+                ResultadoPublicacion body = response.body();
+                List<Publicacion> results = body.getListapublicacion();
+
+                publicacionlista.addAll(results);
+                mAdapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onFailure(Call<ResultadoPublicacion> call, Throwable t) {
+                Toast.makeText(getContext(), "Ha ocurrido un error", Toast.LENGTH_LONG).show();
+                Log.e("error", t.getMessage());
+                t.printStackTrace();
+            }
+        });
 
     }
+
 
     @Override
     public void onClick(View v) {
@@ -132,30 +129,4 @@ public class PublicacionesProfileFragment extends Fragment implements View.OnCli
     }
 
 
-    @Override
-    public void onErrorResponse(VolleyError error) {
-
-    }
-
-    @Override
-    public void onResponse(JSONObject response) {
-        JSONArray jsonArray = response.optJSONArray("usuariodatos");//datos esta en el php
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = jsonArray.getJSONObject(0);
-            if (jsonObject.getString("idgrupomusical").equals("datos incorrectos de entrada")) {
-                Toast.makeText(getContext(), "Datos incorrectos de entrada", Toast.LENGTH_SHORT).show();
-            } else {
-                if (jsonObject.getString("idgrupomusical").equals("error en la consulta")) {
-                    Toast.makeText(getContext(), "Fallo al actualizar los datos intenete nuevamente", Toast.LENGTH_SHORT).show();
-                } else {
-
-                }
-
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
 }

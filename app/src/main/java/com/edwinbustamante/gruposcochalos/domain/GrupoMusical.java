@@ -7,7 +7,7 @@ package com.edwinbustamante.gruposcochalos.domain;
 public class
 GrupoMusical {
     private String nombre;
-    private String fotoperil;
+    private String fotoperfil;
     private String genero;
 
     public GrupoMusical() {
@@ -15,7 +15,7 @@ GrupoMusical {
 
     public GrupoMusical(String urlFotoPortada, String nombreGrupoMusical, String tipoDeMusica) {
         this.nombre = nombreGrupoMusical;
-        this.fotoperil = urlFotoPortada;
+        this.fotoperfil = urlFotoPortada;
         genero = tipoDeMusica;
     }
 
@@ -38,12 +38,12 @@ GrupoMusical {
         this.nombre = nombre;
     }
 
-    public String getFotoperil() {
-        return fotoperil;
+    public String getFotoperfil() {
+        return fotoperfil;
     }
 
-    public void setFotoperil(String fotoperil) {
-        this.fotoperil = fotoperil;
+    public void setFotoperfil(String fotoperfil) {
+        this.fotoperfil = fotoperfil;
     }
 
     public String getGenero() {

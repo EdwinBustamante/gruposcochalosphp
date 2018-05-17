@@ -63,7 +63,7 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
     private TextView informacionEdit, contactosEdit, direccionEdit;
     private ImageView imageViewMovil1, imageViewMovil2, imageViewMovilWhasapp;
     String FileName = "myUserId";
-
+    String urlImagen;
     private LinearLayout editMainCuenta;
 
     RequestQueue rq;
@@ -338,13 +338,13 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
             case R.id.foto_perfil:
 
                 Intent imagenFu = new Intent(getActivity(), FulImagen.class);
-                //imagenFu.putExtra("foto", foto_perfil.getImageMatrix());
+                imagenFu.putExtra("foto", urlImagen);
                 startActivity(imagenFu);
                 break;
             case R.id.header_cover_image:
 
                 Intent imagenPortada = new Intent(getActivity(), FulImagen.class);
-                //imagenFu.putExtra("foto", foto_perfil.getImageMatrix());
+                imagenPortada.putExtra("foto", urlImagen);
                 startActivity(imagenPortada);
                 break;
 
@@ -414,9 +414,11 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                     try {
                         //  Toast.makeText(getContext(), jsonObject.getString("fotoperfil"), Toast.LENGTH_SHORT).show();
                         if (!jsonObject.getString("fotoperfil").equals("null")) {
-                            String urlImagen = jsonObject.getString("fotoperfil").toString();
-                            Glide.with(getContext()).load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagen).centerCrop().into(foto_perfil);
-                            Glide.with(getContext()).load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagen).placeholder(R.drawable.ic_camara_de_fotos).centerCrop().into(foto_portada);
+                            urlImagen = jsonObject.getString("fotoperfil").toString();
+                            Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagen).into(foto_perfil);
+                            //   Glide.with(getContext()).load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagen).centerCrop().into(foto_perfil);
+                            // Glide.with(getContext()).load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagen).placeholder(R.drawable.ic_camara_de_fotos).centerCrop().into(foto_portada);
+                            Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagen).into(foto_portada);
                         }
 
 

@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
@@ -51,12 +52,12 @@ public class RecyclerViewAdaptadorPrincipal extends RecyclerView.Adapter<Recycle
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        GrupoMusical grupoMusical=gruposMusicalesLista.get(position);
-        String  urlImagenPerfil=grupoMusical.getFotoperil();
-     //   Glide.with(getContext()).load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagenPerfil ).centerCrop().into(foto_perfil);
+        GrupoMusical grupoMusical = gruposMusicalesLista.get(position);
+        String urlImagenPerfil = grupoMusical.getFotoperfil();
+        //   Glide.with(getContext()).load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagenPerfil ).centerCrop().into(foto_perfil);
         //modificaciones del cntenido de cada item
-       // holder.fotoPortada.setImageResource();
-        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagenPerfil ).into(holder.fotoPortada);
+        // holder.fotoPortada.setImageResource();
+        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagenPerfil).into(holder.fotoPortada);
         holder.nombreGrupo.setText(grupoMusical.getNombre());
         holder.tipoMusica.setText(grupoMusical.getGenero());
 
@@ -64,6 +65,6 @@ public class RecyclerViewAdaptadorPrincipal extends RecyclerView.Adapter<Recycle
 
     @Override
     public int getItemCount() {
-         return gruposMusicalesLista.size();
+        return gruposMusicalesLista.size();
     }
 }
