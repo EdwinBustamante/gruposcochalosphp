@@ -95,7 +95,7 @@ public class FulImagen extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
 
-         Intent i = getIntent();
+        Intent i = getIntent();
         String imgPerfil = i.getExtras().getString("foto");///recibiendo la imagen del fragmente anterior
         imageUpload = (ImageView) findViewById(R.id.imagenfull);
         Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + imgPerfil).into(imageUpload);
@@ -237,7 +237,7 @@ public class FulImagen extends AppCompatActivity {
 
 
         } else {
-            if (requestCode == CODE_CAMARA_REQUEST && resultCode == RESULT_OK ) {
+            if (requestCode == CODE_CAMARA_REQUEST && resultCode == RESULT_OK) {
                 MediaScannerConnection.scanFile(this,
                         new String[]{mPath}, null,
                         new MediaScannerConnection.OnScanCompletedListener() {
@@ -255,11 +255,13 @@ public class FulImagen extends AppCompatActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("file_path", mPath);
     }
+
     public void subirFoto() {
         cargarImagen.setTitle("Grupos Cochalos");
         cargarImagen.setMessage("Cambiando foto de perfil");
@@ -267,9 +269,9 @@ public class FulImagen extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, urlUpload, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
                 cargarImagen.dismiss();
-
+                Toast.makeText(FulImagen.this, response.toString(), Toast.LENGTH_SHORT).show();
+                finish();
 
             }
         }, new Response.ErrorListener() {

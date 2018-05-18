@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ public class PublicacionesProfileFragment extends Fragment implements View.OnCli
 
 
     String FileName = "myUserId";
+    String FileNameGrupo = "IdGrupo";
     Button publicar;
     private LinearLayout editMainCuenta;
     String idUsuarioInput;
@@ -79,10 +81,21 @@ public class PublicacionesProfileFragment extends Fragment implements View.OnCli
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new MyAdapterPublicar(publicacionlista);
+        Display display =getActivity().getWindowManager().getDefaultDisplay();
+
+        mAdapter = new MyAdapterPublicar(publicacionlista,display);
         mRecyclerView.setAdapter(mAdapter);
-        obtenerCanciones();
+
+
         return vista;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        publicacionlista.clear();
+        obtenerPublicaciones();
+
     }
 
     public List<Publicacion> obtenerListaPublicaciones() {
@@ -93,8 +106,11 @@ public class PublicacionesProfileFragment extends Fragment implements View.OnCli
         return listapublicacion;
     }
 
-    private void obtenerCanciones() {
-        Call<ResultadoPublicacion> resultadoPublicacionCall = PublicacionAPI.getPublicacionService().getCanciones();
+    private void obtenerPublicaciones() {
+        String defaultValue = "DefaultName";
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
+        String idGrupoMusical = sharedPreferences.getString("idgrupomusical", defaultValue);
+        Call<ResultadoPublicacion> resultadoPublicacionCall = PublicacionAPI.getPublicacionService().getCanciones(idGrupoMusical);
         resultadoPublicacionCall.enqueue(new Callback<ResultadoPublicacion>() {
             @Override
             public void onResponse(Call<ResultadoPublicacion> call, retrofit2.Response<ResultadoPublicacion> response) {
@@ -108,7 +124,7 @@ public class PublicacionesProfileFragment extends Fragment implements View.OnCli
 
             @Override
             public void onFailure(Call<ResultadoPublicacion> call, Throwable t) {
-                Toast.makeText(getContext(), "Ha ocurrido un error", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Ha ocurrido un error"+t.getMessage(), Toast.LENGTH_LONG).show();
                 Log.e("error", t.getMessage());
                 t.printStackTrace();
             }

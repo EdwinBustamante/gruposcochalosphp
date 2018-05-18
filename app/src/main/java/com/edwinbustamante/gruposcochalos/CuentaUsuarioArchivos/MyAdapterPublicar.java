@@ -1,6 +1,8 @@
 package com.edwinbustamante.gruposcochalos.CuentaUsuarioArchivos;
 
+import android.graphics.Point;
 import android.support.v7.widget.RecyclerView;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +26,11 @@ public class MyAdapterPublicar extends RecyclerView.Adapter<MyAdapterPublicar.Vi
 
     public List<Publicacion> publicacionLista;//lista de todos los grupos
 
-    public MyAdapterPublicar(List<Publicacion> publicacionLista) {
+    Display display ;
+
+    public MyAdapterPublicar(List<Publicacion> publicacionLista,Display display) {
         this.publicacionLista = publicacionLista;//Aqui paso la lista que stoy recibiendo
+        this.display=display;
     }
 
     //encargado de inflar un nuevo item para la lista
@@ -46,6 +51,13 @@ public class MyAdapterPublicar extends RecyclerView.Adapter<MyAdapterPublicar.Vi
        // holder.fotoPerfilPublicacion.setImageResource(publicacionLista.get(position).getFotoPerfil());
        // holder.nombreGrupoPublicacion.setText(publicacionLista.get(position).getNombreGrupo());
        // holder.fechaPublicacion.setText(publicacionLista.get(position).getFechaPublicacion());
+
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+       holder.fotoPublicacion.setMaxHeight(height);
+       holder.fotoPublicacion.setMaxWidth(width);
         holder.descripcionPublicacion.setText(publicacion.getDescripcion());
         Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + publicacion.getFoto()).into(holder.fotoPublicacion);
     }
@@ -71,16 +83,10 @@ public class MyAdapterPublicar extends RecyclerView.Adapter<MyAdapterPublicar.Vi
             fechaPublicacion = (TextView) itemView.findViewById(R.id.fechaPublicacion);
             descripcionPublicacion = (TextView) itemView.findViewById(R.id.textViewDescripcionPublicacion);
             fotoPublicacion = (ImageView) itemView.findViewById(R.id.imageViewPublicacion);
-           /*
-            Display display = getWindowManager().getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
-            int width = size.x;
-            int height = size.y;
-            fotoPublicacion.setMaxHeight(height);
-            fotoPublicacion.setMaxWidth(width);
 
-         */
+
+
+
            itemView.setOnClickListener(this);// esto es a todo
 
         }

@@ -341,6 +341,7 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener 
                 cargarImagen.dismiss();
                 String respuesta = response.toString();
                 Toast.makeText(Publicar.this, response, Toast.LENGTH_SHORT).show();
+                finish();
 
             }
         }, new Response.ErrorListener() {

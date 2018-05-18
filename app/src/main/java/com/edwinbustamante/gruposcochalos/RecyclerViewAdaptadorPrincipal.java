@@ -1,5 +1,7 @@
 package com.edwinbustamante.gruposcochalos;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
+import com.edwinbustamante.gruposcochalos.VisitanteArchivos.InformacionGrupoVisitante;
 import com.edwinbustamante.gruposcochalos.domain.GrupoMusical;
 import com.squareup.picasso.Picasso;
 
@@ -35,9 +38,10 @@ public class RecyclerViewAdaptadorPrincipal extends RecyclerView.Adapter<Recycle
     }
 
     public List<GrupoMusical> gruposMusicalesLista;//lista de todos los grupos
-
-    public RecyclerViewAdaptadorPrincipal(List<GrupoMusical> gruposMusicalLista) {
+    private Context context;
+    public RecyclerViewAdaptadorPrincipal(List<GrupoMusical> gruposMusicalLista, Context context) {
         this.gruposMusicalesLista = gruposMusicalLista;
+        this.context=context;
     }
 
     //encargado de inflar un nuevo item para la lista
@@ -52,7 +56,7 @@ public class RecyclerViewAdaptadorPrincipal extends RecyclerView.Adapter<Recycle
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        GrupoMusical grupoMusical = gruposMusicalesLista.get(position);
+        final GrupoMusical grupoMusical = gruposMusicalesLista.get(position);
         String urlImagenPerfil = grupoMusical.getFotoperfil();
         //   Glide.with(getContext()).load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagenPerfil ).centerCrop().into(foto_perfil);
         //modificaciones del cntenido de cada item
@@ -60,6 +64,16 @@ public class RecyclerViewAdaptadorPrincipal extends RecyclerView.Adapter<Recycle
         Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagenPerfil).into(holder.fotoPortada);
         holder.nombreGrupo.setText(grupoMusical.getNombre());
         holder.tipoMusica.setText(grupoMusical.getGenero());
+        holder.fotoPortada.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent= new Intent(view.getContext(), InformacionGrupoVisitante.class);
+                intent.putExtra("grupomusical",grupoMusical);
+                context.startActivity(intent);
+            }
+        });
+
+        // /holder.nombreGrupo.setOnClickListener(this); el onclik
 
     }
 

@@ -1,10 +1,13 @@
 package com.edwinbustamante.gruposcochalos.domain;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by EDWIN on 8/5/2018.
  */
 
 public class Publicacion {
+    @SerializedName("idpublicacion")
     private String idpublicacion;
     private String descripcion;
     private String hora;

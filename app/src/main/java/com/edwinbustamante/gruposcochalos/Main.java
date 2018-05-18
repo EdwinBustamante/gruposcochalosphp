@@ -44,7 +44,7 @@ public class Main extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerViewGrupos.setLayoutManager(layoutManager);
 
-        recyclerViewAdaptadorPrincipal = new RecyclerViewAdaptadorPrincipal(grupoMusicales);
+        recyclerViewAdaptadorPrincipal = new RecyclerViewAdaptadorPrincipal(grupoMusicales,this);
         recyclerViewGrupos.setAdapter(recyclerViewAdaptadorPrincipal);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -59,6 +59,13 @@ public class Main extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        grupoMusicales.clear();
         obtenerCanciones();
     }
 

@@ -98,6 +98,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.edwinbustamante.gruposcochalos.CuentaUsuarioArchivos.Publicar" />
         </activity>
+        <activity android:name=".VisitanteArchivos.InformacionGrupoVisitante"></activity>
     </application>
 
 </manifest>

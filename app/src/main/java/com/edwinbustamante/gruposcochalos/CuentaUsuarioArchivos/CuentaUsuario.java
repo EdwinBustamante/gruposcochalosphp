@@ -101,11 +101,17 @@ public class CuentaUsuario extends AppCompatActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                 builder.setCancelable(true);
                 builder.setTitle("Grupos Cochalos");
-                builder.setMessage("Desea cerrar sesion");
-                builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                builder.setMessage("Desea cerrar sesion..?");
+                builder.setPositiveButton("Cerrar sesion", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        finish();
 
+                    }
+                }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
                     }
                 });
                 builder.create().show();

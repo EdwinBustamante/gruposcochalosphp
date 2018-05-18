@@ -6,6 +6,7 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 public class PublicacionAPI {
     private static final String url = Constantes.IP_SERVIDOR + "gruposcochalos/";
@@ -26,7 +27,7 @@ public class PublicacionAPI {
 
     public interface PublicacionService {
         @GET("listarpublicacionesusuario.php")
-        Call<ResultadoPublicacion> getCanciones();
+        Call<ResultadoPublicacion> getCanciones(@Query("idgrupomusical") String idgrupomusical);
     }
 
 }
