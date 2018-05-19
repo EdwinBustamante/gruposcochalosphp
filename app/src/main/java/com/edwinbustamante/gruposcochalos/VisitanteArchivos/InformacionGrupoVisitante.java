@@ -28,7 +28,7 @@ public class InformacionGrupoVisitante extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
         GrupoMusical grupoMusical = getIntent().getExtras().getParcelable("grupomusical");
 
         imageViewPortada = (ImageView) findViewById(R.id.portada_visitante);

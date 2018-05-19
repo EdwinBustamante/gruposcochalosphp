@@ -1,8 +1,10 @@
 package com.edwinbustamante.gruposcochalos.CuentaUsuarioArchivos;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -105,6 +107,8 @@ public class CuentaUsuario extends AppCompatActivity {
                 builder.setPositiveButton("Cerrar sesion", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                      //BorrarIdUsuario();
+                      //BorrarIdGrupoMusical();
                         finish();
 
                     }
@@ -125,6 +129,20 @@ public class CuentaUsuario extends AppCompatActivity {
                 .into(cuenta_perfil);
 
      */
+    }
+    String FileName = "myUserId";
+    String FileNameGrupo = "IdGrupo";
+    public void BorrarIdUsuario() {
+        SharedPreferences sharedPreferences = getSharedPreferences(FileName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("idusuario","");
+        editor.commit();
+    }
+    private void BorrarIdGrupoMusical() {
+        SharedPreferences sharedPreferences = getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("idgrupomusical", "");
+        editor.commit();
     }
 
     /**

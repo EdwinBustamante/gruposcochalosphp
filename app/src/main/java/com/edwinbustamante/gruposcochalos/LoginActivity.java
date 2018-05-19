@@ -155,6 +155,7 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
                         usr.setUser(jsonObject.optString("usuario"));
                         i.putExtra("objetoUsuario", usr);
                         startActivity(i);
+                        finish();
 
                     }
                 }

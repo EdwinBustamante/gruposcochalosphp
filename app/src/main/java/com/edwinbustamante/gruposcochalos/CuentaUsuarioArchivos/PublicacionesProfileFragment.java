@@ -3,6 +3,7 @@ package com.edwinbustamante.gruposcochalos.CuentaUsuarioArchivos;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -81,9 +82,9 @@ public class PublicacionesProfileFragment extends Fragment implements View.OnCli
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        Display display =getActivity().getWindowManager().getDefaultDisplay();
 
-        mAdapter = new MyAdapterPublicar(publicacionlista,display);
+
+        mAdapter = new MyAdapterPublicar(publicacionlista);
         mRecyclerView.setAdapter(mAdapter);
 
 
