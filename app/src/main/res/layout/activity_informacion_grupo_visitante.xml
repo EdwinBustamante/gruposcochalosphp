@@ -29,9 +29,9 @@
         tools:layout_editor_absoluteX="0dp">
 
         <RelativeLayout
-            android:layout_marginTop="5dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp">
 
             <ImageView
                 android:id="@+id/portada_visitante"
@@ -144,7 +144,7 @@
                                 android:src="@drawable/iconinfo" />
 
                             <TextView
-                                android:id="@+id/informacionGrupo"
+
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
@@ -163,12 +163,12 @@
                             android:background="@color/black_overlay" />
 
                         <TextView
-                            android:id="@+id/texViewInformacion"
+                            android:id="@+id/texViewInformacion_visitante"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
                             android:layout_marginRight="5dp"
-                            android:text="La información que debe contener este campo puedes ser: historia, trayectoria musical, número de integrantes, tipo de eventos que amenizan , etc."
+                            android:text="Informacion de grupo Musical(Falta añadir)"
                             android:textSize="17dp" />
 
 
@@ -209,7 +209,6 @@
                                 android:src="@drawable/icocontact" />
 
                             <TextView
-                                android:id="@+id/contactos"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
@@ -235,7 +234,7 @@
                             android:weightSum="3">
 
                             <ImageView
-                                android:id="@+id/imageViewMovil1"
+                                android:id="@+id/imageViewMovil1_visitante"
                                 android:layout_width="0dp"
                                 android:layout_height="40dp"
                                 android:layout_gravity="center"
@@ -245,12 +244,12 @@
                                 android:src="@drawable/contacto" />
 
                             <TextView
-                                android:id="@+id/texViewMovil1"
+                                android:id="@+id/texViewMovil1_visitante"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:layout_weight="2"
-                                android:text="Ingrese número de su móvil 1"
+                                android:text="Falta añadir número de móvil 1"
                                 android:textSize="17dp" />
                         </LinearLayout>
 
@@ -261,7 +260,7 @@
                             android:weightSum="3">
 
                             <ImageView
-                                android:id="@+id/imageViewMovil2"
+                                android:id="@+id/imageViewMovil2_visitante"
                                 android:layout_width="0dp"
                                 android:layout_height="40dp"
                                 android:layout_gravity="center"
@@ -271,12 +270,12 @@
                                 android:src="@drawable/contacto" />
 
                             <TextView
-                                android:id="@+id/texViewMovil2"
+                                android:id="@+id/texViewMovil2_visitante"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:layout_weight="2"
-                                android:text="Ingrese número de su móvil 2"
+                                android:text="Falta añadir número de móvil 2"
                                 android:textSize="17dp" />
                         </LinearLayout>
 
@@ -287,7 +286,7 @@
                             android:weightSum="3">
 
                             <ImageView
-                                android:id="@+id/imageViewMovilWhatsapp"
+                                android:id="@+id/imageViewMovilWhatsapp_visitante"
                                 android:layout_width="0dp"
                                 android:layout_height="40dp"
                                 android:layout_gravity="center"
@@ -297,12 +296,12 @@
                                 android:src="@drawable/whatsapp" />
 
                             <TextView
-                                android:id="@+id/texViewMovilWhatsApp"
+                                android:id="@+id/texViewMovilWhatsAp_visitante"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:layout_weight="2"
-                                android:text=""
+                                android:text="Falta añadir numero de WhatsApp"
                                 android:textSize="17dp" />
                         </LinearLayout>
 
@@ -313,6 +312,7 @@
                             android:weightSum="3">
 
                             <ImageView
+                                android:id="@+id/ImageViewFacebook_visitante"
                                 android:layout_width="0dp"
                                 android:layout_height="40dp"
                                 android:layout_gravity="center"
@@ -322,12 +322,12 @@
                                 android:src="@drawable/facebook" />
 
                             <TextView
-                                android:id="@+id/texViewLinkFacebook"
+                                android:id="@+id/texViewLinkFacebook_visitante"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:layout_weight="2"
-                                android:text="Ingrese link de su faceboook"
+                                android:text="Falta añadir link de faceboook"
                                 android:textSize="17dp" />
                         </LinearLayout>
 
@@ -340,13 +340,13 @@
                             android:background="@color/black_overlay" />
 
                         <TextView
-                            android:id="@+id/texViewContactos"
+                            android:id="@+id/texViewContactos_visitante"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="5dp"
                             android:layout_marginLeft="5dp"
                             android:layout_marginRight="5dp"
-                            android:text="Este campo debe contener números telefónicos de referencia ejemplo: 4###### - 75#######"
+                            android:text="Falta añadir números adicionales de contacto"
                             android:textSize="17dp" />
 
                     </LinearLayout>
@@ -402,13 +402,13 @@
                             android:background="@color/black_overlay" />
 
                         <TextView
-                            android:id="@+id/texViewDireccion"
+                            android:id="@+id/texViewDireccion_visitante"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="5dp"
                             android:layout_marginLeft="5dp"
                             android:layout_marginRight="5dp"
-                            android:text="Este campo  debecontener la direccion del grupo musical, adjuntado de una ubicacion en el icono de location  si es posible.."
+                            android:text="Falta añadir la dirección del grupo musical"
                             android:textSize="17dp" />
 
                         <View
@@ -421,6 +421,7 @@
                         <ImageView
                             android:layout_width="40dp"
                             android:layout_height="40dp"
+                            android:id="@+id/ubicar_visitante"
                             android:layout_marginBottom="10dp"
                             android:layout_marginTop="10dp"
                             android:layout_weight="1"
