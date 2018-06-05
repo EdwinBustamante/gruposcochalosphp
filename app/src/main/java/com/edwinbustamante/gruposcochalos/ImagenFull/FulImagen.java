@@ -50,7 +50,6 @@ import com.android.volley.toolbox.Volley;
 import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
 
 import com.edwinbustamante.gruposcochalos.R;
-import com.edwinbustamante.gruposcochalos.SubirFoto;
 import com.squareup.picasso.Picasso;
 
 
@@ -74,9 +73,9 @@ public class FulImagen extends AppCompatActivity {
     final int CODE_GALLERY_REQUEST = 999;
     final int CODE_CAMARA_REQUEST = 100;
     String urlUpload = Constantes.IP_SERVIDOR + "/gruposcochalos/actualizarfotoperfi.php?";
-    Bitmap bitmap;
+    Bitmap bitmap=null;
     String FileNameGrupo = "IdGrupo";
-    ProgressDialog cargarImagen;
+   ProgressDialog cargarImagen;
     private String mPath;
     private static String APP_DIRECTORY = "GruposCochalos/";
     private static String MEDIA_DIRECTORY = APP_DIRECTORY + "GruposCochalosImages";
@@ -95,8 +94,7 @@ public class FulImagen extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
 
-        Intent i = getIntent();
-        String imgPerfil = i.getExtras().getString("foto");///recibiendo la imagen del fragmente anterior
+        String imgPerfil = getIntent().getExtras().getString("foto");///recibiendo la imagen del fragmente anterior
         imageUpload = (ImageView) findViewById(R.id.imagenfull);
         Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + imgPerfil).into(imageUpload);
         //   imageUpload.setImageResource(imgPortada);
@@ -110,7 +108,7 @@ public class FulImagen extends AppCompatActivity {
         imageUpload.setMaxWidth(width);
         //hace que la imagen sea expansible
         mAttacher = new PhotoViewAttacher(imageUpload);
-        cargarImagen = new ProgressDialog(FulImagen.this);
+       cargarImagen = new ProgressDialog(FulImagen.this);
 
 
     }
@@ -278,7 +276,7 @@ public class FulImagen extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(FulImagen.this, "error" + error.toString(), Toast.LENGTH_SHORT).show();
-                cargarImagen.dismiss();
+               cargarImagen.dismiss();
             }
         }) {
             @Override
@@ -304,7 +302,7 @@ public class FulImagen extends AppCompatActivity {
 
         //metodo que se encarga de convertir el bitmap  a string
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
         byte[] imageBytes = outputStream.toByteArray();
         String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
         return encodedImage;

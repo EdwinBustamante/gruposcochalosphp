@@ -1,39 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginBottom="?attr/actionBarSize"
+    android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/contenedorPublic"
-        android:layout_width="match_parent"
-        android:layout_height="71dp"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/buttonPublicar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Publicar" />
-
-    </RelativeLayout>
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view_publicar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="75dp"
         android:scrollbars="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginBottom="?attr/actionBarSize"
 
-</android.support.constraint.ConstraintLayout>
+        />
+
+
+</LinearLayout>

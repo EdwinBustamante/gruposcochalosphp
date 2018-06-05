@@ -60,9 +60,10 @@ public class CuentaUsuario extends AppCompatActivity {
                 }
                 Intent intent = new Intent(view.getContext(), Publicar.class);
                 startActivity(intent);
-                Toast.makeText(CuentaUsuario.this, "Lista para publicar", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CuentaUsuario.this, "Escribe una publicación", Toast.LENGTH_SHORT).show();
             }
         });
+
         final MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(myPagerAdapter);
@@ -107,8 +108,8 @@ public class CuentaUsuario extends AppCompatActivity {
                 builder.setPositiveButton("Cerrar sesion", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                      //BorrarIdUsuario();
-                      //BorrarIdGrupoMusical();
+                        //BorrarIdUsuario();
+                        //BorrarIdGrupoMusical();
                         finish();
 
                     }
@@ -130,14 +131,17 @@ public class CuentaUsuario extends AppCompatActivity {
 
      */
     }
+
     String FileName = "myUserId";
     String FileNameGrupo = "IdGrupo";
+
     public void BorrarIdUsuario() {
         SharedPreferences sharedPreferences = getSharedPreferences(FileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("idusuario","");
+        editor.putString("idusuario", "");
         editor.commit();
     }
+
     private void BorrarIdGrupoMusical() {
         SharedPreferences sharedPreferences = getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -153,39 +157,40 @@ public class CuentaUsuario extends AppCompatActivity {
     int[] colorIntArray = {R.color.green, R.color.pink};
     int[] iconIntArray = {R.drawable.ic_camara_de_fotos, R.drawable.ic_publicar};
 
-    protected void animateFab(final int position) {
-        fab.clearAnimation();
-        // Scale down animation
-        ScaleAnimation shrink = new ScaleAnimation(1f, 0.2f, 1f, 0.2f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        shrink.setDuration(150);     // animation duration in milliseconds
-        shrink.setInterpolator(new DecelerateInterpolator());
-        shrink.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
 
-            }
+        protected void animateFab(final int position) {
+            fab.clearAnimation();
+            // Scale down animation
+            ScaleAnimation shrink = new ScaleAnimation(1f, 0.2f, 1f, 0.2f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            shrink.setDuration(150);     // animation duration in milliseconds
+            shrink.setInterpolator(new DecelerateInterpolator());
+            shrink.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
 
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                // Change FAB color and icon
-                fab.setBackgroundTintList(getResources().getColorStateList(colorIntArray[position]));
+                }
 
-                fab.setImageDrawable(getResources().getDrawable(iconIntArray[position], null));
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    // Change FAB color and icon
+                    fab.setBackgroundTintList(getResources().getColorStateList(colorIntArray[position]));
 
-                // Scale up animation
-                ScaleAnimation expand = new ScaleAnimation(0.2f, 1f, 0.2f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-                expand.setDuration(100);     // animation duration in milliseconds
-                expand.setInterpolator(new AccelerateInterpolator());
-                fab.startAnimation(expand);
-            }
+                    fab.setImageDrawable(getResources().getDrawable(iconIntArray[position], null));
 
-            @Override
-            public void onAnimationRepeat(Animation animation) {
+                    // Scale up animation
+                    ScaleAnimation expand = new ScaleAnimation(0.2f, 1f, 0.2f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                    expand.setDuration(100);     // animation duration in milliseconds
+                    expand.setInterpolator(new AccelerateInterpolator());
+                    fab.startAnimation(expand);
+                }
 
-            }
-        });
-        fab.startAnimation(shrink);
-    }
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            fab.startAnimation(shrink);
+        }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -12,10 +12,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        <TextView
+            android:id="@+id/eliminarpublicacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:drawableRight="@android:drawable/ic_delete"
+            android:gravity="center|center_vertical|right"
+            android:text="Eliminar publicación" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -27,16 +35,17 @@
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/fotoPerfilPublicacion"
                     android:layout_width="60sp"
-                    android:layout_height="60sp"
-                    android:src="@drawable/portada" />
+                    android:layout_height="60sp" />
             </LinearLayout>
 
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
+
+
 
                 <TextView
                     android:id="@+id/textNombreGrupoPublicacion"
@@ -51,7 +60,7 @@
 
                 <TextView
                     android:id="@+id/fechaPublicacion"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:text="Agredado el 23 de Ago. a las 7:35 pm"
@@ -71,6 +80,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/fondo_editTex_Publicar" />
+
             <ImageView
                 android:id="@+id/imageViewPublicacion"
                 android:layout_width="match_parent"

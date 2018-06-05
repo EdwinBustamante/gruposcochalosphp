@@ -1,13 +1,22 @@
 package com.edwinbustamante.gruposcochalos.domain;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 /**
  * Created by Admin on 22/2/2018.
  */
+@Entity(tableName = "favoritos")//nombre para la base de datos
+public class GrupoMusical implements Parcelable {//pasar objeto por parcelable y Serializable se puede pasar
+    //primary key para la bse de datos interna
 
-public class GrupoMusical implements Parcelable {
+    @PrimaryKey(autoGenerate = true)///que sea autoincrementable
+    @NonNull
+    private Long grupopk;
+
     private String idgrupomusical;
     private String nombre;
     private String genero;
@@ -22,6 +31,15 @@ public class GrupoMusical implements Parcelable {
     private String numtelefonodos;
     private String latitud;
     private String longitud;
+
+    @NonNull
+    public Long getGrupopk() {
+        return grupopk;
+    }
+
+    public void setGrupopk(@NonNull Long grupopk) {
+        this.grupopk = grupopk;
+    }
 
     public GrupoMusical(String idgrupomusical, String nombre, String genero, String informaciondescripcion, String descripcioncontactos, String direcciondescripcion, String numtelefono, String numwhatsapp, String linkfacebook, String fotoperfil, String usuario_idusuario, String numtelefonodos, String latitud, String longitud) {
         this.idgrupomusical = idgrupomusical;
@@ -204,4 +222,6 @@ public class GrupoMusical implements Parcelable {
         parcel.writeString(this.longitud);
 
     }
+
+
 }

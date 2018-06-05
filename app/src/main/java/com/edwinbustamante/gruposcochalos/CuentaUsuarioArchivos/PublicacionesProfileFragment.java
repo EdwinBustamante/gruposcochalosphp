@@ -38,7 +38,6 @@ public class PublicacionesProfileFragment extends Fragment implements View.OnCli
 
     String FileName = "myUserId";
     String FileNameGrupo = "IdGrupo";
-    Button publicar;
     private LinearLayout editMainCuenta;
     String idUsuarioInput;
     //A CONTINUACION SE DECLARA LAS VARIABLES DEL RECYCLERVIEW
@@ -70,11 +69,9 @@ public class PublicacionesProfileFragment extends Fragment implements View.OnCli
         String defaultValue = "DefaultName";
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(FileName, Context.MODE_PRIVATE);
         idUsuarioInput = sharedPreferences.getString("idusuario", defaultValue);
-        //  Toast.makeText(getContext(), idUsuarioInput, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), idUsuarioInput, Toast.LENGTH_SHORT).show();
         //     actualizarDatosUsuario();
-        publicar = (Button) vista.findViewById(R.id.buttonPublicar);
-        publicar.setOnClickListener(this);
-     /*
+        /*
      LA CONFIGURACION DEL RECYCLER VIEW
       */
         mRecyclerView = (RecyclerView) vista.findViewById(R.id.my_recycler_view_publicar);
@@ -84,28 +81,28 @@ public class PublicacionesProfileFragment extends Fragment implements View.OnCli
         mRecyclerView.setLayoutManager(mLayoutManager);
 
 
-        mAdapter = new MyAdapterPublicar(publicacionlista);
+        mAdapter = new MyAdapterPublicar(publicacionlista, this.getContext());
         mRecyclerView.setAdapter(mAdapter);
-
-
+        // obtenerPublicaciones();
+        Toast.makeText(getContext(), "on create", Toast.LENGTH_SHORT).show();
         return vista;
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        publicacionlista.clear();
+
+
         obtenerPublicaciones();
 
+
     }
 
-    public List<Publicacion> obtenerListaPublicaciones() {
-        List<Publicacion> listapublicacion = new ArrayList<>();
 
-        listapublicacion.add(new Publicacion("2", "HOy estamos en tiraque en un evento musical no falten", "540S", "Url", "2", "FEFW", "EF"));
 
-        return listapublicacion;
-    }
+
+
 
     private void obtenerPublicaciones() {
         String defaultValue = "DefaultName";
@@ -117,7 +114,7 @@ public class PublicacionesProfileFragment extends Fragment implements View.OnCli
             public void onResponse(Call<ResultadoPublicacion> call, retrofit2.Response<ResultadoPublicacion> response) {
                 ResultadoPublicacion body = response.body();
                 List<Publicacion> results = body.getListapublicacion();
-
+                publicacionlista.clear();
                 publicacionlista.addAll(results);
                 mAdapter.notifyDataSetChanged();
 
@@ -125,7 +122,7 @@ public class PublicacionesProfileFragment extends Fragment implements View.OnCli
 
             @Override
             public void onFailure(Call<ResultadoPublicacion> call, Throwable t) {
-                Toast.makeText(getContext(), "Ha ocurrido un error"+t.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Ha ocurrido un error" + t.getMessage(), Toast.LENGTH_LONG).show();
                 Log.e("error", t.getMessage());
                 t.printStackTrace();
             }
@@ -137,9 +134,7 @@ public class PublicacionesProfileFragment extends Fragment implements View.OnCli
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.buttonPublicar:
-                Intent intent = new Intent(getActivity(), Publicar.class);
-                startActivity(intent);
+
             default:
                 break;
         }

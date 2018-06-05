@@ -63,7 +63,7 @@
                 android:id="@+id/nombreUsuario"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Usuario o número de teléfono"
+                android:hint="Número de móvil o usuario"
                 android:imeActionId="6"
                 android:imeActionLabel="@string/action_sign_in_short"
                 android:imeOptions="actionUnspecified"

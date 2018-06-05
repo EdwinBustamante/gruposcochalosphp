@@ -23,7 +23,7 @@
                 android:id="@+id/fotoPortada"
                 android:layout_width="60sp"
                 android:layout_height="60sp"
-                android:src="@drawable/portada" />
+                android:src="@mipmap/ic_launcher" />
         </LinearLayout>
 
 
@@ -38,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text=" Mision Rescate"
+                android:text="Nombre de grupo Musical"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="18dp"
                 android:textStyle="bold" />
@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginBottom="5dp"
-                    android:text=" Cumbia Tropical" />
+                    android:text=" Descripcion genero de Musica" />
             </LinearLayout>
 
         </LinearLayout>

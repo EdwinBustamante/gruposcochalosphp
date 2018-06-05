@@ -6,13 +6,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
@@ -35,18 +32,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.Glide;
 import com.edwinbustamante.gruposcochalos.ImagenFull.FulImagen;
 import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
 import com.edwinbustamante.gruposcochalos.R;
-import com.edwinbustamante.gruposcochalos.SubirFoto;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.Serializable;
 
 
 public class InformacionProfileFragment extends Fragment implements View.OnClickListener, Response.ErrorListener, Response.Listener<JSONObject> {
@@ -159,7 +152,7 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.usuario:
-                Intent usuarioIntent = new Intent(getActivity(), EditUsuario.class);
+                Intent usuarioIntent = new Intent(getContext(), EditUsuario.class);
                 usuarioIntent.putExtra("usuario", usuario.getText().toString());
                 startActivity(usuarioIntent);
                 break;
@@ -321,31 +314,31 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                 editarMovilWhatsApp.show();
                 break;
             case R.id.texViewInformacion:
-                Intent i = new Intent(getActivity(), EditInformacion.class);
+                Intent i = new Intent(getContext(), EditInformacion.class);
                 i.putExtra("informacion", informacionEdit.getText().toString());
                 startActivity(i);
                 break;
             case R.id.texViewContactos:
-                Intent intt = new Intent(getActivity(), EditContactos.class);
+                Intent intt = new Intent(getContext(), EditContactos.class);
                 intt.putExtra("contactos", contactosEdit.getText().toString());
                 startActivity(intt);
                 break;
             case R.id.texViewDireccion:
-                Intent direccionIntent = new Intent(getActivity(), EditDireccion.class);
+                Intent direccionIntent = new Intent(getContext(), EditDireccion.class);
                 direccionIntent.putExtra("direccion", direccionEdit.getText().toString());
                 startActivity(direccionIntent);
                 break;
             case R.id.foto_perfil:
 
-                Intent imagenFu = new Intent(getActivity(), FulImagen.class);
+                Intent imagenFu = new Intent(getContext(), FulImagen.class);
                 imagenFu.putExtra("foto", urlImagen);
                 startActivity(imagenFu);
                 break;
             case R.id.header_cover_image:
 
-                Intent imagenPortada = new Intent(getActivity(), FulImagen.class);
-                imagenPortada.putExtra("foto", urlImagen);
-                startActivity(imagenPortada);
+//                Intent imagenPortada = new Intent(getContext(), FulImagen.class);
+//                imagenPortada.putExtra("foto", urlImagen);
+//                startActivity(imagenPortada);
                 break;
 
             case R.id.imageViewMovil1:
@@ -367,7 +360,9 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                     Toast.makeText(getContext(), "Por favor instale WhatsApp Oficial.." + e.getMessage().toString(), Toast.LENGTH_SHORT).show();
                 }
 
+
                 break;
+
             default:
                 break;
         }
@@ -415,10 +410,13 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                         //  Toast.makeText(getContext(), jsonObject.getString("fotoperfil"), Toast.LENGTH_SHORT).show();
                         if (!jsonObject.getString("fotoperfil").equals("null")) {
                             urlImagen = jsonObject.getString("fotoperfil").toString();
-                            Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagen).into(foto_perfil);
+                            Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagen).error( R.drawable.perfilmusic )
+                                    .placeholder( R.drawable.progress_animation ).into(foto_perfil);
+
                             //   Glide.with(getContext()).load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagen).centerCrop().into(foto_perfil);
                             // Glide.with(getContext()).load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagen).placeholder(R.drawable.ic_camara_de_fotos).centerCrop().into(foto_portada);
-                            Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagen).into(foto_portada);
+                            Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagen).error( R.drawable.perfilmusic )
+                                    .placeholder( R.drawable.progress_animation ).into(foto_portada);
                         }
 
 

@@ -50,7 +50,15 @@ dependencies {
     compile 'com.github.snowdream.android:smartimageview:0.0.2'
     compile 'com.squareup.retrofit2:retrofit:2.4.0'
     compile 'com.squareup.retrofit2:converter-gson:2.4.0'
+    compile 'com.github.jakob-grabner:Circle-Progress-View:v1.3'
+
+
+    implementation "android.arch.persistence.room:runtime:1.0.0"
+    annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
 }
+
+
+
 
 
 

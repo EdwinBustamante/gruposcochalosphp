@@ -28,7 +28,7 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_margin="2dp"
         app:cardBackgroundColor="@color/cardview_color_publicaciones"
         app:cardCornerRadius="5dp"
         app:cardElevation="15dp">
@@ -36,13 +36,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_margin="2dp"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -70,6 +70,7 @@
 
 
             <ScrollView
+                android:id="@+id/scrollViewPublicar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -87,15 +88,65 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="500dp"
+                        android:layout_height="400dp"
                         android:orientation="vertical">
 
                         <com.edwinbustamante.gruposcochalos.RenderizadorFotos.ResizableImageView
                             android:id="@+id/imageViewPublicacionPrevio"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            />
+                            android:layout_height="match_parent" />
+
+
                     </LinearLayout>
+
+                    <LinearLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/blanco"
+                        android:elevation="5dp"
+                        android:orientation="horizontal"
+                        android:weightSum="4">
+
+                        <ImageView
+                            android:id="@+id/tiponormalp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_mapa_normal" />
+
+                        <ImageView
+                            android:id="@+id/tipohibridop"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_tierra" />
+
+                        <ImageView
+                            android:id="@+id/tiposatelitalp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_satelital" />
+
+                        <ImageView
+                            android:id="@+id/tipotierrap"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_el_planeta_tierra" />
+
+                    </LinearLayout>
+
+                    <fragment
+                        android:id="@+id/mapSeccionada"
+                        android:name="com.google.android.gms.maps.MapFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp" />
 
 
                 </LinearLayout>

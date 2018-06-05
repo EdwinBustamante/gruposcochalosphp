@@ -1,0 +1,37 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.edwinbustamante.gruposcochalos.SubirFoto">
+    <item
+
+        android:id="@+id/normalU"
+        android:icon="@drawable/ic_musico_usuario"
+        android:orderInCategory="100"
+        android:title="normal"
+       app:showAsAction="always|collapseActionView" />
+
+    <item
+        android:id="@+id/hibridoU"
+        android:icon="@drawable/ic_usuario_login"
+        android:orderInCategory="115"
+        android:title="hibrido"
+        app:showAsAction="always|collapseActionView" />
+    <item
+        android:id="@+id/satelitalU"
+        android:icon="@drawable/ic_satelital"
+        android:orderInCategory="115"
+        android:title="satelital"
+        app:showAsAction="always|collapseActionView" />
+    <item
+        android:id="@+id/tierraU"
+        android:icon="@drawable/ic_usuario_login"
+        android:orderInCategory="115"
+        android:title="tierra"
+        app:showAsAction="always|collapseActionView" />
+    <item
+        android:id="@+id/cancelarU"
+        android:icon="@drawable/ic_arrow_back_black_24dp"
+        android:orderInCategory="115"
+        android:title="cancelar"
+        app:showAsAction="always|collapseActionView" />
+</menu>
