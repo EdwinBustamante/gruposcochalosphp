@@ -1,9 +1,8 @@
 package com.edwinbustamante.gruposcochalos.CuentaUsuarioArchivos;
 
 
+import android.Manifest;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -24,14 +23,11 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,18 +45,17 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.edwinbustamante.gruposcochalos.DialogAnadirUbicacion;
-import com.edwinbustamante.gruposcochalos.DialogFragmentUbicacion;
 import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
 import com.edwinbustamante.gruposcochalos.R;
+import com.edwinbustamante.gruposcochalos.domain.Publicacion;
+import com.frosquivel.magicalcamera.MagicalCamera;
+import com.frosquivel.magicalcamera.MagicalPermissions;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.ByteArrayOutputStream;
@@ -99,10 +94,15 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener,
     private ScrollView scrollViewPublicar;
     private GoogleMap googleMap;
     private UiSettings mUiSettings;
+    private MapView mapView;
 
     private int contadorDeTap = 0;
     boolean mIsLargeLayout;
-    ImageView normal, satelital, tierra, hibrido;
+    ImageView normal, satelital, tierra, hibrido, eliminarmapa;
+    private LatLng latLngPubicar = null;
+    private MagicalPermissions magicalPermissions;
+    private MagicalCamera magicalCamera;
+    private int RESIZE_PHOTO_PIXELS_PERCENTAGE = 80;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,6 +130,8 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener,
         satelital.setOnClickListener(this);
         tierra = findViewById(R.id.tipotierrap);
         tierra.setOnClickListener(this);
+        eliminarmapa = findViewById(R.id.eliminarmapapublicar);
+        eliminarmapa.setOnClickListener(this);
 
         scrollViewPublicar = (ScrollView) findViewById(R.id.scrollViewPublicar);
         mAttacher = new PhotoViewAttacher(imageViewPublicacionPrevio);
@@ -143,73 +145,43 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener,
         imageViewPublicacionPrevio.setMaxHeight(height);
         imageViewPublicacionPrevio.setMaxWidth(width);
         cargarImagen = new ProgressDialog(Publicar.this);
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapSeccionada);
-        mapFragment.getMapAsync(this);
 
-
+        //MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapSeccionada);
+        //  mapFragment.getMapAsync(this);
         mIsLargeLayout = getResources().getBoolean(R.bool.large_layout);
-        // buttoncargar = (Button) findViewById(R.id.buttoncargar);
 
-       /* if (validarPermisos()) {
-            buttoncargar.setEnabled(true);
-        } else {
-            buttoncargar.setEnabled(false);
-        }
-        buttoncargar.setOnClickListener(this);
-    */
-    }
-
-    public boolean validarPermisos() {
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if ((checkSelfPermission(CAMERA) == PackageManager.PERMISSION_GRANTED) &&
-                (checkSelfPermission(WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
-            return true;
-        }
-        if ((shouldShowRequestPermissionRationale(CAMERA)) || (shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE))) {
-
-            cargarDialogRecomendacion();
-        } else {
-            requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE, CAMERA}, 100);
-
-        }
-        return false;
-    }
-
-    private void cargarDialogRecomendacion() {
-
-        AlertDialog.Builder dialogo = new AlertDialog.Builder(Publicar.this);
-        dialogo.setTitle("Permisos desactivados");
-        dialogo.setMessage("Debe aceptar los permisos para el correcto funcionamiento de la Aplicacion Grupos Chochalos");
-        dialogo.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE, CAMERA}, 100);
-            }
-        });
-        dialogo.show();
-
+        mapView = findViewById(R.id.mapView);
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(this);
+        quitarMapa();
+        String[] permissions = new String[]{
+                Manifest.permission.CAMERA,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        };
+        magicalPermissions = new MagicalPermissions(this, permissions);
+        magicalCamera = new MagicalCamera(this, RESIZE_PHOTO_PIXELS_PERCENTAGE, magicalPermissions);
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 100) {
-            if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-
-                //  buttoncargar.setEnabled(true);
-
-            } else {
-                solicitarPermisosManual();
-            }
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        Map<String, Boolean> map = magicalPermissions.permissionResult(requestCode, permissions, grantResults);
+        for (String permission : map.keySet()) {
+            Log.d("PERMISSIONS", permission + " was: " + map.get(permission));
         }
-
-
+        //Following the example you could also
+        //locationPermissions(requestCode, permissions, grantResults);
     }
+
+    private void quitarMapa() {
+        mapView.setVisibility(View.INVISIBLE);
+        normal.setVisibility(View.INVISIBLE);
+        tierra.setVisibility(View.INVISIBLE);
+        satelital.setVisibility(View.INVISIBLE);
+        hibrido.setVisibility(View.INVISIBLE);
+        eliminarmapa.setVisibility(View.INVISIBLE);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -229,12 +201,11 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener,
 
             case R.id.publicar:
                 if (editTextPublicacionPrevio.getText().toString().isEmpty()) {
-                    Toast.makeText(this, "Debes escribir una publicacion para poder publicar", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Debes escribir una publicacion y añadir una foto para poder publicar", Toast.LENGTH_SHORT).show();
                 } else {
                     publicarPublicacion();
                 }
 
-                Toast.makeText(this, "lista para publicar", Toast.LENGTH_SHORT).show();
                 break;
             case android.R.id.home:
                 finish();
@@ -291,6 +262,11 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener,
             case R.id.tipohibridop:
                 googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
                 break;
+            case R.id.eliminarmapapublicar:
+                quitarMapa();
+                latLngPubicar = null;
+                Toast.makeText(this, "Ubicación eliminada", Toast.LENGTH_SHORT).show();
+                break;
             default:
                 Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
                 break;
@@ -324,13 +300,11 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener,
             public void onClick(DialogInterface dialog, int which) {
                 if (option[which] == "Tomar foto") {
 
-                    abrirCamara();
+                    magicalCamera.takePhoto();
 
                 } else if (option[which] == "Elegir de galeria") {
 
-                    Intent intent = new Intent(Intent.ACTION_PICK);
-                    intent.setType("image/*");
-                    startActivityForResult(Intent.createChooser(intent, "Selecciona una imagen"), CODE_GALLERY_REQUEST);
+                    magicalCamera.selectedPicture("Selecciona una aplicación");
 
                 } else {
                     dialog.dismiss();
@@ -341,87 +315,30 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener,
         builder.show();
     }
 
-
-    private void solicitarPermisosManual() {
-        final CharSequence[] opciones = {"si", "no"};
-        final AlertDialog.Builder dialogOpciones = new AlertDialog.Builder(Publicar.this);
-        dialogOpciones.setTitle("Desea configurar los permisos de forma manual?");
-        dialogOpciones.setItems(opciones, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int i) {
-                if (opciones[i].equals("si")) {
-                    Intent intent = new Intent();
-                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    Uri uri = Uri.fromParts("package", getPackageName(), null);
-                    intent.setData(uri);
-                    startActivity(intent);
-                } else {
-                    dialog.dismiss();
-                }
-
-            }
-        });
-        dialogOpciones.show();
-    }
-
-    private void abrirCamara() {
-        // Toast.makeText(this, "hola", Toast.LENGTH_SHORT).show();
-        File file = new File(Environment.getExternalStorageDirectory(), MEDIA_DIRECTORY);
-        boolean isDirectoryCreated = file.exists();
-
-        if (!isDirectoryCreated)
-            isDirectoryCreated = file.mkdirs();
-
-        if (isDirectoryCreated) {
-            Long timestamp = System.currentTimeMillis() / 1000;
-            String imageName = timestamp.toString() + ".jpg";
-
-            namefoto = Environment.getExternalStorageDirectory() + File.separator + MEDIA_DIRECTORY + File.separator + imageName;
-
-            Uri output = Uri.fromFile(new File(namefoto));
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, output);
-            startActivityForResult(intent, CODE_CAMARA_REQUEST);
-
-        }
-    }
-
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CODE_GALLERY_REQUEST && resultCode == RESULT_OK && data != null) {
-            Uri filePath = data.getData();
-            try {
-                InputStream inputStream = getContentResolver().openInputStream(filePath);
-                bitmap = BitmapFactory.decodeStream(inputStream);
-                imageViewPublicacionPrevio.setImageBitmap(bitmap);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-
-
-        } else {
-            if (requestCode == CODE_CAMARA_REQUEST && resultCode == RESULT_OK) {
-
-                MediaScannerConnection.scanFile(getApplicationContext(), new String[]{namefoto}, null, new MediaScannerConnection.OnScanCompletedListener() {
-                    @Override
-                    public void onScanCompleted(String path, Uri uri) {
-                        Log.i("nombrefoto", namefoto);
-                    }
-                });
-
-                bitmap = BitmapFactory.decodeFile(namefoto);
-                imageViewPublicacionPrevio.setImageBitmap(bitmap);
-            }
-        }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //CALL THIS METHOD EVER
+        magicalCamera.resultPhoto(requestCode, resultCode, data);
+
+
+        //this is for rotate picture in this method
+        //magicalCamera.resultPhoto(requestCode, resultCode, data, MagicalCamera.ORIENTATION_ROTATE_180);
+        //alistando para enviar al servidor
+        bitmap = magicalCamera.getPhoto();
+        //with this form you obtain the bitmap (in this example set this bitmap in image view)
+        imageViewPublicacionPrevio.setImageBitmap(bitmap);
+
+        //if you need save your bitmap in device use this method and return the path if you need this
+        //You need to send, the bitmap picture, the photo name, the directory name, the picture type, and autoincrement photo name if           //you need this send true, else you have the posibility or realize your standard name for your pictures.
+        String path = magicalCamera.savePhotoInMemoryDevice(magicalCamera.getPhoto(), "gc", "Grupos Cochalos", MagicalCamera.JPEG, true);
+
+        if (path != null) {
+            Toast.makeText(Publicar.this, "Foto guardado en el dispositivo " + path, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(Publicar.this, "No se guardo la foto", Toast.LENGTH_SHORT).show();
+        }
     }
-
-//    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        outState.putString("file_path", mPath);
-//    }
-
 
     private String getRandomString() {
         SecureRandom random = new SecureRandom();
@@ -466,9 +383,17 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener,
                 String imageData = imageToString(bitmap);//se encarga de convertir a cadena el metodo metodo to String
                 params.put("idgrupomusical", idGrupoMusical);
                 params.put("textopublicacion", editTextPublicacionPrevio.getText().toString());
+
                 params.put("image", imageData);//el nombre image es la clave para recibir en el php
                 String hora = obtenerFechaHora();
                 params.put("hora", hora);
+                if (latLngPubicar != null) {
+                    params.put("latitud", "" + latLngPubicar.latitude);
+                    params.put("longitud", "" + latLngPubicar.longitude);
+                } else {
+                    params.put("latitud", "no");
+                    params.put("longitud", "no");
+                }
                 return params;
             }
         };
@@ -481,7 +406,7 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener,
         //  long codigoHora = System.currentTimeMillis()/1000;
         long codigoHora = new Date().getTime();
         Date d = new Date(codigoHora);
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("hh:mm:ss a");//se da el formato en este caso la hora los minutos y los segundos
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("hh:mm a");//se da el formato en este caso la hora los minutos y los segundos
         java.text.SimpleDateFormat mes = new java.text.SimpleDateFormat("MM");
         java.text.SimpleDateFormat fecha = new java.text.SimpleDateFormat("dd");
         java.text.SimpleDateFormat anio = new java.text.SimpleDateFormat("yyyy");
@@ -539,6 +464,7 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener,
         byte[] imageBytes = outputStream.toByteArray();
         String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
         return encodedImage;
+
     }
 
 
@@ -576,11 +502,18 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener,
 
     @Override
     public void onComplete(LatLng latLng) {
-        Toast.makeText(this, "" + latLng.longitude, Toast.LENGTH_SHORT).show();
+        latLngPubicar = latLng;
 
-        if (latLng != null) {
+        if (latLngPubicar != null) {
             googleMap.clear();
-            LatLng posicionDePublicacion = new LatLng(latLng.latitude, latLng.longitude);
+
+            mapView.setVisibility(View.VISIBLE);
+            normal.setVisibility(View.VISIBLE);
+            tierra.setVisibility(View.VISIBLE);
+            satelital.setVisibility(View.VISIBLE);
+            hibrido.setVisibility(View.VISIBLE);
+            eliminarmapa.setVisibility(View.VISIBLE);
+            LatLng posicionDePublicacion = new LatLng(latLngPubicar.latitude, latLngPubicar.longitude);
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(posicionDePublicacion, 15));
 
             googleMap.addMarker(new MarkerOptions()
@@ -590,4 +523,41 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener,
 
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mapView.onStart();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
+
 }

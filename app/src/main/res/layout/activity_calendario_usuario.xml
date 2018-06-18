@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.edwinbustamante.gruposcochalos.CalendarioUsuario">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/bar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:fitsSystemWindows="false"
+        android:theme="@style/AppTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbarcalendario"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <com.applandeo.materialcalendarview.CalendarView
+        android:id="@+id/calendarViewAdd"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bar"
+        app:selectionColor="@color/satelital"
+        app:selectionLabelColor="@color/blanco"
+        app:type="many_days_picker"
+         />
+    <!--app:pagesColor="#b8ba78"
+        app:disabledDaysLabelsColor="@color/yello"
+        app:selectionColor="@color/satelital"
+       app:type="many_days_picker"
+       app:headerColor="@color/colorPrimary"
+       app:anotherMonthsDaysLabelsColor="#878080"
+       app:abbreviationsBarColor="#37ab46"-->
+
+
+</android.support.constraint.ConstraintLayout>

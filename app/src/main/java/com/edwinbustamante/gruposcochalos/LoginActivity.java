@@ -52,6 +52,7 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
      */
     String FileName = "myUserId";
     String FileNameUsuario = "usuario";
+    String FileNameGrupo = "IdGrupo";
 
     public void guardarIdUsuario(String idusername) {
         SharedPreferences sharedPreferences = getSharedPreferences(FileName, Context.MODE_PRIVATE);
@@ -64,6 +65,14 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
         SharedPreferences sharedPreferences = getSharedPreferences(FileNameUsuario, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("usuario", usuario);
+        editor.commit();
+    }
+
+
+    private void guardarIdGrupoMusical(String idgrupomusical) {
+        SharedPreferences sharedPreferences = getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("idgrupomusical", idgrupomusical);
         editor.commit();
     }
 
@@ -148,9 +157,10 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
                     } else {
                         guardarIdUsuario(jsonObject.optString("idusuario"));//guardando en SharePreference
                         guardarUsuario(jsonObject.optString("usuario"));//guardando en SharePreference
-
+                        guardarIdGrupoMusical(jsonObject.optString("idusuario"));
                         Toast.makeText(this, "Se inicio correctamente", Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(LoginActivity.this, CuentaUsuario.class);
+
                         User usr = new User();
                         usr.setUser(jsonObject.optString("usuario"));
                         i.putExtra("objetoUsuario", usr);
@@ -168,5 +178,10 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
 
             e.printStackTrace();
         }
+    }
+
+    public void olvideContrasenia(View view) {
+        Intent olvide = new Intent(this, OlvideContrasenia.class);
+        startActivity(olvide);
     }
 }

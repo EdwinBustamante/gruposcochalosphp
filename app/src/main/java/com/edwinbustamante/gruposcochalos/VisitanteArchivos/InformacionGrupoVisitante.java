@@ -1,6 +1,8 @@
 package com.edwinbustamante.gruposcochalos.VisitanteArchivos;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.Image;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import com.edwinbustamante.gruposcochalos.ImagenFull.FulImagenVisitante;
 import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
 import com.edwinbustamante.gruposcochalos.R;
+import com.edwinbustamante.gruposcochalos.VisitarMapa.MapsActivityVisitar;
 import com.edwinbustamante.gruposcochalos.domain.GrupoMusical;
 import com.squareup.picasso.Picasso;
 
@@ -24,20 +27,21 @@ import org.w3c.dom.Text;
 public class InformacionGrupoVisitante extends AppCompatActivity implements View.OnClickListener {
     private ImageView imageViewPortada, imageViewPerfil, movil1, movil2, movilwhatsapp, facebook, ubicacion;
     private TextView nombreGrupo, generoGrupo, informacionVisitante, movil1text, movil2text, movilwhatsapptext, linkfacebook, contactosextra, direcciontext;
-    private String fotoperfil;
+    private String fotoperfil, latitudg, longitudg,fotoportada;
+    private TextView numeroPublic;
+    GrupoMusical grupoMusical;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_informacion_grupo_visitante);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Informacion de Grupo Musical");
+        toolbar.setTitle("Información de Grupo Musical");
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
-        GrupoMusical grupoMusical = getIntent().getExtras().getParcelable("grupomusical");
-
+        grupoMusical = getIntent().getExtras().getParcelable("grupomusical");
         imageViewPortada = (ImageView) findViewById(R.id.portada_visitante);
         imageViewPortada.setOnClickListener(this);
         imageViewPerfil = (ImageView) findViewById(R.id.perfil_visitante);
@@ -45,8 +49,13 @@ public class InformacionGrupoVisitante extends AppCompatActivity implements View
         nombreGrupo = (TextView) findViewById(R.id.nombregrupo_visitante);
         generoGrupo = (TextView) findViewById(R.id.texgeneroMusica_visitante);
         fotoperfil = grupoMusical.getFotoperfil();
-        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + fotoperfil).into(imageViewPortada);
-        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + grupoMusical.getFotoperfil()).into(imageViewPerfil);
+        fotoportada=grupoMusical.getFotoportada();
+
+        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + fotoperfil).error(R.drawable.perfilmusic)
+                .placeholder(R.drawable.progress_animation).into(imageViewPerfil);
+        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + fotoportada).error(R.drawable.perfilmusic)
+                .placeholder(R.drawable.progress_animation).into(imageViewPortada);
+
         nombreGrupo.setText(grupoMusical.getNombre());
         generoGrupo.setText(grupoMusical.getGenero());
         informacionVisitante = (TextView) findViewById(R.id.texViewInformacion_visitante);
@@ -73,6 +82,10 @@ public class InformacionGrupoVisitante extends AppCompatActivity implements View
         direcciontext.setText(grupoMusical.getDirecciondescripcion());
         ubicacion = (ImageView) findViewById(R.id.ubicar_visitante);
         ubicacion.setOnClickListener(this);
+        numeroPublic = (TextView) findViewById(R.id.numerodepublic);
+        numeroPublic.setOnClickListener(this);
+        latitudg = grupoMusical.getLatitudg();
+        longitudg = grupoMusical.getLongitudg();
 
     }
 
@@ -107,18 +120,24 @@ public class InformacionGrupoVisitante extends AppCompatActivity implements View
         switch (view.getId()) {
             case R.id.portada_visitante:
                 Intent i = new Intent(this, FulImagenVisitante.class);
-                i.putExtra("fotoperfil", fotoperfil);
+                i.putExtra("nombretoolbar","Portada");
+                i.putExtra("fotoperfil", fotoportada);
                 startActivity(i);
 
-              //Toast.makeText(this, fotoperfil, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, fotoperfil, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.perfil_visitante:
                 Intent in = new Intent(this, FulImagenVisitante.class);
+                in.putExtra("nombretoolbar","Perfil");
                 in.putExtra("fotoperfil", fotoperfil);
                 startActivity(in);
                 //Toast.makeText(this, "perfil", Toast.LENGTH_SHORT).show();
                 break;
-
+            case R.id.numerodepublic:
+                Intent publicacionesvisitar = new Intent(InformacionGrupoVisitante.this, PublicacionesGrupoVisitante.class);
+               publicacionesvisitar.putExtra("idgrupomusical",grupoMusical.getIdgrupomusical());
+                startActivity(publicacionesvisitar);
+                break;
             case R.id.imageViewMovil1_visitante:
                 // Toast.makeText(this, "movil 1", Toast.LENGTH_SHORT).show();
                 llamar(movil1text.getText().toString());
@@ -135,22 +154,55 @@ public class InformacionGrupoVisitante extends AppCompatActivity implements View
 
                     Uri uri = Uri.parse("smsto:" + movilwhatsapptext.getText().toString());
                     Intent ir = new Intent(Intent.ACTION_SENDTO, uri);
-                    ir.setPackage("com.gbwhatsapp");
-                    startActivity(ir);
+                    if (estaInstaladaAplicacion("com.whatsapp", InformacionGrupoVisitante.this)) {
+                        ir.setPackage("com.whatsapp");
+                        startActivity(ir);
+                    } else {
+                        ir.setPackage("com.gbwhatsapp");
+                        startActivity(ir);
+                    }
                 } catch (Exception e) {
                     Toast.makeText(this, "Por favor instale WhatsApp Oficial.." + e.getMessage().toString(), Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.ImageViewFacebook_visitante:
-                Toast.makeText(this, "facebook", Toast.LENGTH_SHORT).show();
+                //String facebookId = "fb.//page/<Faceboook Page ID>";
+                String facebookId="2207520000.1528940297";
+                String urlPage = linkfacebook.getText().toString();
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(facebookId)));
+                } catch (Exception e) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(urlPage)));
+                }
                 break;
             case R.id.ubicar_visitante:
-                Toast.makeText(this, "ubicar", Toast.LENGTH_SHORT).show();
+
+                if (latitudg.equals("no")) {
+                    Toast.makeText(InformacionGrupoVisitante.this, "El grupo " + nombreGrupo.getText().toString() + " no añadio ubicación", Toast.LENGTH_SHORT).show();
+                } else {
+
+                    Intent mapsvisitar = new Intent(InformacionGrupoVisitante.this, MapsActivityVisitar.class);
+                    mapsvisitar.putExtra("latitud", latitudg);
+                    mapsvisitar.putExtra("longitud", longitudg);
+                    mapsvisitar.putExtra("titulomarcador", nombreGrupo.getText().toString());
+                    startActivity(mapsvisitar);
+                }
+
                 break;
             default:
                 break;
         }
 
+    }
+    private boolean estaInstaladaAplicacion(String nombrePaquete, Context contexto) {
+        PackageManager pm = contexto.getPackageManager();
+        try {
+            pm.getPackageInfo(nombrePaquete, PackageManager.GET_ACTIVITIES);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public void llamar(String numero) {

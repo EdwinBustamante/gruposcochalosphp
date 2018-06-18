@@ -27,15 +27,16 @@ public class FulImagenVisitante extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ful_imagen_visitante);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Foto de Perfil");
+        toolbar.setTitle("Foto de "+getIntent().getExtras().getString("nombretoolbar"));
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
         String fotoPerfil = getIntent().getExtras().getString("fotoperfil");
-      //  Toast.makeText(this, fotoPerfil, Toast.LENGTH_SHORT).show();
+        //  Toast.makeText(this, fotoPerfil, Toast.LENGTH_SHORT).show();
         perfil = (ImageView) findViewById(R.id.imagenfullVisitante);
-        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + fotoPerfil).into(perfil);
+        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + fotoPerfil).error(R.drawable.perfilmusic)
+                .placeholder(R.drawable.progress_animation).into(perfil);
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);

@@ -6,11 +6,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
@@ -32,14 +34,25 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
+import com.applandeo.materialcalendarview.CalendarView;
+import com.applandeo.materialcalendarview.DatePicker;
+import com.applandeo.materialcalendarview.builders.DatePickerBuilder;
+import com.applandeo.materialcalendarview.listeners.OnSelectDateListener;
+import com.edwinbustamante.gruposcochalos.CalendarioUsuario;
 import com.edwinbustamante.gruposcochalos.ImagenFull.FulImagen;
+import com.edwinbustamante.gruposcochalos.ImagenFull.FullFotoPortada;
 import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
 import com.edwinbustamante.gruposcochalos.R;
+import com.edwinbustamante.gruposcochalos.SelectecDateFragment;
+import com.edwinbustamante.gruposcochalos.VisitarMapa.MapsActivityVisitar;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Calendar;
+import java.util.List;
 
 
 public class InformacionProfileFragment extends Fragment implements View.OnClickListener, Response.ErrorListener, Response.Listener<JSONObject> {
@@ -54,14 +67,20 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
     private ImageView foto_perfil, foto_portada;
     private TextView usuario, nombreGrupo, generoMusica, movil1, movil2, movilWhatsApp, linkFacebook;
     private TextView informacionEdit, contactosEdit, direccionEdit;
-    private ImageView imageViewMovil1, imageViewMovil2, imageViewMovilWhasapp;
+    private ImageView imageViewMovil1, imageViewMovil2, imageViewMovilWhasapp, anadirubicaciocasa, visitarubicacioncasa, irfacebook;
     String FileName = "myUserId";
     String urlImagen;
+    String urlImagenPortada;
     private LinearLayout editMainCuenta;
+    private ImageView agendaGrupo;
 
     RequestQueue rq;
     JsonRequest jrq;
     String idUsuarioInput;
+    private String latitudg;
+    private String longitudg;
+    static final int DATE_DIALOG_ID = 999;
+    List<Calendar> calendarioguardar;
 
     public InformacionProfileFragment() {
         // Required empty public constructor
@@ -114,7 +133,9 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
         movilWhatsApp = (TextView) vista.findViewById(R.id.texViewMovilWhatsApp);
         movilWhatsApp.setOnClickListener(this);
         linkFacebook = (TextView) vista.findViewById(R.id.texViewLinkFacebook);
-        // linkFacebook.setOnClickListener(this);
+        linkFacebook.setOnClickListener(this);
+        irfacebook = (ImageView) vista.findViewById(R.id.irFacebookCuenta);
+        irfacebook.setOnClickListener(this);
 
         contactosEdit = (TextView) vista.findViewById(R.id.texViewContactos);
         contactosEdit.setOnClickListener(this);
@@ -126,6 +147,13 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
         imageViewMovil2.setOnClickListener(this);
         imageViewMovilWhasapp = (ImageView) vista.findViewById(R.id.imageViewMovilWhatsapp);
         imageViewMovilWhasapp.setOnClickListener(this);
+        anadirubicaciocasa = (ImageView) vista.findViewById(R.id.anadirubicacioncasa);
+        visitarubicacioncasa = (ImageView) vista.findViewById(R.id.visitarubicacioncasa);
+        anadirubicaciocasa.setOnClickListener(this);
+        visitarubicacioncasa.setOnClickListener(this);
+        visitarubicacioncasa.setVisibility(View.INVISIBLE);
+        agendaGrupo = (ImageView) vista.findViewById(R.id.agendaGrupo);
+        agendaGrupo.setOnClickListener(this);
 
         //nombreGrupo.setText(USUARIO.getNombre());
         // generoMusica.setText(USUARIO.getGenero());
@@ -217,6 +245,33 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                 });
                 AlertDialog editarGenero = dialogoEditGenero.create();
                 editarGenero.show();
+                break;
+            case R.id.agendaGrupo:
+                //  onCreateDialog();
+                //  Intent intentC = new Intent(getContext(), CalendarioUsuario.class);
+                // startActivity(intentC);
+                OnSelectDateListener listener = new OnSelectDateListener() {
+                    @Override
+                    public void onSelect(List<Calendar> calendars) {
+
+                        calendarioguardar = calendars;
+                        for (Calendar c : calendars) {
+                            int anio = c.get(Calendar.YEAR);
+                            int mes = c.get(Calendar.MONTH) + 1;
+                            int fecha = c.get(Calendar.DAY_OF_MONTH);
+                            Toast.makeText(getContext(), "" + fecha + "" + mes + "" + anio, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                };
+                Calendar calendar = Calendar.getInstance();
+                DatePickerBuilder builder = new DatePickerBuilder(getContext(), listener)
+                        .pickerType(CalendarView.MANY_DAYS_PICKER)
+                        .date(calendar);
+
+
+                DatePicker datePicker = builder.build();
+                datePicker.show();
+
                 break;
             case R.id.texViewMovil1:
                 final EditText inputMovil1;
@@ -336,9 +391,9 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                 break;
             case R.id.header_cover_image:
 
-//                Intent imagenPortada = new Intent(getContext(), FulImagen.class);
-//                imagenPortada.putExtra("foto", urlImagen);
-//                startActivity(imagenPortada);
+                Intent imagenPortada = new Intent(getContext(), FullFotoPortada.class);
+                imagenPortada.putExtra("foto", urlImagenPortada);
+                startActivity(imagenPortada);
                 break;
 
             case R.id.imageViewMovil1:
@@ -348,23 +403,81 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                 llamar(movil2.getText().toString());
                 break;
             case R.id.imageViewMovilWhatsapp:
+                PackageManager pm = getActivity().getPackageManager();
                 try {
                     // Intent launchIntent =getContext().getPackageManager().getLaunchIntentForPackage("com.whatsapp");
                     //startActivity(launchIntent);
 
                     Uri uri = Uri.parse("smsto:" + movilWhatsApp.getText().toString());
                     Intent ir = new Intent(Intent.ACTION_SENDTO, uri);
-                    ir.setPackage("com.whatsapp");
-                    startActivity(ir);
+
+                    if (estaInstaladaAplicacion("com.whatsapp", getContext())) {
+                        ir.setPackage("com.whatsapp");
+                        startActivity(ir);
+                    } else {
+                        ir.setPackage("com.gbwhatsapp");
+                        startActivity(ir);
+                    }
+
+
                 } catch (Exception e) {
                     Toast.makeText(getContext(), "Por favor instale WhatsApp Oficial.." + e.getMessage().toString(), Toast.LENGTH_SHORT).show();
                 }
 
 
                 break;
+            case R.id.texViewLinkFacebook:
+                Intent faceboooklink = new Intent(getContext(), EditLinkFacebook.class);
+                faceboooklink.putExtra("linkfacebook", linkFacebook.getText().toString());
+                startActivity(faceboooklink);
+                break;
+            case R.id.irFacebookCuenta:
+                String facebookId = "fb.//page/<Faceboook Page ID>";
+                String urlPage = linkFacebook.getText().toString();
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(facebookId)));
+                } catch (Exception e) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(urlPage)));
+                }
 
+                break;
+            case R.id.anadirubicacioncasa:
+                Intent ubicacioncasa = new Intent(getContext(), AnadirUbicacionCasa.class);
+                startActivity(ubicacioncasa);
+
+                break;
+            case R.id.visitarubicacioncasa:
+                if (latitudg.equals("no")) {
+                    Toast.makeText(getContext(), "Falta añadir ubicación", Toast.LENGTH_SHORT).show();
+                } else {
+
+                    Intent mapsvisitar = new Intent(getContext(), MapsActivityVisitar.class);
+                    mapsvisitar.putExtra("latitud", latitudg);
+                    mapsvisitar.putExtra("longitud", longitudg);
+                    mapsvisitar.putExtra("titulomarcador", nombreGrupo.getText().toString());
+                    startActivity(mapsvisitar);
+                }
+
+                break;
             default:
                 break;
+        }
+    }
+
+    protected void onCreateDialog() {
+        DialogFragment newFragment = new SelectecDateFragment();
+        newFragment.show(getFragmentManager(), "DatePicker");
+    }
+
+
+    private boolean estaInstaladaAplicacion(String nombrePaquete, Context contexto) {
+        PackageManager pm = contexto.getPackageManager();
+        try {
+            pm.getPackageInfo(nombrePaquete, PackageManager.GET_ACTIVITIES);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
@@ -408,19 +521,31 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                     linkFacebook.setText(jsonObject.getString("linkfacebook"));
                     try {
                         //  Toast.makeText(getContext(), jsonObject.getString("fotoperfil"), Toast.LENGTH_SHORT).show();
-                        if (!jsonObject.getString("fotoperfil").equals("null")) {
-                            urlImagen = jsonObject.getString("fotoperfil").toString();
-                            Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagen).error( R.drawable.perfilmusic )
-                                    .placeholder( R.drawable.progress_animation ).into(foto_perfil);
+                        //if (!jsonObject.getString("fotoperfil").equals("null")) {
+                        urlImagen = jsonObject.getString("fotoperfil").toString();
+                        urlImagenPortada = jsonObject.getString("fotoportada").toString();
 
-                            //   Glide.with(getContext()).load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagen).centerCrop().into(foto_perfil);
-                            // Glide.with(getContext()).load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagen).placeholder(R.drawable.ic_camara_de_fotos).centerCrop().into(foto_portada);
-                            Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagen).error( R.drawable.perfilmusic )
-                                    .placeholder( R.drawable.progress_animation ).into(foto_portada);
-                        }
+                        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagen).error(R.drawable.perfilmusic)
+                                .placeholder(R.drawable.progress_animation).into(foto_perfil);
+
+                        //   Glide.with(getContext()).load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagen).centerCrop().into(foto_perfil);
+                        // Glide.with(getContext()).load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagen).placeholder(R.drawable.ic_camara_de_fotos).centerCrop().into(foto_portada);
+                        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagenPortada).error(R.drawable.perfilmusic)
+                                .placeholder(R.drawable.progress_animation).into(foto_portada);
+                        //}
 
 
                     } catch (Exception e) {
+
+                    }
+                    latitudg = jsonObject.getString("latitudg");
+                    longitudg = jsonObject.getString("longitudg");
+
+                    if (latitudg.equals("no")) {
+                        visitarubicacioncasa.setVisibility(View.INVISIBLE);
+
+                    } else {
+                        visitarubicacioncasa.setVisibility(View.VISIBLE);
 
                     }
                 }
@@ -443,4 +568,6 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
         editor.putString("idgrupomusical", idgrupomusical);
         editor.commit();
     }
+
+
 }

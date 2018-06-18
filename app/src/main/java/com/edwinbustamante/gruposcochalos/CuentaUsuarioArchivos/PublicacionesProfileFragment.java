@@ -6,8 +6,10 @@ import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -28,6 +30,7 @@ import com.edwinbustamante.gruposcochalos.service.PublicacionAPI;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,6 +43,7 @@ public class PublicacionesProfileFragment extends Fragment implements View.OnCli
     String FileNameGrupo = "IdGrupo";
     private LinearLayout editMainCuenta;
     String idUsuarioInput;
+
     //A CONTINUACION SE DECLARA LAS VARIABLES DEL RECYCLERVIEW
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -66,10 +70,6 @@ public class PublicacionesProfileFragment extends Fragment implements View.OnCli
 
         //progressDialogFotoSubir = new ProgressDialog(this);
 
-        String defaultValue = "DefaultName";
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(FileName, Context.MODE_PRIVATE);
-        idUsuarioInput = sharedPreferences.getString("idusuario", defaultValue);
-        Toast.makeText(getContext(), idUsuarioInput, Toast.LENGTH_SHORT).show();
         //     actualizarDatosUsuario();
         /*
      LA CONFIGURACION DEL RECYCLER VIEW
@@ -79,36 +79,33 @@ public class PublicacionesProfileFragment extends Fragment implements View.OnCli
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
+        publicacionlista.clear();
 
-
-        mAdapter = new MyAdapterPublicar(publicacionlista, this.getContext());
+        mAdapter = new MyAdapterPublicar(publicacionlista, this.getContext(),"administrador");
         mRecyclerView.setAdapter(mAdapter);
-        // obtenerPublicaciones();
-        Toast.makeText(getContext(), "on create", Toast.LENGTH_SHORT).show();
+        String defaultValue = "DefaultName";
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(FileName, Context.MODE_PRIVATE);
+        idUsuarioInput = sharedPreferences.getString("idusuario", defaultValue);
         return vista;
-
     }
+
 
     @Override
     public void onStart() {
         super.onStart();
-
-
         obtenerPublicaciones();
 
 
     }
 
 
-
-
-
-
     private void obtenerPublicaciones() {
-        String defaultValue = "DefaultName";
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
-        String idGrupoMusical = sharedPreferences.getString("idgrupomusical", defaultValue);
-        Call<ResultadoPublicacion> resultadoPublicacionCall = PublicacionAPI.getPublicacionService().getCanciones(idGrupoMusical);
+        String defaultValues = "DefaultName";
+        SharedPreferences sharedPreferencess = getActivity().getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
+        String idGrupoMusical = sharedPreferencess.getString("idgrupomusical", defaultValues);
+        Toast.makeText(getContext(), idGrupoMusical, Toast.LENGTH_SHORT).show();
+
+        Call<ResultadoPublicacion> resultadoPublicacionCall = PublicacionAPI.getPublicacionService().getCanciones(idGrupoMusical);//lacemos la llamada al archivo php
         resultadoPublicacionCall.enqueue(new Callback<ResultadoPublicacion>() {
             @Override
             public void onResponse(Call<ResultadoPublicacion> call, retrofit2.Response<ResultadoPublicacion> response) {

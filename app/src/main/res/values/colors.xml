@@ -26,17 +26,20 @@
     <color name="transparentemaps">#757575</color>
     <color name="informacion">#649bec9f</color>
     <color name="contactos">#64d0e608</color>
-    <color name="direccion">#64d96466</color>
+    <color name="direccion">#42A5F5</color>
     <color name="publicar">#FF208098</color>
-    <color name="cardview_color_publicaciones">#FFFDFFCE</color>
+    <color name="cardview_color_publicaciones">#fdffce</color>
     <color name="fondo_editTex_Publicar">#FFADD7C9</color>
     <color name="blue_300">#64B5F6</color>
     <color name="teal_A700">#00BFA5</color>
     <color name="grey_400">#BDBDBD</color>
-    <color name="rojito">#26A69A</color>
+    <color name="rojito">#B2DFDB</color>
     <color name="normal">#3D5AFE</color>
     <color name="tierra">#8D6E63</color>
     <color name="satelital">#D50000</color>
     <color name="hibrido">#00BFA5</color>
+    <color name="fondopublicaciones">#92a39f9f</color>
+    <color name="publicacionvisitar">#FFE0B2</color>
+    <color name="calendario">#FFCDD2</color>
 
 </resources>

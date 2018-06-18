@@ -103,10 +103,10 @@
 
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/blanco"
+                        android:background="@color/cardview_color_publicaciones"
                         android:elevation="5dp"
                         android:orientation="horizontal"
-                        android:weightSum="4">
+                        android:weightSum="5">
 
                         <ImageView
                             android:id="@+id/tiponormalp"
@@ -140,11 +140,23 @@
                             android:layout_weight="1"
                             android:src="@drawable/ic_el_planeta_tierra" />
 
+                        <ImageView
+                            android:id="@+id/eliminarmapapublicar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_cerrar" />
                     </LinearLayout>
 
-                    <fragment
-                        android:id="@+id/mapSeccionada"
-                        android:name="com.google.android.gms.maps.MapFragment"
+                    <!-- <fragment
+                         android:id="@+id/mapSeccionada"
+                         android:name="com.google.android.gms.maps.MapFragment"
+                         android:layout_width="match_parent"
+                         android:layout_height="300dp" />-->
+
+                    <com.google.android.gms.maps.MapView
+                        android:id="@+id/mapView"
                         android:layout_width="match_parent"
                         android:layout_height="300dp" />
 

@@ -19,12 +19,12 @@ import android.graphics.Point;
 
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
+
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -50,6 +50,7 @@ import com.android.volley.toolbox.Volley;
 import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
 
 import com.edwinbustamante.gruposcochalos.R;
+import com.frosquivel.magicalcamera.MagicalPermissions;
 import com.squareup.picasso.Picasso;
 
 
@@ -62,6 +63,11 @@ import java.util.Map;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
+import com.frosquivel.magicalcamera.MagicalCamera;
+
+
+//and maybe you need in some ocations
+import com.frosquivel.magicalcamera.Objects.MagicalCameraObject;
 
 public class FulImagen extends AppCompatActivity {
 
@@ -73,18 +79,21 @@ public class FulImagen extends AppCompatActivity {
     final int CODE_GALLERY_REQUEST = 999;
     final int CODE_CAMARA_REQUEST = 100;
     String urlUpload = Constantes.IP_SERVIDOR + "/gruposcochalos/actualizarfotoperfi.php?";
-    Bitmap bitmap=null;
+    Bitmap bitmap = null;
     String FileNameGrupo = "IdGrupo";
-   ProgressDialog cargarImagen;
+    ProgressDialog cargarImagen;
     private String mPath;
     private static String APP_DIRECTORY = "GruposCochalos/";
     private static String MEDIA_DIRECTORY = APP_DIRECTORY + "GruposCochalosImages";
+    private MagicalPermissions magicalPermissions;
+    private MagicalCamera magicalCamera;
+    private int RESIZE_PHOTO_PIXELS_PERCENTAGE = 80;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_ful_imagen);
+
 
         Bundle textoDireccion = this.getIntent().getExtras();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -96,8 +105,12 @@ public class FulImagen extends AppCompatActivity {
 
         String imgPerfil = getIntent().getExtras().getString("foto");///recibiendo la imagen del fragmente anterior
         imageUpload = (ImageView) findViewById(R.id.imagenfull);
-        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + imgPerfil).into(imageUpload);
+        // Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + imgPerfil).into(imageUpload);
+        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + imgPerfil).error(R.drawable.perfilmusic)
+                .placeholder(R.drawable.progress_animation).into(imageUpload);
         //   imageUpload.setImageResource(imgPortada);
+
+        //imageUpload.setOnClickListener(v -> Log.d("HOL", "CLICKEADO"));
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -108,9 +121,27 @@ public class FulImagen extends AppCompatActivity {
         imageUpload.setMaxWidth(width);
         //hace que la imagen sea expansible
         mAttacher = new PhotoViewAttacher(imageUpload);
-       cargarImagen = new ProgressDialog(FulImagen.this);
+        cargarImagen = new ProgressDialog(FulImagen.this);
+
+        String[] permissions = new String[]{
+                Manifest.permission.CAMERA,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        };
+        magicalPermissions = new MagicalPermissions(this, permissions);
+        magicalCamera = new MagicalCamera(this, RESIZE_PHOTO_PIXELS_PERCENTAGE, magicalPermissions);
 
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        Map<String, Boolean> map = magicalPermissions.permissionResult(requestCode, permissions, grantResults);
+        for (String permission : map.keySet()) {
+            Log.d("PERMISSIONS", permission + " was: " + map.get(permission));
+        }
+        //Following the example you could also
+        //locationPermissions(requestCode, permissions, grantResults);
     }
 
 
@@ -150,17 +181,17 @@ public class FulImagen extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (option[which] == "Tomar foto") {
-                    ActivityCompat.requestPermissions(
-                            FulImagen.this,
-                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, CODE_CAMARA_REQUEST
-                    );
+                    // ActivityCompat.requestPermissions(FulImagen.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, CODE_CAMARA_REQUEST);
+
+                    abrirCamara();
 
                 } else if (option[which] == "Elegir de galeria") {
-                    ActivityCompat.requestPermissions(
-                            FulImagen.this,
-                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, CODE_GALLERY_REQUEST
-                    );
+                    // ActivityCompat.requestPermissions(FulImagen.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, CODE_GALLERY_REQUEST);
+                    // Intent intent = new Intent(Intent.ACTION_PICK);
+                    // intent.setType("image/*");
+                    // startActivityForResult(Intent.createChooser(intent, "Selecciona una imagen"), CODE_GALLERY_REQUEST);
 
+                    magicalCamera.selectedPicture("Selecciona una aplicación");
                 } else {
                     dialog.dismiss();
                 }
@@ -170,58 +201,61 @@ public class FulImagen extends AppCompatActivity {
         builder.show();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == CODE_GALLERY_REQUEST) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                startActivityForResult(Intent.createChooser(intent, "Selecciona una imagen"), CODE_GALLERY_REQUEST);
-            } else {
-                Toast.makeText(this, "No tienes permisos para aceder a Galeria", Toast.LENGTH_SHORT).show();
-            }
-            return;
-        } else {
-            if (requestCode == CODE_CAMARA_REQUEST) {
-
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    abrirCamara();
-                } else {
-                    Toast.makeText(this, "No tienes permisos para aceder a Camara", Toast.LENGTH_SHORT).show();
-
-                }
-
-            }
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-
     private void abrirCamara() {
-        Toast.makeText(this, "hola", Toast.LENGTH_SHORT).show();
-        File file = new File(Environment.getExternalStorageDirectory(), MEDIA_DIRECTORY);
-        boolean isDirectoryCreated = file.exists();
-
-        if (!isDirectoryCreated)
-            isDirectoryCreated = file.mkdirs();
-
-        if (isDirectoryCreated) {
-            Long timestamp = System.currentTimeMillis() / 1000;
-            String imageName = timestamp.toString() + ".jpg";
-
-            mPath = Environment.getExternalStorageDirectory() + File.separator + MEDIA_DIRECTORY
-                    + File.separator + imageName;
-
-            File newFile = new File(mPath);
-
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(newFile));
-            startActivityForResult(intent, CODE_CAMARA_REQUEST);
-        }
+        //take photo
+        magicalCamera.takePhoto();
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //CALL THIS METHOD EVER
+        magicalCamera.resultPhoto(requestCode, resultCode, data);
+
+
+        //this is for rotate picture in this method
+        //magicalCamera.resultPhoto(requestCode, resultCode, data, MagicalCamera.ORIENTATION_ROTATE_180);
+        //alistando para enviar al servidor
+        bitmap = magicalCamera.getPhoto();
+        //with this form you obtain the bitmap (in this example set this bitmap in image view)
+        imageUpload.setImageBitmap(bitmap);
+
+        //if you need save your bitmap in device use this method and return the path if you need this
+        //You need to send, the bitmap picture, the photo name, the directory name, the picture type, and autoincrement photo name if           //you need this send true, else you have the posibility or realize your standard name for your pictures.
+        String path = magicalCamera.savePhotoInMemoryDevice(magicalCamera.getPhoto(), "gc", "Grupos Cochalos", MagicalCamera.JPEG, true);
+
+        if (path != null) {
+            Toast.makeText(FulImagen.this, "Foto guardado en el dispositivo " + path, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(FulImagen.this, "No se guardo la foto", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+//    private void abrirCamara() {
+//        Toast.makeText(this, "hola", Toast.LENGTH_SHORT).show();
+//        File file = new File(Environment.getExternalStorageDirectory(), MEDIA_DIRECTORY);
+//        boolean isDirectoryCreated = file.exists();
+//
+//        if (!isDirectoryCreated)
+//            isDirectoryCreated = file.mkdirs();
+//
+//        if (isDirectoryCreated) {
+//            Long timestamp = System.currentTimeMillis() / 1000;
+//            String imageName = timestamp.toString() + ".jpg";
+//
+//            mPath = Environment.getExternalStorageDirectory() + File.separator + MEDIA_DIRECTORY
+//                    + File.separator + imageName;
+//
+//            File newFile = new File(mPath);
+//
+//            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(newFile));
+//            startActivityForResult(intent, CODE_CAMARA_REQUEST);
+//        }
+//    }
+
+   /* @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CODE_GALLERY_REQUEST && resultCode == RESULT_OK && data != null) {
             Uri filePath = data.getData();
@@ -252,7 +286,7 @@ public class FulImagen extends AppCompatActivity {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
+    }*/
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -276,7 +310,7 @@ public class FulImagen extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(FulImagen.this, "error" + error.toString(), Toast.LENGTH_SHORT).show();
-               cargarImagen.dismiss();
+                cargarImagen.dismiss();
             }
         }) {
             @Override

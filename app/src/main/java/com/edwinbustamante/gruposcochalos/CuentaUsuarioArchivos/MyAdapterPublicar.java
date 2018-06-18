@@ -3,6 +3,7 @@ package com.edwinbustamante.gruposcochalos.CuentaUsuarioArchivos;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.support.v7.widget.RecyclerView;
@@ -22,7 +23,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.edwinbustamante.gruposcochalos.ImagenFull.FulImagenVisitante;
 import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
+import com.edwinbustamante.gruposcochalos.VisitarMapa.MapsActivityVisitar;
 import com.edwinbustamante.gruposcochalos.domain.Publicacion;
 import com.edwinbustamante.gruposcochalos.R;
 import com.squareup.picasso.Picasso;
@@ -41,10 +44,12 @@ public class MyAdapterPublicar extends RecyclerView.Adapter<MyAdapterPublicar.Vi
     public List<Publicacion> publicacionLista;//lista de todos los grupos
 
     private Context context;
+    private String rol;
 
-    public MyAdapterPublicar(List<Publicacion> publicacionLista, Context context) {
+    public MyAdapterPublicar(List<Publicacion> publicacionLista, Context context, String rol) {
         this.publicacionLista = publicacionLista;//Aqui paso la lista que stoy recibiendo
         this.context = context;
+        this.rol = rol;
     }
 
     //encargado de inflar un nuevo item para la lista
@@ -65,15 +70,42 @@ public class MyAdapterPublicar extends RecyclerView.Adapter<MyAdapterPublicar.Vi
         // holder.fotoPerfilPublicacion.setImageResource(publicacionLista.get(position).getFotoPerfil());
         // holder.nombreGrupoPublicacion.setText(publicacionLista.get(position).getNombreGrupo());
         // holder.fechaPublicacion.setText(publicacionLista.get(position).getFechaPublicacion());
-
-
+        //condicional que detecta si es visitante o administrador
+        if (rol.equals("visitante")) {
+            holder.eliminarPublicacion.setVisibility(View.INVISIBLE);
+        }
         holder.descripcionPublicacion.setText(publicacion.getDescripcion());
         holder.fechaPublicacion.setText(publicacion.getHora());
-        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + publicacion.getFoto()).error( R.drawable.perfilmusic )
-                .placeholder( R.drawable.progress_animation ).into(holder.fotoPublicacion);
+        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + publicacion.getFoto()).error(R.drawable.perfilmusic)
+                .placeholder(R.drawable.progress_animation).into(holder.fotoPublicacion);
+        holder.fotoPublicacion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent verfoto = new Intent(context, FulImagenVisitante.class);
+                verfoto.putExtra("fotoperfil",publicacion.getFoto());
+                verfoto.putExtra("nombretoolbar","Publicación");
+                context.startActivity(verfoto);
+            }
+        });
         holder.nombreGrupoPublicacion.setText(publicacion.getNombre());
-        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + publicacion.getFotoperfil()).error( R.drawable.perfilmusic )
-                .placeholder( R.drawable.progress_animation ).into(holder.fotoPerfilPublicacion);
+        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + publicacion.getFotoperfil()).error(R.drawable.perfilmusic)
+                .placeholder(R.drawable.progress_animation).into(holder.fotoPerfilPublicacion);
+
+        if (publicacion.getLatitud().equals("no")) {
+            holder.mapsUbicacion.setVisibility(View.INVISIBLE);
+        } else {
+            holder.mapsUbicacion.setVisibility(View.VISIBLE);
+            holder.mapsUbicacion.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent visitarMapa = new Intent(context, MapsActivityVisitar.class);
+                    visitarMapa.putExtra("latitud", publicacion.getLatitud());
+                    visitarMapa.putExtra("longitud", publicacion.getLongitud());
+                    visitarMapa.putExtra("titulomarcador", "Ubicación de la publicación");
+                    context.startActivity(visitarMapa);
+                }
+            });
+        }
 
         holder.eliminarPublicacion.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +128,7 @@ public class MyAdapterPublicar extends RecyclerView.Adapter<MyAdapterPublicar.Vi
                 alerdialogEliminar.create().show();
             }
         });
+
     }
 
     public void eliminarPublicacion(final String idpublicacion, final int position) {
@@ -138,7 +171,7 @@ public class MyAdapterPublicar extends RecyclerView.Adapter<MyAdapterPublicar.Vi
      * LA INER CLASE ESTA ABAJO QUE ENCARGA DE DIBUJAR
      */
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private ImageView fotoPerfilPublicacion, fotoPublicacion;
+        private ImageView fotoPerfilPublicacion, fotoPublicacion, mapsUbicacion;
         private TextView nombreGrupoPublicacion, fechaPublicacion, descripcionPublicacion, eliminarPublicacion;
 
 
@@ -150,6 +183,7 @@ public class MyAdapterPublicar extends RecyclerView.Adapter<MyAdapterPublicar.Vi
             descripcionPublicacion = (TextView) itemView.findViewById(R.id.textViewDescripcionPublicacion);
             fotoPublicacion = (ImageView) itemView.findViewById(R.id.imageViewPublicacion);
             eliminarPublicacion = (TextView) itemView.findViewById(R.id.eliminarpublicacion);
+            mapsUbicacion = (ImageView) itemView.findViewById(R.id.imageViewmaps);
 
 
             //itemView.setOnClickListener(this);// esto es a todo

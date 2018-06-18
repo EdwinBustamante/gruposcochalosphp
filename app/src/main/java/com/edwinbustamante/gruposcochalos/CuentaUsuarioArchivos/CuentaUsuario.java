@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
@@ -36,6 +37,32 @@ public class CuentaUsuario extends AppCompatActivity {
     ImageView imageViewCerrarSesion;
     FloatingActionButton fab;
     boolean click = false;
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+
+            new AlertDialog.Builder(this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle("Grupos Cochalos")
+                    .setMessage("Desea cerrar sesion?")
+                    .setNegativeButton(android.R.string.cancel, null)// sin listener
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {// un listener que al pulsar, cierre la aplicacion
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+// Salir
+                            CuentaUsuario.this.finish();
+                        }
+                    })
+                    .show();
+
+// Si el listener devuelve true, significa que el evento esta procesado, y nadie debe hacer nada mas
+            return true;
+        }
+// para las demas cosas, se reenvia el evento al listener habitual
+        return super.onKeyDown(keyCode, event);
+    }
 
     @Override
 
@@ -103,9 +130,10 @@ public class CuentaUsuario extends AppCompatActivity {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                 builder.setCancelable(true);
+                builder.setIcon(android.R.drawable.ic_dialog_alert);
                 builder.setTitle("Grupos Cochalos");
                 builder.setMessage("Desea cerrar sesion..?");
-                builder.setPositiveButton("Cerrar sesion", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //BorrarIdUsuario();
@@ -113,7 +141,7 @@ public class CuentaUsuario extends AppCompatActivity {
                         finish();
 
                     }
-                }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                }).setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
@@ -158,39 +186,39 @@ public class CuentaUsuario extends AppCompatActivity {
     int[] iconIntArray = {R.drawable.ic_camara_de_fotos, R.drawable.ic_publicar};
 
 
-        protected void animateFab(final int position) {
-            fab.clearAnimation();
-            // Scale down animation
-            ScaleAnimation shrink = new ScaleAnimation(1f, 0.2f, 1f, 0.2f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            shrink.setDuration(150);     // animation duration in milliseconds
-            shrink.setInterpolator(new DecelerateInterpolator());
-            shrink.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
+    protected void animateFab(final int position) {
+        fab.clearAnimation();
+        // Scale down animation
+        ScaleAnimation shrink = new ScaleAnimation(1f, 0.2f, 1f, 0.2f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        shrink.setDuration(150);     // animation duration in milliseconds
+        shrink.setInterpolator(new DecelerateInterpolator());
+        shrink.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
 
-                }
+            }
 
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    // Change FAB color and icon
-                    fab.setBackgroundTintList(getResources().getColorStateList(colorIntArray[position]));
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                // Change FAB color and icon
+                fab.setBackgroundTintList(getResources().getColorStateList(colorIntArray[position]));
 
-                    fab.setImageDrawable(getResources().getDrawable(iconIntArray[position], null));
+                fab.setImageDrawable(getResources().getDrawable(iconIntArray[position], null));
 
-                    // Scale up animation
-                    ScaleAnimation expand = new ScaleAnimation(0.2f, 1f, 0.2f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-                    expand.setDuration(100);     // animation duration in milliseconds
-                    expand.setInterpolator(new AccelerateInterpolator());
-                    fab.startAnimation(expand);
-                }
+                // Scale up animation
+                ScaleAnimation expand = new ScaleAnimation(0.2f, 1f, 0.2f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                expand.setDuration(100);     // animation duration in milliseconds
+                expand.setInterpolator(new AccelerateInterpolator());
+                fab.startAnimation(expand);
+            }
 
-                @Override
-                public void onAnimationRepeat(Animation animation) {
+            @Override
+            public void onAnimationRepeat(Animation animation) {
 
-                }
-            });
-            fab.startAnimation(shrink);
-        }
+            }
+        });
+        fab.startAnimation(shrink);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

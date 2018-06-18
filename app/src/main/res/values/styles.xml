@@ -56,11 +56,12 @@
     </style>
 
 
-    <style name="FullScreenDialogStyle" >
+    <style name="FullScreenDialogStyle">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowIsFloating">false</item>
     </style>
+
     <style name="MyStyle" parent="">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

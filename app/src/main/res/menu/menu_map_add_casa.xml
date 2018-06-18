@@ -1,0 +1,28 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.edwinbustamante.gruposcochalos.CuentaUsuarioArchivos.AnadirUbicacionCasa">
+    <item
+        android:id="@+id/maps_normalcasa"
+        android:icon="@drawable/ic_mapa_normal"
+        android:title="vista normal"
+        app:showAsAction="always|collapseActionView" />
+
+    <item
+        android:id="@+id/maps_hibridocasa"
+        android:icon="@drawable/ic_tierra"
+        android:title="vista híbrido"
+        app:showAsAction="always|collapseActionView" />
+    <item
+        android:id="@+id/maps_satelitalcasa"
+        android:icon="@drawable/ic_satelital"
+        android:title="vista satelital"
+        app:showAsAction="always|collapseActionView" />
+    <item
+        android:id="@+id/maps_tierracasa"
+        android:icon="@drawable/ic_el_planeta_tierra"
+        android:orderInCategory="115"
+        android:title="vista Tierra"
+        app:showAsAction="always|collapseActionView" />
+
+</menu>

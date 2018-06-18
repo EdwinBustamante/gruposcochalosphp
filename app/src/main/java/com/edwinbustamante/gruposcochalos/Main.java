@@ -1,22 +1,30 @@
 package com.edwinbustamante.gruposcochalos;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
 import android.widget.Toast;
 
 import com.edwinbustamante.gruposcochalos.domain.GrupoMusical;
 import com.edwinbustamante.gruposcochalos.domain.Resultado;
 import com.edwinbustamante.gruposcochalos.service.ItunesAPI;
+import com.github.arturogutierrez.Badges;
+import com.github.arturogutierrez.BadgesNotSupportedException;
 
 
 import java.util.ArrayList;
@@ -44,13 +52,18 @@ public class Main extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerViewGrupos.setLayoutManager(layoutManager);
 
-        recyclerViewAdaptadorPrincipal = new RecyclerViewAdaptadorPrincipal(grupoMusicales,this);
+        recyclerViewAdaptadorPrincipal = new RecyclerViewAdaptadorPrincipal(grupoMusicales, this);
         recyclerViewGrupos.setAdapter(recyclerViewAdaptadorPrincipal);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
+        try {
+            Badges.setBadge(this, 5);
+        } catch (BadgesNotSupportedException badgesNotSupportedException) {
+            Log.d(TAG, badgesNotSupportedException.getMessage());
+        }
 
 
     }
@@ -58,8 +71,17 @@ public class Main extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        grupoMusicales.clear();
-        obtenerCanciones();
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            // Create background thread to connect and get data
+            grupoMusicales.clear();
+            obtenerCanciones();
+        } else {
+            Toast.makeText(this, "No tienes conexion a Internet", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public void obtenerGruposMusicales() {
@@ -103,17 +125,37 @@ public class Main extends AppCompatActivity {
             @Override
             public void onFailure(Call<Resultado> call, Throwable t) {
                 Toast.makeText(Main.this, "Ha ocurrido un error", Toast.LENGTH_LONG).show();
-                Log.e("error",t.getMessage());
+                Log.e("error", t.getMessage());
+                noHayConexion();
                 t.printStackTrace();
             }
         });
 
     }
 
+
+    private void noHayConexion() {
+
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.recyclerGrupos), "Ups parece que no tienes conexion a internet o ocurrio algún problema en Grupos Cochalos?", Snackbar.LENGTH_INDEFINITE).setDuration(10000)
+                .setAction("Reintentar", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        grupoMusicales.clear();
+                        obtenerCanciones();
+
+
+                    }
+                });
+        snackbar.show();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem search = menu.findItem(R.id.search_main);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
+        search(searchView);
         return true;
     }
 
@@ -138,5 +180,22 @@ public class Main extends AppCompatActivity {
         return true;
     }
 
+    private void search(SearchView searchView) {
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                recyclerViewAdaptadorPrincipal.getFilter().filter(newText);
+                return true;
+            }
+        });
+    }
 
 }

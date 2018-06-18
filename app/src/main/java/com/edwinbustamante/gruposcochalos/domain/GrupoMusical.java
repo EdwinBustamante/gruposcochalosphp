@@ -29,8 +29,17 @@ public class GrupoMusical implements Parcelable {//pasar objeto por parcelable y
     private String fotoperfil;
     private String usuario_idusuario;
     private String numtelefonodos;
-    private String latitud;
-    private String longitud;
+    private String latitudg;
+    private String longitudg;
+    private String fotoportada;
+
+    public String getFotoportada() {
+        return fotoportada;
+    }
+
+    public void setFotoportada(String fotoportada) {
+        this.fotoportada = fotoportada;
+    }
 
     @NonNull
     public Long getGrupopk() {
@@ -41,7 +50,7 @@ public class GrupoMusical implements Parcelable {//pasar objeto por parcelable y
         this.grupopk = grupopk;
     }
 
-    public GrupoMusical(String idgrupomusical, String nombre, String genero, String informaciondescripcion, String descripcioncontactos, String direcciondescripcion, String numtelefono, String numwhatsapp, String linkfacebook, String fotoperfil, String usuario_idusuario, String numtelefonodos, String latitud, String longitud) {
+    public GrupoMusical(String idgrupomusical, String nombre, String genero, String informaciondescripcion, String descripcioncontactos, String direcciondescripcion, String numtelefono, String numwhatsapp, String linkfacebook, String fotoperfil, String usuario_idusuario, String numtelefonodos, String latitudg, String longitudg,String fotoportada) {
         this.idgrupomusical = idgrupomusical;
         this.nombre = nombre;
         this.genero = genero;
@@ -54,8 +63,9 @@ public class GrupoMusical implements Parcelable {//pasar objeto por parcelable y
         this.fotoperfil = fotoperfil;
         this.usuario_idusuario = usuario_idusuario;
         this.numtelefonodos = numtelefonodos;
-        this.latitud = latitud;
-        this.longitud = longitud;
+        this.latitudg = latitudg;
+        this.longitudg = longitudg;
+        this.fotoportada=fotoportada;
     }
 
     protected GrupoMusical(Parcel in) {
@@ -71,8 +81,9 @@ public class GrupoMusical implements Parcelable {//pasar objeto por parcelable y
         fotoperfil = in.readString();
         usuario_idusuario = in.readString();
         numtelefonodos = in.readString();
-        latitud = in.readString();
-        longitud = in.readString();
+        latitudg = in.readString();
+        longitudg = in.readString();
+        fotoportada=in.readString();
     }
 
     public static final Creator<GrupoMusical> CREATOR = new Creator<GrupoMusical>() {
@@ -183,20 +194,20 @@ public class GrupoMusical implements Parcelable {//pasar objeto por parcelable y
         this.numtelefonodos = numtelefonodos;
     }
 
-    public String getLatitud() {
-        return latitud;
+    public String getLatitudg() {
+        return latitudg;
     }
 
-    public void setLatitud(String latitud) {
-        this.latitud = latitud;
+    public void setLatitudg(String latitudg) {
+        this.latitudg = latitudg;
     }
 
-    public String getLongitud() {
-        return longitud;
+    public String getLongitudg() {
+        return longitudg;
     }
 
-    public void setLongitud(String longitud) {
-        this.longitud = longitud;
+    public void setLongitudg(String longitudg) {
+        this.longitudg = longitudg;
     }
 
     @Override
@@ -218,8 +229,9 @@ public class GrupoMusical implements Parcelable {//pasar objeto por parcelable y
         parcel.writeString(this.fotoperfil);
         parcel.writeString(this.usuario_idusuario);
         parcel.writeString(this.numtelefonodos);
-        parcel.writeString(this.latitud);
-        parcel.writeString(this.longitud);
+        parcel.writeString(this.latitudg);
+        parcel.writeString(this.longitudg);
+        parcel.writeString(this.fotoportada);
 
     }
 

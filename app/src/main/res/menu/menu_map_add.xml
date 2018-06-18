@@ -1,18 +1,28 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.edwinbustamante.gruposcochalos.SubirFoto">
+    tools:context="com.edwinbustamante.gruposcochalos.VisitarMapa.MapsActivityVisitar">
     <item
         android:id="@+id/maps_normal"
-        android:title="vista normal"/>
+        android:icon="@drawable/ic_mapa_normal"
+        android:title="vista normal"
+        app:showAsAction="always|collapseActionView" />
 
     <item
         android:id="@+id/maps_hibrido"
-        android:title="vista híbrido"/>
+        android:icon="@drawable/ic_tierra"
+        android:title="vista híbrido"
+        app:showAsAction="always|collapseActionView" />
     <item
         android:id="@+id/maps_satelital"
-        android:title="vista satelital"/>
+        android:icon="@drawable/ic_satelital"
+        android:title="vista satelital"
+        app:showAsAction="always|collapseActionView" />
     <item
         android:id="@+id/maps_tierra"
-        android:title="vista Tierra"/>
+        android:icon="@drawable/ic_el_planeta_tierra"
+        android:orderInCategory="115"
+        android:title="vista Tierra"
+        app:showAsAction="always|collapseActionView" />
+
 </menu>

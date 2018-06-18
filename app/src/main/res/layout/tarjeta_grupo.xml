@@ -9,6 +9,7 @@
     cardview:cardCornerRadius="10sp">
 
     <LinearLayout
+        android:id="@+id/cardgrupo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -63,8 +64,8 @@
                     android:id="@+id/textTipoDeMusica"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginBottom="5dp"
+                    android:layout_weight="1"
                     android:text=" Descripcion genero de Musica" />
             </LinearLayout>
 
