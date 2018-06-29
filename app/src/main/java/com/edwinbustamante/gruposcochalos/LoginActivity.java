@@ -1,7 +1,9 @@
 package com.edwinbustamante.gruposcochalos;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
@@ -53,6 +55,14 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
     String FileName = "myUserId";
     String FileNameUsuario = "usuario";
     String FileNameGrupo = "IdGrupo";
+    String FileNameContrasenia = "Rcontrasenia";
+
+    public void recordarContrasenia(String contrasenia) {
+        SharedPreferences sharedPreferences = getSharedPreferences(FileNameContrasenia, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("contrasenia", contrasenia);
+        editor.commit();
+    }
 
     public void guardarIdUsuario(String idusername) {
         SharedPreferences sharedPreferences = getSharedPreferences(FileName, Context.MODE_PRIVATE);
@@ -91,7 +101,18 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
         animacion.start();
         //############################################################################
         in_usuario = (AutoCompleteTextView) findViewById(R.id.usuario);
+        String defaultValue = "";
+        SharedPreferences sharedPreferences = this.getSharedPreferences(FileNameUsuario, Context.MODE_PRIVATE);
+        String usuarioEntrada = sharedPreferences.getString("usuario", defaultValue);
+        in_usuario.setText(usuarioEntrada.toString());
+        in_usuario.setSelection(usuarioEntrada.toString().length());
+
+        SharedPreferences sharedPreferencesContrasenia = this.getSharedPreferences(FileNameContrasenia, Context.MODE_PRIVATE);
+        String RecordContraEntrada = sharedPreferencesContrasenia.getString("contrasenia", defaultValue);
         in_contrasenia = (EditText) findViewById(R.id.contrasenia);
+        in_contrasenia.setText(RecordContraEntrada.toString());
+        in_contrasenia.setSelection(RecordContraEntrada.toString().length());
+
         mProgress = new ProgressDialog(this);
         rq = Volley.newRequestQueue(getApplicationContext());
 
@@ -159,13 +180,22 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
                         guardarUsuario(jsonObject.optString("usuario"));//guardando en SharePreference
                         guardarIdGrupoMusical(jsonObject.optString("idusuario"));
                         Toast.makeText(this, "Se inicio correctamente", Toast.LENGTH_SHORT).show();
-                        Intent i = new Intent(LoginActivity.this, CuentaUsuario.class);
 
-                        User usr = new User();
-                        usr.setUser(jsonObject.optString("usuario"));
-                        i.putExtra("objetoUsuario", usr);
-                        startActivity(i);
-                        finish();
+                        AlertDialog.Builder recordarContrasenia = new AlertDialog.Builder(this);
+                        recordarContrasenia.setTitle("Grupos Cochalos");
+                        recordarContrasenia.setMessage("Desea que Grupos Cochalos recuerde la contraseña..?");
+                        JSONObject JsonObject = jsonObject;
+
+                                recordarContrasenia(JsonObject.optString("pwd"));
+                                Intent i = new Intent(LoginActivity.this, CuentaUsuario.class);
+                                User usr = new User();
+                                usr.setUser(JsonObject.optString("usuario"));
+                                i.putExtra("objetoUsuario", usr);
+                                startActivity(i);
+                                finish();
+
+
+
 
                     }
                 }

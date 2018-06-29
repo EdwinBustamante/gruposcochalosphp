@@ -130,14 +130,13 @@ public class CuentaUsuario extends AppCompatActivity {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                 builder.setCancelable(true);
-                builder.setIcon(android.R.drawable.ic_dialog_alert);
+                builder.setIcon(R.drawable.ic_advertencia);
                 builder.setTitle("Grupos Cochalos");
                 builder.setMessage("Desea cerrar sesion..?");
                 builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //BorrarIdUsuario();
-                        //BorrarIdGrupoMusical();
+
                         finish();
 
                     }
@@ -150,14 +149,7 @@ public class CuentaUsuario extends AppCompatActivity {
                 builder.create().show();
             }
         });
-        /*Glide.with(CuentaUsuario.this)
-                .load(imageUrl)
-                .fitCenter()
-                // .skipMemoryCache(true)//Almacenando en cache
-                .centerCrop()
-                .into(cuenta_perfil);
 
-     */
     }
 
     String FileName = "myUserId";

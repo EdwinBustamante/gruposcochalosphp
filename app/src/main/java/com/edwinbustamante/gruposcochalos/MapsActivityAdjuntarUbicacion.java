@@ -1,8 +1,17 @@
 package com.edwinbustamante.gruposcochalos;
 
 
+import android.*;
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -40,7 +49,11 @@ public class MapsActivityAdjuntarUbicacion extends AppCompatActivity implements 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapSect);
         mapFragment.getMapAsync(this);
 
+
+
+
     }
+
 
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -105,7 +118,7 @@ public class MapsActivityAdjuntarUbicacion extends AppCompatActivity implements 
                                 .position(new LatLng(latLng.latitude, latLng.longitude))
                                 .title("Nombre de Grupo"));
 
-                         levantarSnackbar();
+                        levantarSnackbar();
                         contadorDeTap++;
                     } else {
                         googleMap.clear();
@@ -123,19 +136,20 @@ public class MapsActivityAdjuntarUbicacion extends AppCompatActivity implements 
 
 
     }
- private void levantarSnackbar(){
 
-     Snackbar snackbar=Snackbar.make(findViewById(R.id.mapSect),"Quisieras añadir la ubicacion selecionada a tu publicación..?", Snackbar.LENGTH_INDEFINITE).setDuration(100000)
-             .setText("Quisieras añadir la ubicacion selecionada a tu publicación..?")
+    private void levantarSnackbar() {
 
-             .setAction("Aceptar", new View.OnClickListener() {
-                 @Override
-                 public void onClick(View v) {
-                   finish();
-                 }
-             });
-     snackbar.show();
- }
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.mapSect), "Quisieras añadir la ubicacion selecionada a tu publicación..?", Snackbar.LENGTH_INDEFINITE).setDuration(100000)
+                .setText("Quisieras añadir la ubicacion selecionada a tu publicación..?")
+
+                .setAction("Aceptar", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        finish();
+                    }
+                });
+        snackbar.show();
+    }
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
@@ -161,4 +175,7 @@ public class MapsActivityAdjuntarUbicacion extends AppCompatActivity implements 
     public void onCameraMoveCanceled() {
 
     }
+
+
+
 }

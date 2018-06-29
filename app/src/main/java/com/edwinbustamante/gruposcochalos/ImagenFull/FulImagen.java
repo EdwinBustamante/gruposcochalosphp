@@ -87,7 +87,7 @@ public class FulImagen extends AppCompatActivity {
     private static String MEDIA_DIRECTORY = APP_DIRECTORY + "GruposCochalosImages";
     private MagicalPermissions magicalPermissions;
     private MagicalCamera magicalCamera;
-    private int RESIZE_PHOTO_PIXELS_PERCENTAGE = 80;
+    private int RESIZE_PHOTO_PIXELS_PERCENTAGE = 90;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
