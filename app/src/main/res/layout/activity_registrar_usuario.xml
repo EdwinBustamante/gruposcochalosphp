@@ -29,110 +29,148 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
-            android:orientation="vertical">
+            android:elevation="10dp"
+            app:cardBackgroundColor="@color/register"
+            app:cardCornerRadius="10dp">
 
-            <android.support.design.widget.TextInputLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hintTextAppearance="@style/FloatingLabel">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="10dp">
 
-                <EditText
-                    android:id="@+id/nombreGrupoRegistro"
+
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Nombre de grupo musical"
-                    android:imeActionId="6"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="textEmailAddress"
-                    android:maxLength="50"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:theme="@style/EditText" />
+                    android:layout_marginBottom="5dp"
+                    app:hintTextAppearance="@style/FloatingLabel">
 
-            </android.support.design.widget.TextInputLayout>
+                    <EditText
+                        android:id="@+id/nombreUsuario"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Número de móvil o usuario"
+                        android:imeActionId="6"
+                        android:imeActionLabel="@string/action_sign_in_short"
+                        android:imeOptions="actionUnspecified"
+                        android:inputType="textEmailAddress"
+                        android:maxLength="20"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:theme="@style/EditText" />
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hintTextAppearance="@style/FloatingLabel">
+                </android.support.design.widget.TextInputLayout>
 
-                <EditText
-                    android:id="@+id/nombreUsuario"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Número de móvil o usuario"
-                    android:imeActionId="6"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="textEmailAddress"
-                    android:maxLength="20"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:theme="@style/EditText" />
+                    android:layout_marginBottom="5dp"
+                    app:hintTextAppearance="@style/FloatingLabel"
+                    app:passwordToggleEnabled="true">
 
-            </android.support.design.widget.TextInputLayout>
+                    <EditText
+                        android:id="@+id/contraseniaRegistro"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Contraseña"
+                        android:imeActionId="6"
+                        android:imeActionLabel="@string/action_sign_in_short"
+                        android:imeOptions="actionUnspecified"
+                        android:inputType="textPassword"
+                        android:maxLength="20"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:theme="@style/EditText" />
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hintTextAppearance="@style/FloatingLabel"
-                app:passwordToggleEnabled="true">
+                </android.support.design.widget.TextInputLayout>
 
-                <EditText
-                    android:id="@+id/contraseniaRegistro"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Contraseña"
-                    android:imeActionId="6"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="textPassword"
-                    android:maxLength="20"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:theme="@style/EditText" />
+                    android:layout_marginBottom="5dp"
+                    app:hintTextAppearance="@style/FloatingLabel"
+                    app:passwordToggleEnabled="true">
 
-            </android.support.design.widget.TextInputLayout>
+                    <EditText
+                        android:id="@+id/contraseniaRegistro2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Repetir Contraseña"
+                        android:imeActionId="6"
+                        android:imeActionLabel="@string/action_sign_in_short"
+                        android:imeOptions="actionUnspecified"
+                        android:inputType="textPassword"
+                        android:maxLength="20"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:theme="@style/EditText" />
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hintTextAppearance="@style/FloatingLabel"
-                app:passwordToggleEnabled="true">
 
-                <EditText
-                    android:id="@+id/contraseniaRegistro2"
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Repetir Contraseña"
-                    android:imeActionId="6"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="textPassword"
-                    android:maxLength="20"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:theme="@style/EditText" />
+                    android:layout_marginBottom="5dp"
+                    app:hintTextAppearance="@style/FloatingLabel">
+
+                    <EditText
+                        android:id="@+id/nombreGrupoRegistro"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Nombre de grupo musical"
+                        android:imeActionId="6"
+                        android:imeActionLabel="@string/action_sign_in_short"
+                        android:imeOptions="actionUnspecified"
+                        android:inputType="textEmailAddress"
+                        android:maxLength="50"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:theme="@style/EditText" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    app:hintTextAppearance="@style/FloatingLabel">
+
+                    <EditText
+                        android:id="@+id/instrumento"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Instrumento favorito?(Pregunta secreta)"
+                        android:imeActionId="6"
+                        android:imeActionLabel="@string/action_sign_in_short"
+                        android:imeOptions="actionUnspecified"
+                        android:inputType="textEmailAddress"
+                        android:maxLength="15"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:theme="@style/EditText" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <Button
+                    android:id="@+id/btnRegistrarCuenta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/modelobottoncreate"
+                    android:text="REGISTRAR" />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
 
 
-            </android.support.design.widget.TextInputLayout>
-
-            <Button
-                android:id="@+id/btnRegistrarCuenta"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/modelobottoncreate"
-                android:text="REGISTRAR" />
-        </LinearLayout>
     </ScrollView>
 
 </LinearLayout>

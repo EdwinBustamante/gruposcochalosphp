@@ -151,4 +151,5 @@
     <string name="material_calendar_positive_button">GUARDAR</string>
     <string name="material_calendar_negative_button">CANCELAR</string>
     <string name="title_activity_olvide_contrasenia">OlvideContrasenia</string>
+    <string name="title_activity_youtube_visitante">YoutubeVisitante</string>
 </resources>

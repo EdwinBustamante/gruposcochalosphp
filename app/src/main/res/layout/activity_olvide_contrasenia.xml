@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context="com.edwinbustamante.gruposcochalos.OlvideContrasenia">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout6"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="56dp"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -20,6 +26,102 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <LinearLayout
+        android:id="@+id/colorAnimate"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="57dp"
+        android:background="@drawable/my_bg_anim"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/appBarLayout6"
+        app:layout_constraintStart_toEndOf="@+id/appBarLayout6"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout6"
+        app:layout_constraintVertical_bias="0.6">
 
 
-</android.support.design.widget.CoordinatorLayout>
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:elevation="10dp"
+            app:cardBackgroundColor="@color/recup"
+            app:cardCornerRadius="5dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Si ha olvidado la contraseña de acceso introduzca el número de movil o usuario y instrumento favorito. Recibira la contraseña en instantes" />
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical"
+            app:hintTextAppearance="@style/FloatingLabel">
+
+            <AutoCompleteTextView
+                android:id="@+id/usuarioRecordar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_action_user"
+                android:hint="Número de móvil o usuario"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textSize="16dp"
+                android:theme="@style/EditText" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            app:hintTextAppearance="@style/FloatingLabel">
+
+            <EditText
+                android:id="@+id/instrumentoRecordar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_record_voice_over"
+                android:hint="Instrumento favorito?(Pregunta secreta)"
+                android:imeActionId="6"
+                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeOptions="actionUnspecified"
+                android:inputType="textEmailAddress"
+                android:maxLength="15"
+                android:maxLines="1"
+                android:paddingLeft="12dp"
+                android:singleLine="true"
+                android:theme="@style/EditText" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/recordar"
+            style="?android:textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/modelobottonlogin"
+            android:clickable="true"
+            android:drawableLeft="@drawable/ic_hombre_con_llave_grande"
+            android:elevation="24dp"
+            android:onClick="RecuperarContrasenia"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:text="Recordar Contraseña"
+            android:textColor="#ffffff"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+
+</android.support.constraint.ConstraintLayout>
+

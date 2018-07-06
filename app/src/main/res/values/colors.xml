@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#007887</color> <!---Color del toolbar-->
-    <color name="colorPrimaryDark">#f9113e58
-    </color> <!---color de la parte de arriba de la aplicacion-->
+    <color name="colorPrimaryDark">#f9113e58 </color> <!---color de la parte de arriba de la aplicacion-->
     <color name="colorAccent">#14769c</color>
 
 
@@ -41,5 +40,9 @@
     <color name="fondopublicaciones">#92a39f9f</color>
     <color name="publicacionvisitar">#FFE0B2</color>
     <color name="calendario">#FFCDD2</color>
+    <color name="recup">#7986CB</color>
+    <color name="register">#f92f6280</color>
+    <color name="fonditoTextView">#BDBDBD</color>
+    <color name="youtubeV">#FFCDD2</color>
 
 </resources>

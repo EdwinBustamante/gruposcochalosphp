@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
@@ -152,7 +154,17 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
     @Override
     public void onErrorResponse(VolleyError error) {
         mProgress.dismiss();
-        // Toast.makeText(this, "No se puede iniciar", Toast.LENGTH_SHORT).show();
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+
+            Toast.makeText(this, "Error en el ingreso al sistema, fallo la conexion al servidor ", Toast.LENGTH_SHORT).show();
+
+        } else {
+            Toast.makeText(this, "No tienes conexion a Internet", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override
@@ -181,20 +193,15 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
                         guardarIdGrupoMusical(jsonObject.optString("idusuario"));
                         Toast.makeText(this, "Se inicio correctamente", Toast.LENGTH_SHORT).show();
 
-                        AlertDialog.Builder recordarContrasenia = new AlertDialog.Builder(this);
-                        recordarContrasenia.setTitle("Grupos Cochalos");
-                        recordarContrasenia.setMessage("Desea que Grupos Cochalos recuerde la contraseña..?");
-                        JSONObject JsonObject = jsonObject;
+                            JSONObject JsonObject = jsonObject;
 
-                                recordarContrasenia(JsonObject.optString("pwd"));
-                                Intent i = new Intent(LoginActivity.this, CuentaUsuario.class);
-                                User usr = new User();
-                                usr.setUser(JsonObject.optString("usuario"));
-                                i.putExtra("objetoUsuario", usr);
-                                startActivity(i);
-                                finish();
-
-
+                        recordarContrasenia(JsonObject.optString("pwd"));
+                        Intent i = new Intent(LoginActivity.this, CuentaUsuario.class);
+                        User usr = new User();
+                        usr.setUser(JsonObject.optString("usuario"));
+                        i.putExtra("objetoUsuario", usr);
+                        startActivity(i);
+                        finish();
 
 
                     }

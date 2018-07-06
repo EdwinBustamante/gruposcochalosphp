@@ -65,9 +65,9 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
     private ProgressDialog progressDialogFotoSubir;
     private Toolbar toolbar;
     private ImageView foto_perfil, foto_portada;
-    private TextView usuario, nombreGrupo, generoMusica, movil1, movil2, movilWhatsApp, linkFacebook;
+    private TextView usuario, nombreGrupo, generoMusica, movil1, movil2, movilWhatsApp, linkFacebook,linkYoutube;
     private TextView informacionEdit, contactosEdit, direccionEdit;
-    private ImageView imageViewMovil1, imageViewMovil2, imageViewMovilWhasapp, anadirubicaciocasa, visitarubicacioncasa, irfacebook;
+    private ImageView imageViewMovil1, imageViewMovil2, imageViewMovilWhasapp, anadirubicaciocasa, visitarubicacioncasa, irfacebook,imageViewYoutube;
     String FileName = "myUserId";
     String urlImagen;
     String urlImagenPortada;
@@ -154,15 +154,12 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
         visitarubicacioncasa.setVisibility(View.INVISIBLE);
         agendaGrupo = (ImageView) vista.findViewById(R.id.agendaGrupo);
         agendaGrupo.setOnClickListener(this);
+        linkYoutube=(TextView)vista.findViewById(R.id.linkYoutube);
+        linkYoutube.setOnClickListener(this);
+        imageViewYoutube=(ImageView)vista.findViewById(R.id.imageViewYoutube);
+        imageViewYoutube.setOnClickListener(this);
 
-        //nombreGrupo.setText(USUARIO.getNombre());
-        // generoMusica.setText(USUARIO.getGenero());
-        //Toast.makeText(this, USUARIO.getUser(), Toast.LENGTH_SHORT).show();
 
-        // nombreGrupo.setOnClickListener(this);
-        //generoMusica.setOnClickListener(this);
-        // cuenta_perfil.setOnClickListener(this);
-        // Inflate the layout for this fragment
 
 
         return vista;
@@ -272,6 +269,17 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                 DatePicker datePicker = builder.build();
                 datePicker.show();
 
+                break;
+
+            case R.id.imageViewYoutube:
+                Uri uris = Uri.parse(linkYoutube.getText().toString());
+                Intent it = new Intent(Intent.ACTION_VIEW, uris);
+                startActivity(it);
+                break;
+            case R.id.linkYoutube:
+                Intent youtubelink = new Intent(getContext(), EditLinkYoutube.class);
+                youtubelink.putExtra("linkyoutube", linkYoutube.getText().toString());
+                startActivity(youtubelink);
                 break;
             case R.id.texViewMovil1:
                 final EditText inputMovil1;
@@ -538,8 +546,10 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                     } catch (Exception e) {
 
                     }
+
                     latitudg = jsonObject.getString("latitudg");
                     longitudg = jsonObject.getString("longitudg");
+                    linkYoutube.setText(jsonObject.getString("linkyoutube"));
 
                     if (latitudg.equals("no")) {
                         visitarubicacioncasa.setVisibility(View.INVISIBLE);

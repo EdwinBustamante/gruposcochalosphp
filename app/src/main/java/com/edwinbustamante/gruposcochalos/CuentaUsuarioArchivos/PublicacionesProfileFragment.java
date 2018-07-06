@@ -103,7 +103,7 @@ public class PublicacionesProfileFragment extends Fragment implements View.OnCli
         String defaultValues = "DefaultName";
         SharedPreferences sharedPreferencess = getActivity().getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
         String idGrupoMusical = sharedPreferencess.getString("idgrupomusical", defaultValues);
-        Toast.makeText(getContext(), idGrupoMusical, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(getContext(), idGrupoMusical, Toast.LENGTH_SHORT).show();
 
         Call<ResultadoPublicacion> resultadoPublicacionCall = PublicacionAPI.getPublicacionService().getCanciones(idGrupoMusical);//lacemos la llamada al archivo php
         resultadoPublicacionCall.enqueue(new Callback<ResultadoPublicacion>() {

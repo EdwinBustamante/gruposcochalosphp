@@ -1,7 +1,10 @@
 package com.edwinbustamante.gruposcochalos;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -32,12 +35,25 @@ import java.util.regex.Pattern;
 public class RegistrarUsuario extends AppCompatActivity implements Response.Listener<JSONObject>, Response.ErrorListener {
     LinearLayout linearLayoutanimacion;
     AnimationDrawable animacion;
-    private EditText nombreGrupoRegistro, nombreUsuario, pasRegistro1, pasRegistro2;
+    private EditText nombreGrupoRegistro, nombreUsuario, pasRegistro1, pasRegistro2, instrumento;
     private Button registarRegistro;
     private ProgressDialog mProgress;
 
     RequestQueue requestQueue;
     JsonObjectRequest jsonObjectReques;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+        } else {
+            Toast.makeText(this, "No tienes conexion a Internet", Toast.LENGTH_SHORT).show();
+        }
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +75,7 @@ public class RegistrarUsuario extends AppCompatActivity implements Response.List
         pasRegistro1 = (EditText) findViewById(R.id.contraseniaRegistro);
         pasRegistro2 = (EditText) findViewById(R.id.contraseniaRegistro2);
         registarRegistro = (Button) findViewById(R.id.btnRegistrarCuenta);
+        instrumento = findViewById(R.id.instrumento);
         requestQueue = Volley.newRequestQueue(getApplicationContext());
 
         //instanciamos el autentificador de fire base y tambien el progress Dialog
@@ -131,6 +148,26 @@ public class RegistrarUsuario extends AppCompatActivity implements Response.List
 
             }
         });
+        instrumento.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String tiempoRealInstrumento = String.valueOf(s);
+                if (!validarInstrumento(tiempoRealInstrumento)) {
+                    instrumento.setError("Caracteres especiales y espacios no permitido");
+                }
+
+            }
+        });
 
         registarRegistro.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,28 +184,33 @@ public class RegistrarUsuario extends AppCompatActivity implements Response.List
         final String usuario = nombreUsuario.getText().toString().trim();
         final String pas1 = pasRegistro1.getText().toString().trim();
         final String pas2 = pasRegistro2.getText().toString().trim();
-        if (!TextUtils.isEmpty(nombreGrupo) && !TextUtils.isEmpty(usuario) && !TextUtils.isEmpty(pas1) && !TextUtils.isEmpty(pas2)) {
-            if (usuario.length() > 6) {
+        final String instrument = instrumento.getText().toString().trim();
+
+        if (!TextUtils.isEmpty(nombreGrupo) && !TextUtils.isEmpty(usuario) && !TextUtils.isEmpty(pas1) && !TextUtils.isEmpty(pas2) && !TextUtils.isEmpty(instrument)) {
+            if (usuario.length() > 7) {
                 if (pas1.length() > 6) {
-                    if (validarUsuario(usuario) && validarPassword(pas1) && validarPassword(pas2)) {
+                    if (instrument.length() > 3) {
+                        if (validarUsuario(usuario) && validarPassword(pas1) && validarPassword(pas2) && validarInstrumento(instrument)) {
+                            if (pas1.equals(pas2)) {
 
-                        if (pas1.equals(pas2)) {
+                                mProgress.setMessage("Registrando, espere un momento por favor...");
+                                mProgress.show();//lanzamos el progres Dialog
 
-                            mProgress.setMessage("Registrando, espere un momento por favor...");
-                            mProgress.show();//lanzamos el progres Dialog
+                                cargarWebService();
 
-                            cargarWebService();
-
-                        } else {
-                            Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
+                            }
                         }
+                    } else {
+                        instrumento.setError("El instrumento favorito debe ser mayor a 3 caracteres");
                     }
                 } else {
                     Toast.makeText(this, "La contraseña deber ser mayor a 6 Caracteres", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                nombreUsuario.setError("El nombre usuario debe ser mayor a 6 caracteres");
-                Toast.makeText(this, "El nombre usuario debe ser mayor a 6 caracteres", Toast.LENGTH_SHORT).show();
+                nombreUsuario.setError("El nombre usuario debe ser mayor a 7 caracteres");
+                Toast.makeText(this, "El nombre usuario debe ser mayor a 7 caracteres", Toast.LENGTH_SHORT).show();
             }
         } else {
             if (TextUtils.isEmpty(nombreGrupo)) {
@@ -182,6 +224,9 @@ public class RegistrarUsuario extends AppCompatActivity implements Response.List
             }
             if (TextUtils.isEmpty(pas2)) {
                 pasRegistro2.setError("El campo esta vacio");
+            }
+            if (TextUtils.isEmpty(instrument)) {
+                instrumento.setError("El campo esta vacio");
             }
             Toast.makeText(this, "Debe llenar todos los campos de manera obligatoria", Toast.LENGTH_SHORT).show();
         }
@@ -199,9 +244,15 @@ public class RegistrarUsuario extends AppCompatActivity implements Response.List
         return mat.matches();
     }
 
+    public boolean validarInstrumento(String cadena) {
+        Pattern pat = Pattern.compile("[a-zA-Z0-9]+");
+        Matcher mat = pat.matcher(cadena);
+        return mat.matches();
+    }
+
     private void cargarWebService() {
         // String url = "http://192.168.43.219/gruposcochalos/registro.php?nombre=" + nombreGrupoRegistro.getText().toString() + "&user=" + nombreUsuario.getText().toString() + "&pwd=" + pasRegistro1.getText().toString();
-        String url = Constantes.IP_SERVIDOR+"gruposcochalos/registro.php?nombre=" + nombreGrupoRegistro.getText().toString() + "&usuario=" + nombreUsuario.getText().toString() + "&pwd=" + pasRegistro1.getText().toString();
+        String url = Constantes.IP_SERVIDOR + "gruposcochalos/registro.php?nombre=" + nombreGrupoRegistro.getText().toString() + "&usuario=" + nombreUsuario.getText().toString() + "&pwd=" + pasRegistro1.getText().toString() + "&instrumento=" + instrumento.getText().toString();
         url = url.replace(" ", "%20");
         jsonObjectReques = new JsonObjectRequest(Request.Method.GET, url, null, this, this);//realiza el llamado ala url
         requestQueue.add(jsonObjectReques);
@@ -214,8 +265,8 @@ public class RegistrarUsuario extends AppCompatActivity implements Response.List
         try {
             jsonObject = jsonArray.getJSONObject(0);
             if (jsonObject.optString("usuario").equals("ya existe usuario")) {
-                nombreUsuario.setError("El nombre de usuario ya existe..");
-                Toast.makeText(this, "El nombre de usuario ya existe", Toast.LENGTH_SHORT).show();
+                nombreUsuario.setError("Numero de móvil o usuario ya existe..");
+                Toast.makeText(this, "Numero de móvil o usuario ya existe, " + "\n" + "Intente con otro número", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Su cuenta se registro correctamente...", Toast.LENGTH_SHORT).show();
 
@@ -232,7 +283,17 @@ public class RegistrarUsuario extends AppCompatActivity implements Response.List
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        Toast.makeText(this, "No se pudo registrar, fallo la conexion al servidor ", Toast.LENGTH_SHORT).show();
         mProgress.dismiss();
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+
+            Toast.makeText(this, "No se pudo registrar, fallo la conexion al servidor ", Toast.LENGTH_SHORT).show();
+
+        } else {
+            Toast.makeText(this, "No tienes conexion a Internet", Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

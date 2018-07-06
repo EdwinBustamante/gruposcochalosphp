@@ -59,11 +59,11 @@ public class Main extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-        try {
-            Badges.setBadge(this, 5);
+        /*try {
+            Badges.setBadge(this, 0);
         } catch (BadgesNotSupportedException badgesNotSupportedException) {
             Log.d(TAG, badgesNotSupportedException.getMessage());
-        }
+        }*/
 
 
     }
@@ -84,30 +84,7 @@ public class Main extends AppCompatActivity {
 
     }
 
-    public void obtenerGruposMusicales() {
-//        List<GrupoMusical> listagrupos = new ArrayList<>();
-//        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
-//        listagrupos.add(new GrupoMusical(R.drawable.portada, "BONANZA", "Cumbia Tropical"));
-//        listagrupos.add(new GrupoMusical(R.drawable.portada, "PANDORA DE COLOMI", "Cumbia Tropical"));
-//        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
-//        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
-//        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
-//        listagrupos.add(new GrupoMusical(R.drawable.portada, "BONANZA", "Cumbia Tropical"));
-//        listagrupos.add(new GrupoMusical(R.drawable.portada, "PANDORA DE COLOMI", "Cumbia Tropical"));
-//        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
-//        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
-//        listagrupos.add(new GrupoMusical(R.drawable.portada, "BONANZA", "Cumbia Tropical"));
-//        listagrupos.add(new GrupoMusical(R.drawable.portada, "PANDORA DE COLOMI", "Cumbia Tropical"));
-//        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
-//        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
-//        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
-//        listagrupos.add(new GrupoMusical(R.drawable.portada, "BONANZA", "Cumbia Tropical"));
-//        listagrupos.add(new GrupoMusical(R.drawable.portada, "PANDORA DE COLOMI", "Cumbia Tropical"));
-//        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
-//        listagrupos.add(new GrupoMusical(R.drawable.portada, "MISION RESCATE", "Cumbia Tropical"));
-//        return listagrupos;
 
-    }
 
     private void obtenerCanciones() {
         Call<Resultado> resultadoCall = ItunesAPI.getItunesService().getCanciones();

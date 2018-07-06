@@ -44,7 +44,7 @@ public class CuentaUsuario extends AppCompatActivity {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
 
             new AlertDialog.Builder(this)
-                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setIcon(R.drawable.ic_advertencia)
                     .setTitle("Grupos Cochalos")
                     .setMessage("Desea cerrar sesion?")
                     .setNegativeButton(android.R.string.cancel, null)// sin listener

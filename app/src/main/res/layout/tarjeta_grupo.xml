@@ -24,7 +24,7 @@
                 android:id="@+id/fotoPortada"
                 android:layout_width="60sp"
                 android:layout_height="60sp"
-                android:src="@mipmap/ic_launcher" />
+                 />
         </LinearLayout>
 
 

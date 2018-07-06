@@ -25,9 +25,9 @@ import com.squareup.picasso.Picasso;
 import org.w3c.dom.Text;
 
 public class InformacionGrupoVisitante extends AppCompatActivity implements View.OnClickListener {
-    private ImageView imageViewPortada, imageViewPerfil, movil1, movil2, movilwhatsapp, facebook, ubicacion;
-    private TextView nombreGrupo, generoGrupo, informacionVisitante, movil1text, movil2text, movilwhatsapptext, linkfacebook, contactosextra, direcciontext;
-    private String fotoperfil, latitudg, longitudg,fotoportada;
+    private ImageView imageViewPortada, imageViewPerfil, movil1, movil2, movilwhatsapp, facebook, ubicacion, imageViewYoutuveV;
+    private TextView nombreGrupo, generoGrupo, informacionVisitante, movil1text, movil2text, movilwhatsapptext, linkfacebook, contactosextra, direcciontext,linkYoutubeVisitante;
+    private String fotoperfil, latitudg, longitudg, fotoportada;
     private TextView numeroPublic;
     GrupoMusical grupoMusical;
 
@@ -49,7 +49,10 @@ public class InformacionGrupoVisitante extends AppCompatActivity implements View
         nombreGrupo = (TextView) findViewById(R.id.nombregrupo_visitante);
         generoGrupo = (TextView) findViewById(R.id.texgeneroMusica_visitante);
         fotoperfil = grupoMusical.getFotoperfil();
-        fotoportada=grupoMusical.getFotoportada();
+        fotoportada = grupoMusical.getFotoportada();
+        imageViewYoutuveV = findViewById(R.id.imageViewYoutubeVisitante);
+        imageViewYoutuveV.setOnClickListener(this);
+
 
         Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + fotoperfil).error(R.drawable.perfilmusic)
                 .placeholder(R.drawable.progress_animation).into(imageViewPerfil);
@@ -64,10 +67,12 @@ public class InformacionGrupoVisitante extends AppCompatActivity implements View
         movil1.setOnClickListener(this);
         movil1text = (TextView) findViewById(R.id.texViewMovil1_visitante);
         movil1text.setText(grupoMusical.getNumtelefono());
+        movil1text.setOnClickListener(this);
         movil2 = (ImageView) findViewById(R.id.imageViewMovil2_visitante);
         movil2.setOnClickListener(this);
         movil2text = (TextView) findViewById(R.id.texViewMovil2_visitante);
         movil2text.setText(grupoMusical.getNumtelefonodos());
+        movil2text.setOnClickListener(this);
         movilwhatsapp = (ImageView) findViewById(R.id.imageViewMovilWhatsapp_visitante);
         movilwhatsapp.setOnClickListener(this);
         movilwhatsapptext = (TextView) findViewById(R.id.texViewMovilWhatsAp_visitante);
@@ -86,6 +91,10 @@ public class InformacionGrupoVisitante extends AppCompatActivity implements View
         numeroPublic.setOnClickListener(this);
         latitudg = grupoMusical.getLatitudg();
         longitudg = grupoMusical.getLongitudg();
+        linkYoutubeVisitante=findViewById(R.id.linkYoutubeVisitante);
+
+        linkYoutubeVisitante.setText(grupoMusical.getLinkyoutube());
+
 
     }
 
@@ -120,7 +129,7 @@ public class InformacionGrupoVisitante extends AppCompatActivity implements View
         switch (view.getId()) {
             case R.id.portada_visitante:
                 Intent i = new Intent(this, FulImagenVisitante.class);
-                i.putExtra("nombretoolbar","Portada");
+                i.putExtra("nombretoolbar", "Portada");
                 i.putExtra("fotoperfil", fotoportada);
                 startActivity(i);
 
@@ -128,22 +137,33 @@ public class InformacionGrupoVisitante extends AppCompatActivity implements View
                 break;
             case R.id.perfil_visitante:
                 Intent in = new Intent(this, FulImagenVisitante.class);
-                in.putExtra("nombretoolbar","Perfil");
+                in.putExtra("nombretoolbar", "Perfil");
                 in.putExtra("fotoperfil", fotoperfil);
                 startActivity(in);
                 //Toast.makeText(this, "perfil", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.numerodepublic:
                 Intent publicacionesvisitar = new Intent(InformacionGrupoVisitante.this, PublicacionesGrupoVisitante.class);
-               publicacionesvisitar.putExtra("idgrupomusical",grupoMusical.getIdgrupomusical());
+                publicacionesvisitar.putExtra("idgrupomusical", grupoMusical.getIdgrupomusical());
                 startActivity(publicacionesvisitar);
+                break;
+            case R.id.imageViewYoutubeVisitante:
+                Uri uris = Uri.parse(linkYoutubeVisitante.getText().toString());
+                Intent it = new Intent(Intent.ACTION_VIEW,uris);
+                startActivity(it);
                 break;
             case R.id.imageViewMovil1_visitante:
                 // Toast.makeText(this, "movil 1", Toast.LENGTH_SHORT).show();
                 llamar(movil1text.getText().toString());
                 break;
+            case R.id.texViewMovil1_visitante:
+                llamar(movil1text.getText().toString());
+                break;
             case R.id.imageViewMovil2_visitante:
                 // Toast.makeText(this, "movil 2", Toast.LENGTH_SHORT).show();
+                llamar(movil2text.getText().toString());
+                break;
+            case  R.id.texViewMovil2_visitante:
                 llamar(movil2text.getText().toString());
                 break;
             case R.id.imageViewMovilWhatsapp_visitante:
@@ -167,7 +187,7 @@ public class InformacionGrupoVisitante extends AppCompatActivity implements View
                 break;
             case R.id.ImageViewFacebook_visitante:
                 //String facebookId = "fb.//page/<Faceboook Page ID>";
-                String facebookId="2207520000.1528940297";
+                String facebookId = "2207520000.1528940297";
                 String urlPage = linkfacebook.getText().toString();
                 try {
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(facebookId)));
@@ -194,6 +214,7 @@ public class InformacionGrupoVisitante extends AppCompatActivity implements View
         }
 
     }
+
     private boolean estaInstaladaAplicacion(String nombrePaquete, Context contexto) {
         PackageManager pm = contexto.getPackageManager();
         try {

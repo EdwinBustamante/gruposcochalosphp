@@ -32,6 +32,15 @@ public class GrupoMusical implements Parcelable {//pasar objeto por parcelable y
     private String latitudg;
     private String longitudg;
     private String fotoportada;
+    private String linkyoutube;
+
+    public String getLinkyoutube() {
+        return linkyoutube;
+    }
+
+    public void setLinkyoutube(String linkyoutube) {
+        this.linkyoutube = linkyoutube;
+    }
 
     public String getFotoportada() {
         return fotoportada;
@@ -50,7 +59,7 @@ public class GrupoMusical implements Parcelable {//pasar objeto por parcelable y
         this.grupopk = grupopk;
     }
 
-    public GrupoMusical(String idgrupomusical, String nombre, String genero, String informaciondescripcion, String descripcioncontactos, String direcciondescripcion, String numtelefono, String numwhatsapp, String linkfacebook, String fotoperfil, String usuario_idusuario, String numtelefonodos, String latitudg, String longitudg,String fotoportada) {
+    public GrupoMusical(String idgrupomusical, String nombre, String genero, String informaciondescripcion, String descripcioncontactos, String direcciondescripcion, String numtelefono, String numwhatsapp, String linkfacebook, String fotoperfil, String usuario_idusuario, String numtelefonodos, String latitudg, String longitudg,String fotoportada,String linkyoutube) {
         this.idgrupomusical = idgrupomusical;
         this.nombre = nombre;
         this.genero = genero;
@@ -66,6 +75,7 @@ public class GrupoMusical implements Parcelable {//pasar objeto por parcelable y
         this.latitudg = latitudg;
         this.longitudg = longitudg;
         this.fotoportada=fotoportada;
+        this.linkyoutube=linkyoutube;
     }
 
     protected GrupoMusical(Parcel in) {
@@ -84,6 +94,7 @@ public class GrupoMusical implements Parcelable {//pasar objeto por parcelable y
         latitudg = in.readString();
         longitudg = in.readString();
         fotoportada=in.readString();
+        linkyoutube=in.readString();
     }
 
     public static final Creator<GrupoMusical> CREATOR = new Creator<GrupoMusical>() {
@@ -232,6 +243,7 @@ public class GrupoMusical implements Parcelable {//pasar objeto por parcelable y
         parcel.writeString(this.latitudg);
         parcel.writeString(this.longitudg);
         parcel.writeString(this.fotoportada);
+        parcel.writeString(this.linkyoutube);
 
     }
 

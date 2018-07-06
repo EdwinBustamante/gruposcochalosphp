@@ -112,13 +112,13 @@ public class FulImagen extends AppCompatActivity {
 
         //imageUpload.setOnClickListener(v -> Log.d("HOL", "CLICKEADO"));
 
-        Display display = getWindowManager().getDefaultDisplay();
+       /* Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         int width = size.x;
         int height = size.y;
         imageUpload.setMaxHeight(height);
-        imageUpload.setMaxWidth(width);
+        imageUpload.setMaxWidth(width);*/
         //hace que la imagen sea expansible
         mAttacher = new PhotoViewAttacher(imageUpload);
         cargarImagen = new ProgressDialog(FulImagen.this);
@@ -218,6 +218,7 @@ public class FulImagen extends AppCompatActivity {
         //alistando para enviar al servidor
         bitmap = magicalCamera.getPhoto();
         //with this form you obtain the bitmap (in this example set this bitmap in image view)
+
         imageUpload.setImageBitmap(bitmap);
 
         //if you need save your bitmap in device use this method and return the path if you need this

@@ -93,14 +93,14 @@ public class FullFotoPortada extends AppCompatActivity {
         Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + imgPerfil).error(R.drawable.perfilmusic)
                 .placeholder(R.drawable.progress_animation).into(imageUpload);
         //   imageUpload.setImageResource(imgPortada);
-
+/*
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         int width = size.x;
         int height = size.y;
         imageUpload.setMaxHeight(height);
-        imageUpload.setMaxWidth(width);
+        imageUpload.setMaxWidth(width);*/
         //hace que la imagen sea expansible
         mAttacher = new PhotoViewAttacher(imageUpload);
         cargarImagen = new ProgressDialog(FullFotoPortada.this);

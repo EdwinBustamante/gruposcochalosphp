@@ -35,6 +35,7 @@
         <item name="android:colorControlActivated">@color/blanco</item>
     </style>
 
+
     <style name="PublicarPublicacion" parent="AppTheme">
         <item name="android:colorControlNormal">@color/negro</item>
         <item name="android:colorControlActivated">@color/yello</item>
