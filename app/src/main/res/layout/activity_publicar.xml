@@ -86,7 +86,8 @@
                         android:background="@color/fondo_editTex_Publicar"
                         android:hint="Escribir una actualizacion de estado o una promoción" />
 
-                    <LinearLayout
+                    <RelativeLayout
+                        android:id="@+id/rl"
                         android:layout_width="match_parent"
                         android:layout_height="400dp"
                         android:orientation="vertical">
@@ -94,10 +95,18 @@
                         <com.edwinbustamante.gruposcochalos.RenderizadorFotos.ResizableImageView
                             android:id="@+id/imageViewPublicacionPrevio"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_height="match_parent"
+                           />
+
+                        <Button
+                            android:id="@+id/rotarFotop"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ROTAR IMAGEN"
+                            android:visibility="invisible" />
 
 
-                    </LinearLayout>
+                    </RelativeLayout>
 
                     <LinearLayout
 

@@ -84,7 +84,7 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener,
     private static String APP_DIRECTORY = "GruposCochalos/";
     private static String MEDIA_DIRECTORY = APP_DIRECTORY + "GruposCochalosImages";
     private String namefoto = "";
-    private Button mOptionButton;
+    private Button mOptionButton,rotatFoto;
     final int CODE_GALLERY_REQUEST = 999;
     final int CODE_CAMARA_REQUEST = 100;
     ProgressDialog cargarImagen;
@@ -161,6 +161,15 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener,
         };
         magicalPermissions = new MagicalPermissions(this, permissions);
         magicalCamera = new MagicalCamera(this, RESIZE_PHOTO_PIXELS_PERCENTAGE, magicalPermissions);
+        rotatFoto=findViewById(R.id.rotarFotop);
+        rotatFoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bitmap rotado= rotateImage(bitmap,90);
+                imageViewPublicacionPrevio.setImageBitmap(rotado);
+                bitmap=rotado;
+            }
+        });
     }
 
     @Override
@@ -328,16 +337,16 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener,
         bitmap = magicalCamera.getPhoto();
         //with this form you obtain the bitmap (in this example set this bitmap in image view)
         imageViewPublicacionPrevio.setImageBitmap(bitmap);
-
+        rotatFoto.setVisibility(View.VISIBLE);
         //if you need save your bitmap in device use this method and return the path if you need this
         //You need to send, the bitmap picture, the photo name, the directory name, the picture type, and autoincrement photo name if           //you need this send true, else you have the posibility or realize your standard name for your pictures.
-        String path = magicalCamera.savePhotoInMemoryDevice(magicalCamera.getPhoto(), "gc", "Grupos Cochalos", MagicalCamera.JPEG, true);
+       /* String path = magicalCamera.savePhotoInMemoryDevice(magicalCamera.getPhoto(), "gc", "Grupos Cochalos", MagicalCamera.JPEG, true);
 
         if (path != null) {
             Toast.makeText(Publicar.this, "Foto guardado en el dispositivo " + path, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(Publicar.this, "No se guardo la foto", Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
 
     private String getRandomString() {

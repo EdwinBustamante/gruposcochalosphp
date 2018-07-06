@@ -34,6 +34,7 @@ import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -74,7 +75,7 @@ public class FulImagen extends AppCompatActivity {
 
     PhotoViewAttacher mAttacher;//Para hacer Zoom en el imagen
 
-    Button btnChoose, btnUpload;
+    Button btnChoose, btnUpload,rotatFoto;
     ImageView imageUpload;
     final int CODE_GALLERY_REQUEST = 999;
     final int CODE_CAMARA_REQUEST = 100;
@@ -87,7 +88,7 @@ public class FulImagen extends AppCompatActivity {
     private static String MEDIA_DIRECTORY = APP_DIRECTORY + "GruposCochalosImages";
     private MagicalPermissions magicalPermissions;
     private MagicalCamera magicalCamera;
-    private int RESIZE_PHOTO_PIXELS_PERCENTAGE = 90;
+    private int RESIZE_PHOTO_PIXELS_PERCENTAGE = 100;//la resolucion en pixeles
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,20 +106,31 @@ public class FulImagen extends AppCompatActivity {
 
         String imgPerfil = getIntent().getExtras().getString("foto");///recibiendo la imagen del fragmente anterior
         imageUpload = (ImageView) findViewById(R.id.imagenfull);
-        // Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + imgPerfil).into(imageUpload);
+        rotatFoto=findViewById(R.id.rotarFoto);
+        rotatFoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               Bitmap rotado= rotateImage(bitmap,90);
+                imageUpload.setImageBitmap(rotado);
+                bitmap=rotado;
+            }
+        });
+
         Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + imgPerfil).error(R.drawable.perfilmusic)
-                .placeholder(R.drawable.progress_animation).into(imageUpload);
+               .placeholder(R.drawable.progress_animation).into(imageUpload);
+
+
         //   imageUpload.setImageResource(imgPortada);
 
-        //imageUpload.setOnClickListener(v -> Log.d("HOL", "CLICKEADO"));
 
-       /* Display display = getWindowManager().getDefaultDisplay();
+
+        Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         int width = size.x;
         int height = size.y;
         imageUpload.setMaxHeight(height);
-        imageUpload.setMaxWidth(width);*/
+        imageUpload.setMaxWidth(width);
         //hace que la imagen sea expansible
         mAttacher = new PhotoViewAttacher(imageUpload);
         cargarImagen = new ProgressDialog(FulImagen.this);
@@ -216,78 +228,22 @@ public class FulImagen extends AppCompatActivity {
         //this is for rotate picture in this method
         //magicalCamera.resultPhoto(requestCode, resultCode, data, MagicalCamera.ORIENTATION_ROTATE_180);
         //alistando para enviar al servidor
-        bitmap = magicalCamera.getPhoto();
-        //with this form you obtain the bitmap (in this example set this bitmap in image view)
+        bitmap = magicalCamera.getPhoto();        //with this form you obtain the bitmap (in this example set this bitmap in image view)
 
         imageUpload.setImageBitmap(bitmap);
-
+         rotatFoto.setVisibility(View.VISIBLE);
         //if you need save your bitmap in device use this method and return the path if you need this
         //You need to send, the bitmap picture, the photo name, the directory name, the picture type, and autoincrement photo name if           //you need this send true, else you have the posibility or realize your standard name for your pictures.
-        String path = magicalCamera.savePhotoInMemoryDevice(magicalCamera.getPhoto(), "gc", "Grupos Cochalos", MagicalCamera.JPEG, true);
 
+
+      /*  String path = magicalCamera.savePhotoInMemoryDevice(magicalCamera.getPhoto(), "gc", "Grupos Cochalos", MagicalCamera.JPEG, true);
         if (path != null) {
             Toast.makeText(FulImagen.this, "Foto guardado en el dispositivo " + path, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(FulImagen.this, "No se guardo la foto", Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
 
-
-//    private void abrirCamara() {
-//        Toast.makeText(this, "hola", Toast.LENGTH_SHORT).show();
-//        File file = new File(Environment.getExternalStorageDirectory(), MEDIA_DIRECTORY);
-//        boolean isDirectoryCreated = file.exists();
-//
-//        if (!isDirectoryCreated)
-//            isDirectoryCreated = file.mkdirs();
-//
-//        if (isDirectoryCreated) {
-//            Long timestamp = System.currentTimeMillis() / 1000;
-//            String imageName = timestamp.toString() + ".jpg";
-//
-//            mPath = Environment.getExternalStorageDirectory() + File.separator + MEDIA_DIRECTORY
-//                    + File.separator + imageName;
-//
-//            File newFile = new File(mPath);
-//
-//            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(newFile));
-//            startActivityForResult(intent, CODE_CAMARA_REQUEST);
-//        }
-//    }
-
-   /* @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CODE_GALLERY_REQUEST && resultCode == RESULT_OK && data != null) {
-            Uri filePath = data.getData();
-            try {
-                InputStream inputStream = getContentResolver().openInputStream(filePath);
-                bitmap = BitmapFactory.decodeStream(inputStream);
-                imageUpload.setImageBitmap(bitmap);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-
-
-        } else {
-            if (requestCode == CODE_CAMARA_REQUEST && resultCode == RESULT_OK) {
-                MediaScannerConnection.scanFile(this,
-                        new String[]{mPath}, null,
-                        new MediaScannerConnection.OnScanCompletedListener() {
-                            @Override
-                            public void onScanCompleted(String path, Uri uri) {
-                                Log.i("ExternalStorage", "Scanned " + path + ":");
-                                Log.i("ExternalStorage", "-> Uri = " + uri);
-                            }
-                        });
-
-
-                bitmap = BitmapFactory.decodeFile(mPath);
-                imageUpload.setImageBitmap(bitmap);
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }*/
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -57,7 +58,7 @@ public class FullFotoPortada extends AppCompatActivity {
 
     PhotoViewAttacher mAttacher;//Para hacer Zoom en el imagen
 
-    Button btnChoose, btnUpload;
+    Button btnChoose, btnUpload,rotatFoto;
     ImageView imageUpload;
     final int CODE_GALLERY_REQUEST = 999;
     final int CODE_CAMARA_REQUEST = 100;
@@ -86,6 +87,15 @@ public class FullFotoPortada extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
+        rotatFoto=findViewById(R.id.rotarFoto);
+        rotatFoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bitmap rotado= rotateImage(bitmap,90);
+                imageUpload.setImageBitmap(rotado);
+                bitmap=rotado;
+            }
+        });
 
         String imgPerfil = getIntent().getExtras().getString("foto");///recibiendo la imagen del fragmente anterior
         imageUpload = (ImageView) findViewById(R.id.imagenfullportada);
@@ -188,16 +198,16 @@ public class FullFotoPortada extends AppCompatActivity {
         bitmap = magicalCamera.getPhoto();
         //with this form you obtain the bitmap (in this example set this bitmap in image view)
         imageUpload.setImageBitmap(bitmap);
-
+        rotatFoto.setVisibility(View.VISIBLE);
         //if you need save your bitmap in device use this method and return the path if you need this
         //You need to send, the bitmap picture, the photo name, the directory name, the picture type, and autoincrement photo name if           //you need this send true, else you have the posibility or realize your standard name for your pictures.
-        String path = magicalCamera.savePhotoInMemoryDevice(magicalCamera.getPhoto(), "gc", "Grupos Cochalos", MagicalCamera.JPEG, true);
+      //  String path = magicalCamera.savePhotoInMemoryDevice(magicalCamera.getPhoto(), "gc", "Grupos Cochalos", MagicalCamera.JPEG, true);
 
-        if (path != null) {
+       /* if (path != null) {
             Toast.makeText(FullFotoPortada.this, "Foto guardado en el dispositivo " + path, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(FullFotoPortada.this, "No se guardo la foto", Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
 
 

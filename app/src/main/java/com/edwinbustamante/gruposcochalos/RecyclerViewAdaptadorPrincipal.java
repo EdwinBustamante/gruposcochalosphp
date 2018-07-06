@@ -13,11 +13,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
 import com.edwinbustamante.gruposcochalos.VisitanteArchivos.InformacionGrupoVisitante;
 import com.edwinbustamante.gruposcochalos.domain.GrupoMusical;
 import com.squareup.picasso.Picasso;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +29,7 @@ import java.util.List;
  * Created by Admin on 22/2/2018.
  */
 
-public class RecyclerViewAdaptadorPrincipal extends RecyclerView.Adapter<RecyclerViewAdaptadorPrincipal.ViewHolder>implements Filterable {
-
+public class RecyclerViewAdaptadorPrincipal extends RecyclerView.Adapter<RecyclerViewAdaptadorPrincipal.ViewHolder> implements Filterable {
 
 
     public List<GrupoMusical> gruposMusicalesLista;//lista de todos los grupos
@@ -36,7 +38,7 @@ public class RecyclerViewAdaptadorPrincipal extends RecyclerView.Adapter<Recycle
 
     public RecyclerViewAdaptadorPrincipal(List<GrupoMusical> gruposMusicalLista, Context context) {
         this.gruposMusicalesLista = gruposMusicalLista;
-        this.mFilteredList=gruposMusicalLista;
+        this.mFilteredList = gruposMusicalLista;
         this.context = context;
     }
 
@@ -54,12 +56,13 @@ public class RecyclerViewAdaptadorPrincipal extends RecyclerView.Adapter<Recycle
     public void onBindViewHolder(ViewHolder holder, int position) {
         final GrupoMusical grupoMusical = mFilteredList.get(position);
         String urlImagenPerfil = grupoMusical.getFotoperfil();
-        //   Glide.with(getContext()).load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagenPerfil ).centerCrop().into(foto_perfil);
-        //modificaciones del cntenido de cada item
-        // holder.fotoPortada.setImageResource();
 
-        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagenPerfil).error(R.drawable.perfilmusic)
+       Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagenPerfil).error(R.drawable.perfilmusic)
                 .placeholder(R.drawable.progress_animation).into(holder.fotoPortada);
+
+
+
+
         holder.nombreGrupo.setText(grupoMusical.getNombre());
         holder.tipoMusica.setText(grupoMusical.getGenero());
         holder.cardgrupo.setOnClickListener(new View.OnClickListener() {
@@ -107,7 +110,7 @@ public class RecyclerViewAdaptadorPrincipal extends RecyclerView.Adapter<Recycle
 
                     for (GrupoMusical grupomusical : gruposMusicalesLista) {
 
-                        if (grupomusical.getNombre().toLowerCase().contains(charString) ) {
+                        if (grupomusical.getNombre().toLowerCase().contains(charString)) {
 
                             filteredList.add(grupomusical);
                         }
