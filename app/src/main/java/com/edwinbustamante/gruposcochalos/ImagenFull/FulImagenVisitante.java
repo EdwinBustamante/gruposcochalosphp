@@ -1,5 +1,6 @@
 package com.edwinbustamante.gruposcochalos.ImagenFull;
 
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
@@ -35,8 +36,7 @@ public class FulImagenVisitante extends AppCompatActivity {
         String fotoPerfil = getIntent().getExtras().getString("fotoperfil");
         //  Toast.makeText(this, fotoPerfil, Toast.LENGTH_SHORT).show();
         perfil = (ImageView) findViewById(R.id.imagenfullVisitante);
-        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + fotoPerfil).error(R.drawable.perfilmusic)
-                .placeholder(R.drawable.progress_animation).into(perfil);
+
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -44,10 +44,15 @@ public class FulImagenVisitante extends AppCompatActivity {
         int height = size.y;
         perfil.setMaxHeight(height);
         perfil.setMaxWidth(width);
+        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + fotoPerfil).error(R.drawable.perfilmusic)
+                .resize(width, height)
+                .centerCrop()
+                .placeholder(R.drawable.progress_animation).into(perfil);
         //hace que la imagen sea expansible
         mAttacher = new PhotoViewAttacher(perfil);
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

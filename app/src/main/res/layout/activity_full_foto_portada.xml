@@ -35,12 +35,22 @@
         android:text="Rotar Foto"
         android:visibility="invisible" />
 
-    <com.edwinbustamante.gruposcochalos.RenderizadorFotos.ResizableImageView
-        android:id="@+id/imagenfullportada"
+    <LinearLayout
+        android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/bar"
-        android:background="@color/negro" />
+        android:layout_below="@id/bar"
+        android:background="@color/negro"
+        android:gravity="center">
+
+        <com.edwinbustamante.gruposcochalos.RenderizadorFotos.ResizableImageView
+            android:id="@+id/imagenfullportada"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+
+    </LinearLayout>
 
 
 </RelativeLayout>

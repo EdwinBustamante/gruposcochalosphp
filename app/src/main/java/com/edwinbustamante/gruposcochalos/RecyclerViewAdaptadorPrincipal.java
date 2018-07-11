@@ -57,10 +57,9 @@ public class RecyclerViewAdaptadorPrincipal extends RecyclerView.Adapter<Recycle
         final GrupoMusical grupoMusical = mFilteredList.get(position);
         String urlImagenPerfil = grupoMusical.getFotoperfil();
 
-       Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagenPerfil).error(R.drawable.perfilmusic)
+        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + urlImagenPerfil)
+                .error(R.drawable.perfilmusic)
                 .placeholder(R.drawable.progress_animation).into(holder.fotoPortada);
-
-
 
 
         holder.nombreGrupo.setText(grupoMusical.getNombre());
@@ -88,8 +87,7 @@ public class RecyclerViewAdaptadorPrincipal extends RecyclerView.Adapter<Recycle
 
     @Override
     public int getItemCount() {
-        return
-                mFilteredList.size();
+        return mFilteredList.size();
     }
 
     @Override

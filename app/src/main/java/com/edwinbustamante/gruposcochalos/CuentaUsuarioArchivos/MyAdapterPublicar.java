@@ -72,6 +72,7 @@ public class MyAdapterPublicar extends RecyclerView.Adapter<MyAdapterPublicar.Vi
         // holder.fechaPublicacion.setText(publicacionLista.get(position).getFechaPublicacion());
         //condicional que detecta si es visitante o administrador
         if (rol.equals("visitante")) {
+
             holder.eliminarPublicacion.setVisibility(View.INVISIBLE);
         }
         holder.descripcionPublicacion.setText(publicacion.getDescripcion());
@@ -82,8 +83,8 @@ public class MyAdapterPublicar extends RecyclerView.Adapter<MyAdapterPublicar.Vi
             @Override
             public void onClick(View v) {
                 Intent verfoto = new Intent(context, FulImagenVisitante.class);
-                verfoto.putExtra("fotoperfil",publicacion.getFoto());
-                verfoto.putExtra("nombretoolbar","Publicación");
+                verfoto.putExtra("fotoperfil", publicacion.getFoto());
+                verfoto.putExtra("nombretoolbar", "Publicación");
                 context.startActivity(verfoto);
             }
         });
@@ -94,6 +95,7 @@ public class MyAdapterPublicar extends RecyclerView.Adapter<MyAdapterPublicar.Vi
         if (publicacion.getLatitud().equals("no")) {
             holder.mapsUbicacion.setVisibility(View.INVISIBLE);
         } else {
+            holder.mapsUbicacion.setImageResource(R.drawable.ic_mapa_normal);
             holder.mapsUbicacion.setVisibility(View.VISIBLE);
             holder.mapsUbicacion.setOnClickListener(new View.OnClickListener() {
                 @Override

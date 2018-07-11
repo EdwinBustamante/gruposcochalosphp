@@ -58,7 +58,7 @@ public class FullFotoPortada extends AppCompatActivity {
 
     PhotoViewAttacher mAttacher;//Para hacer Zoom en el imagen
 
-    Button btnChoose, btnUpload,rotatFoto;
+    Button btnChoose, btnUpload, rotatFoto;
     ImageView imageUpload;
     final int CODE_GALLERY_REQUEST = 999;
     final int CODE_CAMARA_REQUEST = 100;
@@ -87,30 +87,33 @@ public class FullFotoPortada extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
-        rotatFoto=findViewById(R.id.rotarFoto);
+        rotatFoto = findViewById(R.id.rotarFoto);
         rotatFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bitmap rotado= rotateImage(bitmap,90);
+                Bitmap rotado = rotateImage(bitmap, 90);
                 imageUpload.setImageBitmap(rotado);
-                bitmap=rotado;
+                bitmap = rotado;
             }
         });
 
         String imgPerfil = getIntent().getExtras().getString("foto");///recibiendo la imagen del fragmente anterior
         imageUpload = (ImageView) findViewById(R.id.imagenfullportada);
         // Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + imgPerfil).into(imageUpload);
-        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + imgPerfil).error(R.drawable.perfilmusic)
-                .placeholder(R.drawable.progress_animation).into(imageUpload);
+
         //   imageUpload.setImageResource(imgPortada);
-/*
+
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         int width = size.x;
         int height = size.y;
         imageUpload.setMaxHeight(height);
-        imageUpload.setMaxWidth(width);*/
+        imageUpload.setMaxWidth(width);
+        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + imgPerfil).error(R.drawable.perfilmusic)
+                .resize(width, height)
+                .centerCrop()
+                .placeholder(R.drawable.progress_animation).into(imageUpload);
         //hace que la imagen sea expansible
         mAttacher = new PhotoViewAttacher(imageUpload);
         cargarImagen = new ProgressDialog(FullFotoPortada.this);
@@ -201,7 +204,7 @@ public class FullFotoPortada extends AppCompatActivity {
         rotatFoto.setVisibility(View.VISIBLE);
         //if you need save your bitmap in device use this method and return the path if you need this
         //You need to send, the bitmap picture, the photo name, the directory name, the picture type, and autoincrement photo name if           //you need this send true, else you have the posibility or realize your standard name for your pictures.
-      //  String path = magicalCamera.savePhotoInMemoryDevice(magicalCamera.getPhoto(), "gc", "Grupos Cochalos", MagicalCamera.JPEG, true);
+        //  String path = magicalCamera.savePhotoInMemoryDevice(magicalCamera.getPhoto(), "gc", "Grupos Cochalos", MagicalCamera.JPEG, true);
 
        /* if (path != null) {
             Toast.makeText(FullFotoPortada.this, "Foto guardado en el dispositivo " + path, Toast.LENGTH_SHORT).show();

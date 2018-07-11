@@ -104,7 +104,6 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:visibility="invisible"
-                cardview:srcCompat="@drawable/ic_mapa_normal"
                 tools:ignore="VectorDrawableCompat" />
 
             <TextView
@@ -115,7 +114,9 @@
             <ImageView
                 android:id="@+id/imageViewPublicacion"
                 android:layout_width="match_parent"
-                android:layout_height="400dp" />
+                android:layout_height="400dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="5dp" />
 
         </LinearLayout>
 

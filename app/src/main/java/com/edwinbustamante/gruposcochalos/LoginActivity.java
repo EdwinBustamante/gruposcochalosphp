@@ -27,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
+import com.edwinbustamante.gruposcochalos.Administrador.MainAdministrador;
 import com.edwinbustamante.gruposcochalos.CuentaUsuarioArchivos.CuentaUsuario;
 import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
 import com.edwinbustamante.gruposcochalos.Objetos.User;
@@ -191,18 +192,22 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
                         guardarIdUsuario(jsonObject.optString("idusuario"));//guardando en SharePreference
                         guardarUsuario(jsonObject.optString("usuario"));//guardando en SharePreference
                         guardarIdGrupoMusical(jsonObject.optString("idusuario"));
-                        Toast.makeText(this, "Se inicio correctamente", Toast.LENGTH_SHORT).show();
-
-                            JSONObject JsonObject = jsonObject;
-
+                        JSONObject JsonObject = jsonObject;
                         recordarContrasenia(JsonObject.optString("pwd"));
-                        Intent i = new Intent(LoginActivity.this, CuentaUsuario.class);
-                        User usr = new User();
-                        usr.setUser(JsonObject.optString("usuario"));
-                        i.putExtra("objetoUsuario", usr);
-                        startActivity(i);
-                        finish();
-
+                        if (jsonObject.optString("rol").equals("u")) {
+                            Toast.makeText(this, "Se inicio correctamente", Toast.LENGTH_SHORT).show();
+                            Intent i = new Intent(LoginActivity.this, CuentaUsuario.class);
+                            User usr = new User();
+                            usr.setUser(JsonObject.optString("usuario"));
+                            i.putExtra("objetoUsuario", usr);
+                            startActivity(i);
+                            finish();
+                        } else {
+                            Toast.makeText(this, "Se inicio correctamente", Toast.LENGTH_SHORT).show();
+                            Intent i = new Intent(LoginActivity.this, MainAdministrador.class);
+                            startActivity(i);
+                            finish();
+                        }
 
                     }
                 }

@@ -58,10 +58,14 @@ import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import id.zelory.compressor.Compressor;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 import com.frosquivel.magicalcamera.MagicalCamera;
@@ -116,8 +120,7 @@ public class FulImagen extends AppCompatActivity {
             }
         });
 
-        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + imgPerfil).error(R.drawable.perfilmusic)
-               .placeholder(R.drawable.progress_animation).into(imageUpload);
+
 
 
         //   imageUpload.setImageResource(imgPortada);
@@ -131,6 +134,12 @@ public class FulImagen extends AppCompatActivity {
         int height = size.y;
         imageUpload.setMaxHeight(height);
         imageUpload.setMaxWidth(width);
+
+
+        Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + imgPerfil).error(R.drawable.perfilmusic)
+                .resize(width, height)
+                .centerCrop()
+                .placeholder(R.drawable.progress_animation).into(imageUpload);
         //hace que la imagen sea expansible
         mAttacher = new PhotoViewAttacher(imageUpload);
         cargarImagen = new ProgressDialog(FulImagen.this);
@@ -228,10 +237,11 @@ public class FulImagen extends AppCompatActivity {
         //this is for rotate picture in this method
         //magicalCamera.resultPhoto(requestCode, resultCode, data, MagicalCamera.ORIENTATION_ROTATE_180);
         //alistando para enviar al servidor
+
         bitmap = magicalCamera.getPhoto();        //with this form you obtain the bitmap (in this example set this bitmap in image view)
 
         imageUpload.setImageBitmap(bitmap);
-         rotatFoto.setVisibility(View.VISIBLE);
+        rotatFoto.setVisibility(View.VISIBLE);
         //if you need save your bitmap in device use this method and return the path if you need this
         //You need to send, the bitmap picture, the photo name, the directory name, the picture type, and autoincrement photo name if           //you need this send true, else you have the posibility or realize your standard name for your pictures.
 
@@ -305,7 +315,20 @@ public class FulImagen extends AppCompatActivity {
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
-
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            // Log exception
+            return null;
+        }
+    }
 
 }
 
