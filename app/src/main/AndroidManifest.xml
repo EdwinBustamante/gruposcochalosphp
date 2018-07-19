@@ -48,7 +48,7 @@
         <activity
             android:name=".Main"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".LoginActivity"
             android:configChanges="screenSize|orientation"
@@ -114,7 +114,6 @@
             android:name=".VisitanteArchivos.PublicacionesGrupoVisitante"
             android:label="@string/title_activity_publicaciones_grupo_visitante"
             android:theme="@style/AppTheme" />
-        <activity android:name=".CalendarioUsuario" />
         <activity android:name=".ImagenFull.FullFotoPortada" />
         <activity android:name=".CuentaUsuarioArchivos.EditLinkFacebook" />
         <activity
@@ -136,7 +135,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Administrador.MainAdministrador"></activity>
+        <activity android:name=".Administrador.MainAdministrador" />
+        <activity android:name=".CuentaUsuarioArchivos.AgendaGrupo" />
+        <activity android:name=".CuentaUsuarioArchivos.AddEvento"></activity>
     </application>
 
 </manifest>

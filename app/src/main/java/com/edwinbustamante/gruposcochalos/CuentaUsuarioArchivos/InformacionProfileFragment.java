@@ -7,8 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -36,11 +34,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
-import com.applandeo.materialcalendarview.CalendarView;
-import com.applandeo.materialcalendarview.DatePicker;
-import com.applandeo.materialcalendarview.builders.DatePickerBuilder;
-import com.applandeo.materialcalendarview.listeners.OnSelectDateListener;
-import com.edwinbustamante.gruposcochalos.CalendarioUsuario;
 import com.edwinbustamante.gruposcochalos.ImagenFull.FulImagen;
 import com.edwinbustamante.gruposcochalos.ImagenFull.FullFotoPortada;
 import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
@@ -53,10 +46,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Calendar;
 import java.util.List;
 
@@ -71,9 +60,9 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
     private ProgressDialog progressDialogFotoSubir;
     private Toolbar toolbar;
     private ImageView foto_perfil, foto_portada;
-    private TextView usuario, nombreGrupo, generoMusica, movil1, movil2, movilWhatsApp, linkFacebook,linkYoutube;
+    private TextView usuario, nombreGrupo, generoMusica, movil1, movil2, movilWhatsApp, linkFacebook, linkYoutube;
     private TextView informacionEdit, contactosEdit, direccionEdit;
-    private ImageView imageViewMovil1, imageViewMovil2, imageViewMovilWhasapp, anadirubicaciocasa, visitarubicacioncasa, irfacebook,imageViewYoutube;
+    private ImageView imageViewMovil1, imageViewMovil2, imageViewMovilWhasapp, anadirubicaciocasa, visitarubicacioncasa, irfacebook, imageViewYoutube;
     String FileName = "myUserId";
     String urlImagen;
     String urlImagenPortada;
@@ -160,12 +149,10 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
         visitarubicacioncasa.setVisibility(View.INVISIBLE);
         agendaGrupo = (ImageView) vista.findViewById(R.id.agendaGrupo);
         agendaGrupo.setOnClickListener(this);
-        linkYoutube=(TextView)vista.findViewById(R.id.linkYoutube);
+        linkYoutube = (TextView) vista.findViewById(R.id.linkYoutube);
         linkYoutube.setOnClickListener(this);
-        imageViewYoutube=(ImageView)vista.findViewById(R.id.imageViewYoutube);
+        imageViewYoutube = (ImageView) vista.findViewById(R.id.imageViewYoutube);
         imageViewYoutube.setOnClickListener(this);
-
-
 
 
         return vista;
@@ -250,31 +237,8 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                 editarGenero.show();
                 break;
             case R.id.agendaGrupo:
-                //  onCreateDialog();
-                //  Intent intentC = new Intent(getContext(), CalendarioUsuario.class);
-                // startActivity(intentC);
-                OnSelectDateListener listener = new OnSelectDateListener() {
-                    @Override
-                    public void onSelect(List<Calendar> calendars) {
-
-                        calendarioguardar = calendars;
-                        for (Calendar c : calendars) {
-                            int anio = c.get(Calendar.YEAR);
-                            int mes = c.get(Calendar.MONTH) + 1;
-                            int fecha = c.get(Calendar.DAY_OF_MONTH);
-                            Toast.makeText(getContext(), "" + fecha + "" + mes + "" + anio, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                };
-                Calendar calendar = Calendar.getInstance();
-                DatePickerBuilder builder = new DatePickerBuilder(getContext(), listener)
-                        .pickerType(CalendarView.MANY_DAYS_PICKER)
-                        .date(calendar);
-
-
-                DatePicker datePicker = builder.build();
-                datePicker.show();
-
+                Intent agendaIntent = new Intent(getContext(), AgendaGrupo.class);
+                startActivity(agendaIntent);
                 break;
 
             case R.id.imageViewYoutube:

@@ -44,5 +44,7 @@
     <color name="register">#f92f6280</color>
     <color name="fonditoTextView">#BDBDBD</color>
     <color name="youtubeV">#FFCDD2</color>
-
+    <color name="fin">#FFF8E1</color>
+    <color name="ini">#FFF8E1</color>
+    <color name="rojo">#D50000</color>
 </resources>

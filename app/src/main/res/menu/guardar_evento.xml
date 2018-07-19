@@ -1,13 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.edwinbustamante.gruposcochalos.Calendario.Calendarioadd">
+    tools:context="com.edwinbustamante.gruposcochalos.CuentaUsuarioArchivos.AddEvento">
     <item
 
-        android:id="@+id/addeventos"
+        android:id="@+id/guardarevento"
         android:orderInCategory="100"
         android:title="Guardar"
-        android:icon="@drawable/ic_action_add"
         app:showAsAction="always|withText" />
 
 </menu>
