@@ -95,6 +95,9 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
             a = getIntent().getExtras().getInt("anio");
             am_pm = getIntent().getExtras().getInt("AM_PM");
             configurarTexto(h, m, d, ms, a, am_pm);
+            if (estaPasadoLaFecha(d,ms,a)){
+                mensajeAlerta.setText("La fecha del comienzo del evento está en el pasado");
+            }
         }
 
 
