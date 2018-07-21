@@ -111,8 +111,7 @@ public class FullFotoPortada extends AppCompatActivity {
         imageUpload.setMaxHeight(height);
         imageUpload.setMaxWidth(width);
         Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + imgPerfil).error(R.drawable.perfilmusic)
-                .resize(width, height)
-                .centerCrop()
+
                 .placeholder(R.drawable.progress_animation).into(imageUpload);
         //hace que la imagen sea expansible
         mAttacher = new PhotoViewAttacher(imageUpload);

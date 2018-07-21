@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.RectF;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.alamkanak.weekview.DateTimeInterpreter;
 import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
@@ -30,10 +32,12 @@ import com.edwinbustamante.gruposcochalos.domain.EventoEdwin;
 import com.edwinbustamante.gruposcochalos.domain.ResultadoEvento;
 import com.edwinbustamante.gruposcochalos.service.EventoAPI;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -56,7 +60,7 @@ public class AgendaGrupo extends AppCompatActivity implements WeekView.EventLong
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         rol = getIntent().getExtras().getString("rol");
-        idGrupoMusical=getIntent().getExtras().getString("idgrupomusical");
+        idGrupoMusical = getIntent().getExtras().getString("idgrupomusical");
 
         mWeekView = (WeekView) findViewById(R.id.weekView);
         MonthLoader.MonthChangeListener mMonthChangeListener = new MonthLoader.MonthChangeListener() {
@@ -94,6 +98,8 @@ public class AgendaGrupo extends AppCompatActivity implements WeekView.EventLong
         };
         // month every time the month changes on the week view.
         mWeekView.setMonthChangeListener(mMonthChangeListener);
+        // mWeekView.getLastVisibleDay();
+        mWeekView.getFirstVisibleDay();
 
 
 // The week view has infinite scrolling horizontally. We have to provide the events of a
@@ -105,6 +111,29 @@ public class AgendaGrupo extends AppCompatActivity implements WeekView.EventLong
             // Set long press listener for empty view
             mWeekView.setEmptyViewLongPressListener(this);
         }
+
+
+//configurando la formato de la fecha y anio
+        mWeekView.setDateTimeInterpreter(new DateTimeInterpreter() {
+            @Override
+            public String interpretDate(Calendar date) {
+                SimpleDateFormat weekdayNameFormat = new SimpleDateFormat("EEE", Locale.getDefault());
+                String weekday = weekdayNameFormat.format(date.getTime());
+                SimpleDateFormat format = new SimpleDateFormat(" d/M/y", Locale.getDefault());
+
+                // All android api level do not have a standard way of getting the first letter of
+                // the week day name. Hence we get the first char programmatically.
+                // Details: http://stackoverflow.com/questions/16959502/get-one-letter-abbreviation-of-week-day-of-a-date-in-java#answer-16959657
+                if (true)
+                    weekday = String.valueOf(weekday.charAt(0));
+                return weekday.toUpperCase() + format.format(date.getTime());
+            }
+
+            @Override
+            public String interpretTime(int hour) {
+                return hour > 11 ? (hour - 12) + " PM" : (hour == 0 ? "12 AM" : hour + " AM");
+            }
+        });
     }
 
     @Override
@@ -305,7 +334,9 @@ public class AgendaGrupo extends AppCompatActivity implements WeekView.EventLong
                     endTime.set(Calendar.MINUTE, Integer.parseInt(eventoe.getMinutof()));
                     WeekViewEvent event = new WeekViewEvent(Integer.parseInt(eventoe.getIdevento()), eventoe.getTitulo(), startTime, endTime);
                     // event.setName("Estamos en el local villa del carmen los esperamos");
-                    event.setColor(getResources().getColor(R.color.colorPrimaryDark));
+                    int selectedColor = Integer.parseInt(eventoe.getColor());
+                    int col = Color.parseColor("#" + Integer.toHexString(selectedColor).toUpperCase());
+                    event.setColor(col);
                     events.add(event);
                     mWeekView.notifyDatasetChanged();
                     // publicacionlista.clear();

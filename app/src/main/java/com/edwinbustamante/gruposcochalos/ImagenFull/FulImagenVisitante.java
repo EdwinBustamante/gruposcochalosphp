@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
 import com.edwinbustamante.gruposcochalos.R;
 import com.squareup.picasso.Picasso;
@@ -28,7 +29,7 @@ public class FulImagenVisitante extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ful_imagen_visitante);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Foto de "+getIntent().getExtras().getString("nombretoolbar"));
+        toolbar.setTitle("Foto de " + getIntent().getExtras().getString("nombretoolbar"));
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -45,8 +46,6 @@ public class FulImagenVisitante extends AppCompatActivity {
         perfil.setMaxHeight(height);
         perfil.setMaxWidth(width);
         Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + fotoPerfil).error(R.drawable.perfilmusic)
-                .resize(width, height)
-                .centerCrop()
                 .placeholder(R.drawable.progress_animation).into(perfil);
         //hace que la imagen sea expansible
         mAttacher = new PhotoViewAttacher(perfil);

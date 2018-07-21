@@ -50,7 +50,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 
-public class AddEvento extends AppCompatActivity implements View.OnClickListener,  Response.Listener<JSONObject>,Response.ErrorListener {
+public class AddEvento extends AppCompatActivity implements View.OnClickListener, Response.Listener<JSONObject>, Response.ErrorListener {
     private TextView horaInicio, horaFin, fechaInicio, fechaFin, colorC, mensajeAlerta;
     private EditText tituloEvento;
     static final int TIME_DIALOG_ID_INI = 999;
@@ -334,15 +334,17 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
                     @Override
                     public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
 
+                        colorEvento = selectedColor;
+
                         // definimos el color
-                        colorEvento = Color.parseColor("#" + Integer.toHexString(selectedColor).toUpperCase());
+                        int col = Color.parseColor("#" + Integer.toHexString(selectedColor).toUpperCase());
 
                         // instanciamos el drawable
                         // icon = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_color_lens);
                         // definimos filtro
-                        icon.mutate().setColorFilter(colorEvento, PorterDuff.Mode.SRC_ATOP);
+                        icon.mutate().setColorFilter(col, PorterDuff.Mode.SRC_ATOP);
                         iconColor.setImageDrawable(icon);
-                        colorC.setTextColor(colorEvento);
+                        colorC.setTextColor(col);
 
                         //Toast.makeText(AddEvento.this, "onColorSelected: " + Integer.toHexString(selectedColor).toUpperCase(), Toast.LENGTH_SHORT).show();
                     }
@@ -504,6 +506,7 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
             mesI = month;
             anioI = year;
             String mes = reformatearMes(month + 1);
+
             fechaInicio.setText("" + dayOfMonth + " " + mes + " " + year);
 
             if (estaPasadoLaFecha(dayOfMonth, month, year)) {

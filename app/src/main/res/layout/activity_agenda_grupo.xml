@@ -29,14 +29,19 @@
         android:id="@+id/weekView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:fitsSystemWindows="false"
+        android:focusableInTouchMode="false"
+        android:keyboardNavigationCluster="false"
+        android:nestedScrollingEnabled="false"
         app:columnGap="8dp"
-        app:dayBackgroundColor="#05000000"
+        app:dayBackgroundColor="@color/columnas"
+        app:dayNameLength="length_long"
         app:eventTextColor="@android:color/white"
         app:headerColumnBackground="#ffffffff"
         app:headerColumnPadding="8dp"
         app:headerColumnTextColor="#8f000000"
-        app:headerRowBackgroundColor="#ffefefef"
-        app:headerRowPadding="12dp"
+        app:headerRowBackgroundColor="@color/baragenda"
+        app:headerRowPadding="20dp"
         app:hourHeight="60dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -44,6 +49,6 @@
         app:layout_constraintTop_toBottomOf="@+id/barAgenda"
         app:noOfVisibleDays="3"
         app:textSize="12sp"
-        app:todayBackgroundColor="#1848adff" />
+        app:todayBackgroundColor="@color/hoy" />
 
 </android.support.constraint.ConstraintLayout>

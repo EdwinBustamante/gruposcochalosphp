@@ -79,7 +79,7 @@ public class FulImagen extends AppCompatActivity {
 
     PhotoViewAttacher mAttacher;//Para hacer Zoom en el imagen
 
-    Button btnChoose, btnUpload,rotatFoto;
+    Button btnChoose, btnUpload, rotatFoto;
     ImageView imageUpload;
     final int CODE_GALLERY_REQUEST = 999;
     final int CODE_CAMARA_REQUEST = 100;
@@ -110,21 +110,18 @@ public class FulImagen extends AppCompatActivity {
 
         String imgPerfil = getIntent().getExtras().getString("foto");///recibiendo la imagen del fragmente anterior
         imageUpload = (ImageView) findViewById(R.id.imagenfull);
-        rotatFoto=findViewById(R.id.rotarFoto);
+        rotatFoto = findViewById(R.id.rotarFoto);
         rotatFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Bitmap rotado= rotateImage(bitmap,90);
+                Bitmap rotado = rotateImage(bitmap, 90);
                 imageUpload.setImageBitmap(rotado);
-                bitmap=rotado;
+                bitmap = rotado;
             }
         });
 
 
-
-
         //   imageUpload.setImageResource(imgPortada);
-
 
 
         Display display = getWindowManager().getDefaultDisplay();
@@ -137,8 +134,6 @@ public class FulImagen extends AppCompatActivity {
 
 
         Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + imgPerfil).error(R.drawable.perfilmusic)
-                .resize(width, height)
-                .centerCrop()
                 .placeholder(R.drawable.progress_animation).into(imageUpload);
         //hace que la imagen sea expansible
         mAttacher = new PhotoViewAttacher(imageUpload);
@@ -315,6 +310,7 @@ public class FulImagen extends AppCompatActivity {
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
+
     public static Bitmap getBitmapFromURL(String src) {
         try {
             URL url = new URL(src);

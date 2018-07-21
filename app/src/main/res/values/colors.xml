@@ -47,4 +47,7 @@
     <color name="fin">#FFF8E1</color>
     <color name="ini">#FFF8E1</color>
     <color name="rojo">#D50000</color>
+    <color name="baragenda">#B2DFDB</color>
+    <color name="columnas">#E0F2F1</color>
+    <color name="hoy">#80CBC4</color>
 </resources>

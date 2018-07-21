@@ -7,6 +7,7 @@
         android:id="@+id/guardarevento"
         android:orderInCategory="100"
         android:title="Guardar"
+        android:icon="@drawable/ic_done"
         app:showAsAction="always|withText" />
 
 </menu>
