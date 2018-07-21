@@ -3,8 +3,10 @@ package com.edwinbustamante.gruposcochalos.CuentaUsuarioArchivos;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
@@ -25,17 +27,31 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
 import com.edwinbustamante.gruposcochalos.R;
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.OnColorSelectedListener;
 import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 
-public class AddEvento extends AppCompatActivity implements View.OnClickListener {
-    private TextView horaInicio, horaFin, fechaInicio, fechaFin, colorC,mensajeAlerta;
+public class AddEvento extends AppCompatActivity implements View.OnClickListener,  Response.Listener<JSONObject>,Response.ErrorListener {
+    private TextView horaInicio, horaFin, fechaInicio, fechaFin, colorC, mensajeAlerta;
     private EditText tituloEvento;
     static final int TIME_DIALOG_ID_INI = 999;
     static final int TIME_DIALOG_ID_FIN = 998;
@@ -53,6 +69,10 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
     private int colorEvento;
     Drawable icon;
 
+    RequestQueue requestQueue;
+    JsonObjectRequest jsonObjectReques;
+    String FileNameGrupo = "IdGrupo";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +83,8 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
-
+        horaI = -1;
+        horaF = -1;
         horaInicio = findViewById(R.id.horaInicio);
         horaFin = findViewById(R.id.horaFin);
         horaInicio.setOnClickListener(this);
@@ -84,7 +105,7 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
         icon.mutate().setColorFilter(colorEvento, PorterDuff.Mode.SRC_ATOP);
         iconColor.setImageDrawable(icon);
         colorC.setTextColor(colorEvento);
-        mensajeAlerta=findViewById(R.id.mensajealerta);
+        mensajeAlerta = findViewById(R.id.mensajealerta);
 
         colorC.setOnClickListener(this);
         if (getIntent().getExtras().getInt("datos") == 1) {
@@ -95,11 +116,11 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
             a = getIntent().getExtras().getInt("anio");
             am_pm = getIntent().getExtras().getInt("AM_PM");
             configurarTexto(h, m, d, ms, a, am_pm);
-            if (estaPasadoLaFecha(d,ms,a)){
+            if (estaPasadoLaFecha(d, ms, a)) {
                 mensajeAlerta.setText("La fecha del comienzo del evento está en el pasado");
             }
         }
-
+        requestQueue = Volley.newRequestQueue(this);
 
     }
 
@@ -132,6 +153,10 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
         fechaF = d;
         mesF = ms;
         anioF = a;
+        horaI = h;
+        minutoI = m;
+        horaF = h;
+        minutoF = m;
     }
 
     @Override
@@ -169,14 +194,102 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
             tituloEv = "OCUPADO";
         }
         String colorDelEvento = "" + colorEvento;
-        if (fechaI != 0 && fechaF != 0) {
-            Toast.makeText(this, tituloEv + "\n" + colorDelEvento + "\n" + fechaI + "" + mesI + "" + anioI + "\n" + fechaF + "" + mesF + "" + anioF, Toast.LENGTH_SHORT).show();
+
+        String fecha1 = fechaI + "/" + mesI + "/" + anioI;
+        String fecha2 = fechaF + "/" + mesF + "/" + anioF;
+        if (fechaI != 0 && fechaF != 0 && horaF != -1 && horaI != -1) {
+            switch (compararFechasConDate(fecha1, fecha2)) {
+                case "igual":
+                    if (horaValida(horaI, minutoI, horaF, minutoF)) {
+                        String defaultValue = "DefaultName";
+                        SharedPreferences sharedPreferences = getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
+                        String idGrupoMusical = sharedPreferences.getString("idgrupomusical", defaultValue);
+
+                        String url = Constantes.IP_SERVIDOR + "gruposcochalos/addevento.php?idgrupomusical=" + idGrupoMusical + "&tituloevento=" + tituloEv + "&colorevento=" + colorDelEvento + "&fechai=" + fechaI + "&mesi=" + mesI + "&anioi=" + anioI + "&horai=" + horaI + "&minutoi=" + minutoI + "&fechaf=" + fechaF + "&mesf=" + mesF + "&aniof=" + anioF + "&horaf=" + horaF + "&minutof=" + minutoF;
+                        url = url.replace(" ", "%20");
+                        jsonObjectReques = new JsonObjectRequest(Request.Method.GET, url, null, this, this);//realiza el llamado ala url
+                        requestQueue.add(jsonObjectReques);
+                        ///RESPUESTA
+                        // Toast.makeText(this, tituloEv + "\n" + colorDelEvento + "\n" + fechaI + "" + mesI + "" + anioI + "\n" + fechaF + "" + mesF + "" + anioF, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Rango de horas del evento incorrecta", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case "correcto":
+                    String defaultValue = "DefaultName";
+                    SharedPreferences sharedPreferences = getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
+                    String idGrupoMusical = sharedPreferences.getString("idgrupomusical", defaultValue);
+
+                    String url = Constantes.IP_SERVIDOR + "gruposcochalos/addevento.php?idgrupomusical=" + idGrupoMusical + "&tituloevento=" + tituloEv + "&colorevento=" + colorDelEvento + "&fechai=" + fechaI + "&mesi=" + mesI + "&anioi=" + anioI + "&horai=" + horaI + "&minutoi=" + minutoI + "&fechaf=" + fechaF + "&mesf=" + mesF + "&aniof=" + anioF + "&horaf=" + horaF + "&minutof=" + minutoF;
+                    url = url.replace(" ", "%20");
+                    jsonObjectReques = new JsonObjectRequest(Request.Method.GET, url, null, this, this);//realiza el llamado ala url
+                    requestQueue.add(jsonObjectReques);
+                    ///RESPUESTA
+                    // Toast.makeText(this, tituloEv + "\n" + colorDelEvento + "\n" + fechaI + "" + mesI + "" + anioI + "\n" + fechaF + "" + mesF + "" + anioF, Toast.LENGTH_SHORT).show();
+
+                    break;
+                case "incorrecto":
+                    Toast.makeText(this, "La fecha fin del evento, está antes del inicio del evento", Toast.LENGTH_SHORT).show();
+
+                    break;
+            }
+
 
         } else {
-            Toast.makeText(this, "Defina fecha de inicio y fin", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Defina fecha y hora de inicio y fin", Toast.LENGTH_SHORT).show();
         }
 
 
+    }
+
+
+    private boolean horaValida(int hI, int mI, int hF, int mF) {
+        boolean res = false;
+        if (hI < hF) {
+            res = true;
+        } else {
+            if (hI == hF && mI < mF) {
+                res = true;
+            }
+        }
+        return res;
+    }
+
+
+    /**
+     * Comparamos las Fechas
+     *
+     * @param fecha1
+     * @param fecha2
+     * @return
+     * @author CHENAO
+     */
+    private String compararFechasConDate(String fecha1, String fecha2) {
+
+        String resultado = "";
+        try {
+            /**Obtenemos las fechas enviadas en el formato a comparar*/
+            SimpleDateFormat formateador = new SimpleDateFormat("dd/MM/yyyy");
+            Date fechaDate1 = formateador.parse(fecha1);
+            Date fechaDate2 = formateador.parse(fecha2);
+
+            if (fechaDate1.before(fechaDate2)) {
+                //  resultado = "La Fecha 1 es menor ";
+                resultado = "correcto";
+            } else {
+                if (fechaDate2.before(fechaDate1)) {
+                    //  resultado = "La Fecha 1 es Mayor ";
+                    resultado = "incorrecto";
+                } else {
+                    // resultado = "Las Fechas Son iguales ";
+                    resultado = "igual";
+                }
+            }
+        } catch (ParseException e) {
+            System.out.println("Se Produjo un Error!!!  " + e.getMessage());
+        }
+
+        return resultado;
     }
 
     @Override
@@ -300,6 +413,8 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
     private TimePickerDialog.OnTimeSetListener timePickerListenerInicio = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            horaI = hourOfDay;
+            minutoI = minute;
             String AM_PM;
             int hora = 00;
             if (hourOfDay < 12) {
@@ -364,6 +479,8 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
     private TimePickerDialog.OnTimeSetListener timePickerListenerfin = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            horaF = hourOfDay;
+            minutoF = minute;
             String AM_PM;
             int hora = 00;
             if (hourOfDay < 12) {
@@ -389,7 +506,7 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
             String mes = reformatearMes(month + 1);
             fechaInicio.setText("" + dayOfMonth + " " + mes + " " + year);
 
-            if (estaPasadoLaFecha(dayOfMonth,month,year)){
+            if (estaPasadoLaFecha(dayOfMonth, month, year)) {
                 mensajeAlerta.setText("La fecha del comienzo del evento está en el pasado");
             }
         }
@@ -398,14 +515,14 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
     };
 
     private boolean estaPasadoLaFecha(int dayOfMonth, int month, int year) {
-        boolean res=false;
+        boolean res = false;
         final Calendar c = Calendar.getInstance();
         int y = c.get(Calendar.YEAR);
         int m = c.get(Calendar.MONTH);
         int d = c.get(Calendar.DAY_OF_MONTH);
-        if (year<y|| month<m||dayOfMonth<d){
-            res=true;
-        }else{
+        if (year < y || month < m || dayOfMonth < d) {
+            res = true;
+        } else {
             mensajeAlerta.setText("");
         }
         return res;
@@ -453,5 +570,30 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
                 return "dic.";
         }
         return res;
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError error) {
+        Toast.makeText(this, "Error en el servidor intente nuevamente o mas tarde", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onResponse(JSONObject response) {
+        JSONArray jsonArray = response.optJSONArray("mensaje");
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = jsonArray.getJSONObject(0);
+            if (jsonObject.optString("agregado").equals("exito")) {
+                Toast.makeText(this, "Se agrego correctamente el evento...", Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+                Toast.makeText(this, "Error al agregar el evento " + "\n" + "configure nuevamente el evento...", Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 }

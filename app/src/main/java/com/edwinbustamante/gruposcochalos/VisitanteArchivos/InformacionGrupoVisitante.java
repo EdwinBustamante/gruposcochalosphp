@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.edwinbustamante.gruposcochalos.CuentaUsuarioArchivos.AgendaGrupo;
 import com.edwinbustamante.gruposcochalos.ImagenFull.FulImagenVisitante;
 import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
 import com.edwinbustamante.gruposcochalos.R;
@@ -26,10 +27,11 @@ import org.w3c.dom.Text;
 
 public class InformacionGrupoVisitante extends AppCompatActivity implements View.OnClickListener {
     private ImageView imageViewPortada, imageViewPerfil, movil1, movil2, movilwhatsapp, facebook, ubicacion, imageViewYoutuveV;
-    private TextView nombreGrupo, generoGrupo, informacionVisitante, movil1text, movil2text, movilwhatsapptext, linkfacebook, contactosextra, direcciontext,linkYoutubeVisitante;
+    private TextView nombreGrupo, generoGrupo, informacionVisitante, movil1text, movil2text, movilwhatsapptext, linkfacebook, contactosextra, direcciontext, linkYoutubeVisitante;
     private String fotoperfil, latitudg, longitudg, fotoportada;
     private TextView numeroPublic;
     GrupoMusical grupoMusical;
+    ImageView agendaVisitante;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,8 @@ public class InformacionGrupoVisitante extends AppCompatActivity implements View
         fotoportada = grupoMusical.getFotoportada();
         imageViewYoutuveV = findViewById(R.id.imageViewYoutubeVisitante);
         imageViewYoutuveV.setOnClickListener(this);
+        agendaVisitante = findViewById(R.id.agendaVisitante);
+        agendaVisitante.setOnClickListener(this);
 
 
         Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + fotoperfil).error(R.drawable.perfilmusic)
@@ -91,7 +95,7 @@ public class InformacionGrupoVisitante extends AppCompatActivity implements View
         numeroPublic.setOnClickListener(this);
         latitudg = grupoMusical.getLatitudg();
         longitudg = grupoMusical.getLongitudg();
-        linkYoutubeVisitante=findViewById(R.id.linkYoutubeVisitante);
+        linkYoutubeVisitante = findViewById(R.id.linkYoutubeVisitante);
 
         linkYoutubeVisitante.setText(grupoMusical.getLinkyoutube());
 
@@ -142,6 +146,12 @@ public class InformacionGrupoVisitante extends AppCompatActivity implements View
                 startActivity(in);
                 //Toast.makeText(this, "perfil", Toast.LENGTH_SHORT).show();
                 break;
+            case R.id.agendaVisitante:
+                Intent agendaIntent = new Intent(InformacionGrupoVisitante.this, AgendaGrupo.class);
+                agendaIntent.putExtra("rol", "visitante");
+                agendaIntent.putExtra("idgrupomusical",grupoMusical.getIdgrupomusical());
+                startActivity(agendaIntent);
+                break;
             case R.id.numerodepublic:
                 Intent publicacionesvisitar = new Intent(InformacionGrupoVisitante.this, PublicacionesGrupoVisitante.class);
                 publicacionesvisitar.putExtra("idgrupomusical", grupoMusical.getIdgrupomusical());
@@ -149,7 +159,7 @@ public class InformacionGrupoVisitante extends AppCompatActivity implements View
                 break;
             case R.id.imageViewYoutubeVisitante:
                 Uri uris = Uri.parse(linkYoutubeVisitante.getText().toString());
-                Intent it = new Intent(Intent.ACTION_VIEW,uris);
+                Intent it = new Intent(Intent.ACTION_VIEW, uris);
                 startActivity(it);
                 break;
             case R.id.imageViewMovil1_visitante:
@@ -163,7 +173,7 @@ public class InformacionGrupoVisitante extends AppCompatActivity implements View
                 // Toast.makeText(this, "movil 2", Toast.LENGTH_SHORT).show();
                 llamar(movil2text.getText().toString());
                 break;
-            case  R.id.texViewMovil2_visitante:
+            case R.id.texViewMovil2_visitante:
                 llamar(movil2text.getText().toString());
                 break;
             case R.id.imageViewMovilWhatsapp_visitante:

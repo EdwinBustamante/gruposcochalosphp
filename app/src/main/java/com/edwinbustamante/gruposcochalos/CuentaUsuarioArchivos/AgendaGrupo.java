@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -16,16 +17,34 @@ import android.widget.Toast;
 import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
 import com.edwinbustamante.gruposcochalos.R;
+import com.edwinbustamante.gruposcochalos.domain.EventoEdwin;
+import com.edwinbustamante.gruposcochalos.domain.ResultadoEvento;
+import com.edwinbustamante.gruposcochalos.service.EventoAPI;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class AgendaGrupo extends AppCompatActivity implements WeekView.EventLongPressListener, WeekView.EventClickListener, WeekView.EmptyViewLongPressListener {
     WeekView mWeekView;
     private List<WeekViewEvent> events = new ArrayList<WeekViewEvent>();
+
+    String rol;
+    String idGrupoMusical;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +54,10 @@ public class AgendaGrupo extends AppCompatActivity implements WeekView.EventLong
         toolbar.setTitle("Agenda");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        rol = getIntent().getExtras().getString("rol");
+        idGrupoMusical=getIntent().getExtras().getString("idgrupomusical");
+
         mWeekView = (WeekView) findViewById(R.id.weekView);
         MonthLoader.MonthChangeListener mMonthChangeListener = new MonthLoader.MonthChangeListener() {
             @Override
@@ -74,14 +97,23 @@ public class AgendaGrupo extends AppCompatActivity implements WeekView.EventLong
 
 
 // The week view has infinite scrolling horizontally. We have to provide the events of a
+        if (rol.equals("usuario")) {
+            // Set long press listener for events.
+            mWeekView.setEventLongPressListener(this);
+            // Set an action when any event is clicked.
+            mWeekView.setOnEventClickListener(this);
+            // Set long press listener for empty view
+            mWeekView.setEmptyViewLongPressListener(this);
+        }
+    }
 
-        // Set long press listener for events.
-        mWeekView.setEventLongPressListener(this);
+    @Override
+    protected void onStart() {
+        super.onStart();
+        events.clear();
+        mWeekView.notifyDatasetChanged();
+        obtenerEventos();
 
-        // Set an action when any event is clicked.
-        mWeekView.setOnEventClickListener(this);
-        // Set long press listener for empty view
-        mWeekView.setEmptyViewLongPressListener(this);
     }
 
     /**
@@ -99,7 +131,9 @@ public class AgendaGrupo extends AppCompatActivity implements WeekView.EventLong
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.guardar_agenda, menu);
+        if (rol.equals("usuario")) {
+            getMenuInflater().inflate(R.menu.guardar_agenda, menu);
+        }
         return true;
     }
 
@@ -133,16 +167,7 @@ public class AgendaGrupo extends AppCompatActivity implements WeekView.EventLong
         alertaEliminar.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                int pos = 0;
-                boolean encontrado = false;
-                while (pos < events.size() && encontrado == false) {
-                    if (event.getId() == events.get(pos).getId()) {
-                        events.remove(pos);
-                        mWeekView.notifyDatasetChanged();
-                        encontrado = true;
-                    }
-                    pos++;
-                }
+                eliminarEvento(event.getId());
                 dialog.dismiss();
             }
         }).setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
@@ -152,6 +177,46 @@ public class AgendaGrupo extends AppCompatActivity implements WeekView.EventLong
             }
         }).create().show();
     }
+
+    public void eliminarEvento(final long idevento) {
+        String urlUpload = Constantes.IP_SERVIDOR + "/gruposcochalos/eliminarevento.php?";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, urlUpload, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+
+                int pos = 0;
+                boolean encontrado = false;
+                while (pos < events.size() && encontrado == false) {
+                    if (idevento == events.get(pos).getId()) {
+                        events.remove(pos);
+                        mWeekView.notifyDatasetChanged();
+                        encontrado = true;
+                    }
+                    pos++;
+                }
+                Toast.makeText(AgendaGrupo.this, response, Toast.LENGTH_SHORT).show();
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(AgendaGrupo.this, "error" + error.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("idevento", "" + idevento);
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(AgendaGrupo.this);
+        requestQueue.add(stringRequest);
+
+    }
+
 
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
@@ -167,14 +232,14 @@ public class AgendaGrupo extends AppCompatActivity implements WeekView.EventLong
         int d = time.get(Calendar.DAY_OF_MONTH);
         int ms = time.get(Calendar.MONTH);
         int a = time.get(Calendar.YEAR);
-        int am_pm=time.get(Calendar.AM_PM);
+        int am_pm = time.get(Calendar.AM_PM);
         addEvento.putExtra("datos", 1);
         addEvento.putExtra("hora", h);
         addEvento.putExtra("minuto", m);
         addEvento.putExtra("dia", d);
         addEvento.putExtra("mes", ms);
         addEvento.putExtra("anio", a);
-        addEvento.putExtra("AM_PM",am_pm);
+        addEvento.putExtra("AM_PM", am_pm);
         startActivity(addEvento);
 
        /* Calendar startTime = time;
@@ -210,5 +275,52 @@ public class AgendaGrupo extends AppCompatActivity implements WeekView.EventLong
         event.setColor(getResources().getColor(R.color.colorAccent));
         events.add(event);
         mWeekView.notifyDatasetChanged();*/
+    }
+
+    private void obtenerEventos() {
+
+
+        Call<ResultadoEvento> resultadoAgendaCall = EventoAPI.getEventoService().getAgenda(idGrupoMusical);//lacemos la llamada al archivo php
+        resultadoAgendaCall.enqueue(new Callback<ResultadoEvento>() {
+            @Override
+            public void onResponse(Call<ResultadoEvento> call, retrofit2.Response<ResultadoEvento> response) {
+                ResultadoEvento body = response.body();
+                List<EventoEdwin> results = body.getListaEventos();
+                for (EventoEdwin eventoe : results) {
+
+                    Calendar startTime = Calendar.getInstance();
+                    //OTRO EVENTO............................
+                    startTime = Calendar.getInstance();
+                    startTime.set(Calendar.DAY_OF_MONTH, Integer.parseInt(eventoe.getFechai()));
+                    startTime.set(Calendar.MONTH, Integer.parseInt(eventoe.getMesi()));
+                    startTime.set(Calendar.YEAR, Integer.parseInt(eventoe.getAnioi()));
+                    startTime.set(Calendar.HOUR_OF_DAY, Integer.parseInt(eventoe.getHorai()));
+                    startTime.set(Calendar.MINUTE, Integer.parseInt(eventoe.getMinutoi()));
+
+                    Calendar endTime = (Calendar) startTime.clone();
+                    endTime.set(Calendar.DAY_OF_MONTH, Integer.parseInt(eventoe.getFechaf()));
+                    endTime.set(Calendar.MONTH, Integer.parseInt(eventoe.getMesf()));
+                    endTime.set(Calendar.YEAR, Integer.parseInt(eventoe.getAniof()));
+                    endTime.set(Calendar.HOUR_OF_DAY, Integer.parseInt(eventoe.getHoraf()));
+                    endTime.set(Calendar.MINUTE, Integer.parseInt(eventoe.getMinutof()));
+                    WeekViewEvent event = new WeekViewEvent(Integer.parseInt(eventoe.getIdevento()), eventoe.getTitulo(), startTime, endTime);
+                    // event.setName("Estamos en el local villa del carmen los esperamos");
+                    event.setColor(getResources().getColor(R.color.colorPrimaryDark));
+                    events.add(event);
+                    mWeekView.notifyDatasetChanged();
+                    // publicacionlista.clear();
+                    // publicacionlista.addAll(results);
+                    // mAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResultadoEvento> call, Throwable t) {
+                Toast.makeText(AgendaGrupo.this, "Ha ocurrido un error" + t.getMessage(), Toast.LENGTH_LONG).show();
+                Log.e("error", t.getMessage());
+                t.printStackTrace();
+            }
+        });
+
     }
 }

@@ -237,7 +237,12 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                 editarGenero.show();
                 break;
             case R.id.agendaGrupo:
+                String defaultValue = "DefaultName";
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
+                String idGrupoMusica = sharedPreferences.getString("idgrupomusical", defaultValue);
                 Intent agendaIntent = new Intent(getContext(), AgendaGrupo.class);
+                agendaIntent.putExtra("rol", "usuario");
+                agendaIntent.putExtra("idgrupomusical",idGrupoMusica );
                 startActivity(agendaIntent);
                 break;
 
