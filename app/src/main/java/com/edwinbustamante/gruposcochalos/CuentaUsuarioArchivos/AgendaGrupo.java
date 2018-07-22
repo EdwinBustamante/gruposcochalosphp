@@ -1,5 +1,6 @@
 package com.edwinbustamante.gruposcochalos.CuentaUsuarioArchivos;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -162,6 +163,7 @@ public class AgendaGrupo extends AppCompatActivity implements WeekView.EventLong
         // Inflate the menu; this adds items to the action bar if it is present.
         if (rol.equals("usuario")) {
             getMenuInflater().inflate(R.menu.guardar_agenda, menu);
+
         }
         return true;
     }
@@ -181,6 +183,21 @@ public class AgendaGrupo extends AppCompatActivity implements WeekView.EventLong
                 break;
             case android.R.id.home:
                 finish();
+                break;
+            case R.id.diaunover:
+                mWeekView.setNumberOfVisibleDays(1);
+                break;
+            case R.id.diadosver:
+                mWeekView.setNumberOfVisibleDays(2);
+                break;
+            case R.id.diatresver:
+                mWeekView.setNumberOfVisibleDays(3);
+                break;
+            case R.id.diacuatrover:
+                mWeekView.setNumberOfVisibleDays(4);
+                break;
+            case R.id.diacincover:
+                mWeekView.setNumberOfVisibleDays(5);
                 break;
             default:
                 break;

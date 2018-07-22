@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -59,6 +60,14 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
     String FileNameUsuario = "usuario";
     String FileNameGrupo = "IdGrupo";
     String FileNameContrasenia = "Rcontrasenia";
+    String FileNameR = "record";
+    Switch aSwitchRecordar;
+    private void switchActivate(int i) {
+        SharedPreferences sharedPreferences = getSharedPreferences(FileNameR, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("swichr",i);
+        editor.commit();
+    }
 
     public void recordarContrasenia(String contrasenia) {
         SharedPreferences sharedPreferences = getSharedPreferences(FileNameContrasenia, Context.MODE_PRIVATE);
@@ -118,6 +127,15 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
 
         mProgress = new ProgressDialog(this);
         rq = Volley.newRequestQueue(getApplicationContext());
+        aSwitchRecordar=findViewById(R.id.switchrecordar);
+
+        SharedPreferences sr = this.getSharedPreferences(FileNameR, Context.MODE_PRIVATE);
+        int active = sr.getInt("swichr", 0);
+        if (active==1) {
+            aSwitchRecordar.setChecked(true);
+        }else {
+            aSwitchRecordar.setChecked(false);
+        }
 
 
     }
@@ -193,7 +211,14 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
                         guardarUsuario(jsonObject.optString("usuario"));//guardando en SharePreference
                         guardarIdGrupoMusical(jsonObject.optString("idusuario"));
                         JSONObject JsonObject = jsonObject;
-                        recordarContrasenia(JsonObject.optString("pwd"));
+                        if (aSwitchRecordar.isChecked()){
+                            recordarContrasenia(JsonObject.optString("pwd"));
+                            switchActivate(1);
+                        }else {
+                            recordarContrasenia("");
+                            switchActivate(0);
+                        }
+
                         if (jsonObject.optString("rol").equals("u")) {
                             Toast.makeText(this, "Se inicio correctamente", Toast.LENGTH_SHORT).show();
                             Intent i = new Intent(LoginActivity.this, CuentaUsuario.class);
@@ -221,6 +246,8 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
             e.printStackTrace();
         }
     }
+
+
 
     public void olvideContrasenia(View view) {
         Intent olvide = new Intent(this, OlvideContrasenia.class);

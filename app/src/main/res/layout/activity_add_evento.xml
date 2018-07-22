@@ -208,9 +208,9 @@
                         </LinearLayout>
 
                         <LinearLayout
-                            android:layout_marginTop="5dp"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
                             android:layout_weight="0.1"
                             android:background="@color/colorPrimary"
                             android:orientation="vertical">
@@ -262,6 +262,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/rojo" />
+
+                    <Switch
+                        android:id="@+id/todoeldia"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:text="Todo el día" />
 
                 </LinearLayout>
 

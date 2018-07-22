@@ -3,11 +3,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.edwinbustamante.gruposcochalos.Calendario.Calendarioadd">
     <item
-
         android:id="@+id/addeventos"
-        android:orderInCategory="100"
-        android:title="Guardar"
         android:icon="@drawable/ic_action_add"
+        android:orderInCategory="100"
+        android:title="Añadir Evento"
         app:showAsAction="always|withText" />
+    <item
+        android:id="@+id/diaunover"
+        android:orderInCategory="100"
+        android:title="número de dias 1"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/diadosver"
+        android:orderInCategory="100"
+        android:title="número de dias 2"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/diatresver"
+        android:orderInCategory="100"
+        android:title="número de dias 3"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/diacuatrover"
+        android:orderInCategory="100"
+        android:title="número de dias 4"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/diacincover"
+        android:orderInCategory="100"
+        android:title="número de dias 5"
+        app:showAsAction="never" />
+
 
 </menu>

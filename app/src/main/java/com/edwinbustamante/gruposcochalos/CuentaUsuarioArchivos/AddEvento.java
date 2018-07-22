@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -72,6 +73,7 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
     RequestQueue requestQueue;
     JsonObjectRequest jsonObjectReques;
     String FileNameGrupo = "IdGrupo";
+    private Switch todoElDia;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +108,7 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
         iconColor.setImageDrawable(icon);
         colorC.setTextColor(colorEvento);
         mensajeAlerta = findViewById(R.id.mensajealerta);
-
+        todoElDia = findViewById(R.id.todoeldia);
         colorC.setOnClickListener(this);
         if (getIntent().getExtras().getInt("datos") == 1) {
             h = getIntent().getExtras().getInt("hora");
@@ -116,11 +118,24 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
             a = getIntent().getExtras().getInt("anio");
             am_pm = getIntent().getExtras().getInt("AM_PM");
             configurarTexto(h, m, d, ms, a, am_pm);
-            if (estaPasadoLaFecha(d, ms, a)) {
+
+
+            final Calendar c = Calendar.getInstance();
+            int y = c.get(Calendar.YEAR);
+            int m = c.get(Calendar.MONTH);
+            int d = c.get(Calendar.DAY_OF_MONTH);
+            String fecha1 = d + "/" + m + "/" + y;
+            String fecha2 = d + "/" + m + "/" + a;
+            String s = compararFechasConDate(fecha1, fecha2);
+            if (s.equals("incorrecto")) {
                 mensajeAlerta.setText("La fecha del comienzo del evento está en el pasado");
+            } else {
+                mensajeAlerta.setText("");
             }
+
         }
         requestQueue = Volley.newRequestQueue(this);
+        todoElDia.setOnClickListener(this);
 
     }
 
@@ -309,6 +324,16 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
                 break;
             case R.id.colorEvento:
                 colorDialogo();
+                break;
+            case R.id.todoeldia:
+                if (todoElDia.isChecked()) {
+                    horaI = 0;
+                    minutoI = 0;
+                    horaInicio.setText(horaI + " : " + minutoI + " " + "AM");
+                    horaF = 23;
+                    minutoF = 59;
+                    horaFin.setText(horaF + " : " + minutoF + " " + "PM");
+                }
                 break;
             default:
                 break;
@@ -506,11 +531,18 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
             mesI = month;
             anioI = year;
             String mes = reformatearMes(month + 1);
-
             fechaInicio.setText("" + dayOfMonth + " " + mes + " " + year);
-
-            if (estaPasadoLaFecha(dayOfMonth, month, year)) {
+            final Calendar c = Calendar.getInstance();
+            int y = c.get(Calendar.YEAR);
+            int m = c.get(Calendar.MONTH);
+            int d = c.get(Calendar.DAY_OF_MONTH);
+            String fecha1 = d + "/" + m + "/" + y;
+            String fecha2 = dayOfMonth + "/" + month + "/" + year;
+            String s = compararFechasConDate(fecha1, fecha2);
+            if (s.equals("incorrecto")) {
                 mensajeAlerta.setText("La fecha del comienzo del evento está en el pasado");
+            } else {
+                mensajeAlerta.setText("");
             }
         }
 
