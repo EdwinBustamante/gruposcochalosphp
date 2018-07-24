@@ -1,5 +1,6 @@
 package com.edwinbustamante.gruposcochalos.CuentaUsuarioArchivos;
 
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -225,6 +226,10 @@ public class AgendaGrupo extends AppCompatActivity implements WeekView.EventLong
     }
 
     public void eliminarEvento(final long idevento) {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Eliminando..");
+        progressDialog.setMessage("Eliminando el evento espere un momento por favor...");
+        progressDialog.show();
         String urlUpload = Constantes.IP_SERVIDOR + "/gruposcochalos/eliminarevento.php?";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, urlUpload, new Response.Listener<String>() {
             @Override
@@ -241,6 +246,7 @@ public class AgendaGrupo extends AppCompatActivity implements WeekView.EventLong
                     }
                     pos++;
                 }
+                progressDialog.dismiss();
                 Toast.makeText(AgendaGrupo.this, response, Toast.LENGTH_SHORT).show();
 
 
@@ -248,6 +254,7 @@ public class AgendaGrupo extends AppCompatActivity implements WeekView.EventLong
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
                 Toast.makeText(AgendaGrupo.this, "error" + error.toString(), Toast.LENGTH_SHORT).show();
             }
         }) {

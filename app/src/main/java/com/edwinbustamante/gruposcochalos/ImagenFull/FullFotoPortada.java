@@ -234,7 +234,7 @@ public class FullFotoPortada extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(FullFotoPortada.this, "error" + error.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(FullFotoPortada.this, "error intente nuevamente" , Toast.LENGTH_SHORT).show();
                 cargarImagen.dismiss();
             }
         }) {

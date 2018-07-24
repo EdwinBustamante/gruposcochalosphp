@@ -271,7 +271,7 @@ public class FulImagen extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(FulImagen.this, "error" + error.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(FulImagen.this, "error intente nuevamente...", Toast.LENGTH_SHORT).show();
                 cargarImagen.dismiss();
             }
         }) {

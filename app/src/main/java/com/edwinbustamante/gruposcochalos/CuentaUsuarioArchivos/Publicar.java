@@ -377,7 +377,7 @@ public class Publicar extends AppCompatActivity implements View.OnClickListener,
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(Publicar.this, "error" + error.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(Publicar.this, "error al publicar intente nuevamente..." , Toast.LENGTH_SHORT).show();
                 cargarImagen.dismiss();
             }
         }) {

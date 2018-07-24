@@ -70,6 +70,7 @@ dependencies {
     compile 'com.github.alamkanak:android-week-view:1.2.6'
     compile 'com.github.QuadFlask:colorpicker:0.0.13'
     compile 'id.zelory:compressor:2.1.0'
+
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
 }
 

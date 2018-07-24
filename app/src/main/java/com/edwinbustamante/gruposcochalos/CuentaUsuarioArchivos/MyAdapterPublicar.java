@@ -1,6 +1,7 @@
 package com.edwinbustamante.gruposcochalos.CuentaUsuarioArchivos;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -134,6 +135,11 @@ public class MyAdapterPublicar extends RecyclerView.Adapter<MyAdapterPublicar.Vi
     }
 
     public void eliminarPublicacion(final String idpublicacion, final int position) {
+
+        final ProgressDialog progressDialog= new ProgressDialog(context);
+        progressDialog.setTitle("Eliminando publicación");
+        progressDialog.setMessage("Eliminando publicación espere un momento por favor...");
+        progressDialog.show();
         String urlUpload = Constantes.IP_SERVIDOR + "/gruposcochalos/eliminarpublicacion.php?";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, urlUpload, new Response.Listener<String>() {
             @Override
@@ -142,13 +148,15 @@ public class MyAdapterPublicar extends RecyclerView.Adapter<MyAdapterPublicar.Vi
                 String respuesta = response.toString();
                 publicacionLista.remove(position);
                 notifyItemRemoved(position);
+                progressDialog.dismiss();
                 Toast.makeText(context, response, Toast.LENGTH_SHORT).show();
 
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "error" + error.toString(), Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+                Toast.makeText(context, "error al publicar intente nuevamente", Toast.LENGTH_SHORT).show();
             }
         }) {
             @Override

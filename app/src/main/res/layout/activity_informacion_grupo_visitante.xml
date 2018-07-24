@@ -192,7 +192,7 @@
                             android:layout_width="80dp"
                             android:layout_height="80dp"
                             android:layout_margin="3dp"
-                            android:src="@drawable/calendario" />
+                            android:src="@drawable/ic_calendariovisitante" />
 
                     </LinearLayout>
 

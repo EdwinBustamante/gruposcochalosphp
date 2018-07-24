@@ -2,6 +2,7 @@ package com.edwinbustamante.gruposcochalos.CuentaUsuarioArchivos;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -74,6 +75,7 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
     JsonObjectRequest jsonObjectReques;
     String FileNameGrupo = "IdGrupo";
     private Switch todoElDia;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +138,9 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
         }
         requestQueue = Volley.newRequestQueue(this);
         todoElDia.setOnClickListener(this);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Agregando evento");
+        progressDialog.setMessage("Agregando evento a la agenda espere un momento por favor...");
 
     }
 
@@ -204,6 +209,7 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
     }
 
     private void alistarDatos() {
+
         String tituloEv = tituloEvento.getText().toString();
         if (tituloEvento.getText().toString().isEmpty()) {
             tituloEv = "OCUPADO";
@@ -220,6 +226,8 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
                         SharedPreferences sharedPreferences = getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
                         String idGrupoMusical = sharedPreferences.getString("idgrupomusical", defaultValue);
 
+                        progressDialog.show();
+
                         String url = Constantes.IP_SERVIDOR + "gruposcochalos/addevento.php?idgrupomusical=" + idGrupoMusical + "&tituloevento=" + tituloEv + "&colorevento=" + colorDelEvento + "&fechai=" + fechaI + "&mesi=" + mesI + "&anioi=" + anioI + "&horai=" + horaI + "&minutoi=" + minutoI + "&fechaf=" + fechaF + "&mesf=" + mesF + "&aniof=" + anioF + "&horaf=" + horaF + "&minutof=" + minutoF;
                         url = url.replace(" ", "%20");
                         jsonObjectReques = new JsonObjectRequest(Request.Method.GET, url, null, this, this);//realiza el llamado ala url
@@ -235,6 +243,8 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
                     SharedPreferences sharedPreferences = getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
                     String idGrupoMusical = sharedPreferences.getString("idgrupomusical", defaultValue);
 
+
+                    progressDialog.show();
                     String url = Constantes.IP_SERVIDOR + "gruposcochalos/addevento.php?idgrupomusical=" + idGrupoMusical + "&tituloevento=" + tituloEv + "&colorevento=" + colorDelEvento + "&fechai=" + fechaI + "&mesi=" + mesI + "&anioi=" + anioI + "&horai=" + horaI + "&minutoi=" + minutoI + "&fechaf=" + fechaF + "&mesf=" + mesF + "&aniof=" + anioF + "&horaf=" + horaF + "&minutof=" + minutoF;
                     url = url.replace(" ", "%20");
                     jsonObjectReques = new JsonObjectRequest(Request.Method.GET, url, null, this, this);//realiza el llamado ala url
@@ -609,6 +619,7 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
 
     @Override
     public void onErrorResponse(VolleyError error) {
+        progressDialog.dismiss();
         Toast.makeText(this, "Error en el servidor intente nuevamente o mas tarde", Toast.LENGTH_SHORT).show();
 
     }
@@ -621,8 +632,10 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
             jsonObject = jsonArray.getJSONObject(0);
             if (jsonObject.optString("agregado").equals("exito")) {
                 Toast.makeText(this, "Se agrego correctamente el evento...", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
                 finish();
             } else {
+                progressDialog.dismiss();
                 Toast.makeText(this, "Error al agregar el evento " + "\n" + "configure nuevamente el evento...", Toast.LENGTH_SHORT).show();
             }
 
