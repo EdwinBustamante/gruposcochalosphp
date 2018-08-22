@@ -152,4 +152,7 @@
     <string name="material_calendar_negative_button">CANCELAR</string>
     <string name="title_activity_olvide_contrasenia">OlvideContrasenia</string>
     <string name="title_activity_youtube_visitante">YoutubeVisitante</string>
+    <string name="restriccion">YoutubeVisitante</string>
+    <string name="usodelaaplicacion"><b>"USO DE LA APLICACIÓN MÓVIL Y SUS SERVICIOS"</b></string>
+    <string name="condiciones">YoutubeVisitante</string>
 </resources>

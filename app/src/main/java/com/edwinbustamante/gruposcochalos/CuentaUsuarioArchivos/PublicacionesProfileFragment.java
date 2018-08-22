@@ -81,7 +81,7 @@ public class PublicacionesProfileFragment extends Fragment implements View.OnCli
         mRecyclerView.setLayoutManager(mLayoutManager);
         publicacionlista.clear();
 
-        mAdapter = new MyAdapterPublicar(publicacionlista, this.getContext(),"administrador");
+        mAdapter = new MyAdapterPublicar(publicacionlista, this.getContext(), "administrador");
         mRecyclerView.setAdapter(mAdapter);
         String defaultValue = "DefaultName";
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(FileName, Context.MODE_PRIVATE);
@@ -93,7 +93,13 @@ public class PublicacionesProfileFragment extends Fragment implements View.OnCli
     @Override
     public void onStart() {
         super.onStart();
-        obtenerPublicaciones();
+
+        String defaultValue = "DefaultName";
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("estado", Context.MODE_PRIVATE);
+        String bandera = sharedPreferences.getString("estado", defaultValue);
+        if (bandera.equals("1")) {
+            obtenerPublicaciones();
+        }
 
 
     }
@@ -103,7 +109,7 @@ public class PublicacionesProfileFragment extends Fragment implements View.OnCli
         String defaultValues = "DefaultName";
         SharedPreferences sharedPreferencess = getActivity().getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
         String idGrupoMusical = sharedPreferencess.getString("idgrupomusical", defaultValues);
-       // Toast.makeText(getContext(), idGrupoMusical, Toast.LENGTH_SHORT).show();
+        // Toast.makeText(getContext(), idGrupoMusical, Toast.LENGTH_SHORT).show();
 
         Call<ResultadoPublicacion> resultadoPublicacionCall = PublicacionAPI.getPublicacionService().getCanciones(idGrupoMusical);//lacemos la llamada al archivo php
         resultadoPublicacionCall.enqueue(new Callback<ResultadoPublicacion>() {

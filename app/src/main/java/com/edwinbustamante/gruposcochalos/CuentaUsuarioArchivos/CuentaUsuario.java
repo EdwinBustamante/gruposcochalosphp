@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -37,6 +38,7 @@ public class CuentaUsuario extends AppCompatActivity {
     ImageView imageViewCerrarSesion;
     FloatingActionButton fab;
     boolean click = false;
+    String FileNameEstado = "estado";
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -52,6 +54,9 @@ public class CuentaUsuario extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 // Salir
+                            BorrarEstadoIdGrupoMusical();
+                            BorrarIdGrupoMusical();
+                            BorrarIdUsuario();
                             CuentaUsuario.this.finish();
                         }
                     })
@@ -85,9 +90,34 @@ public class CuentaUsuario extends AppCompatActivity {
                             .setInterpolator(interpolador)
                             .start();
                 }
-                Intent intent = new Intent(view.getContext(), Publicar.class);
-                startActivity(intent);
-                Toast.makeText(CuentaUsuario.this, "Escribe una publicación", Toast.LENGTH_SHORT).show();
+                String defaultValue = "DefaultName";
+                SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(FileNameEstado, Context.MODE_PRIVATE);
+                String bandera = sharedPreferences.getString("estado", defaultValue);
+
+                if (bandera.equals("1")) {
+                    Intent intent = new Intent(view.getContext(), Publicar.class);
+                    startActivity(intent);
+                    Toast.makeText(CuentaUsuario.this, "Escribe una publicación", Toast.LENGTH_SHORT).show();
+                } else {
+                    new AlertDialog.Builder(view.getContext())
+                            .setIcon(R.drawable.ic_advertencia)
+                            .setTitle("RESTRICCIÓN Y CONDICIONES DE GRUPOS COCHALOS")
+                            .setMessage("Debes completar tu informacion, para poder ser habilitado por el administrador," +
+                                    " una vez habilitado tu grupo musical sera reflejado en la interfaz principal de esta aplicación," +
+                                    " quedando activa para la interacción de los usuarios visitantes...." + "\n" + "\n" +
+                                    "USO DE LA APLICACION MOVIL Y SUS SERVICIOS" + "\n"
+                                    + "En la aplicacion Grupos Cochalos no deben introducirse ni difundirse propagandas de caracter racista" +
+                                    ", pornográfico, contenidos falsos, virus y software nocivo. " +
+                                    "Si se detecta incumplimiento de las condiciones mencionadas se deshabilitará esta cuenta del sistema" + "\n" + "\n" +
+                                    "Aguarde la habilitación del administrador gracias...")
+                            .setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {// un listener que al pulsar, cierre la aplicacion
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                }
             }
         });
 
@@ -136,6 +166,9 @@ public class CuentaUsuario extends AppCompatActivity {
                 builder.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        BorrarEstadoIdGrupoMusical();
+                        BorrarIdGrupoMusical();
+                        BorrarIdUsuario();
 
                         finish();
 
@@ -166,6 +199,13 @@ public class CuentaUsuario extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("idgrupomusical", "");
+        editor.commit();
+    }
+
+    private void BorrarEstadoIdGrupoMusical() {
+        SharedPreferences sharedPreferences = getSharedPreferences("estado", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("estado", "");
         editor.commit();
     }
 

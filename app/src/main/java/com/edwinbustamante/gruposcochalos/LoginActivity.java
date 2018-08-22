@@ -59,13 +59,15 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
     String FileName = "myUserId";
     String FileNameUsuario = "usuario";
     String FileNameGrupo = "IdGrupo";
+    String FileNameEstado = "estado";
     String FileNameContrasenia = "Rcontrasenia";
     String FileNameR = "record";
     Switch aSwitchRecordar;
+
     private void switchActivate(int i) {
         SharedPreferences sharedPreferences = getSharedPreferences(FileNameR, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("swichr",i);
+        editor.putInt("swichr", i);
         editor.commit();
     }
 
@@ -95,6 +97,12 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
         SharedPreferences sharedPreferences = getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("idgrupomusical", idgrupomusical);
+        editor.commit();
+    }
+    private void guardarEstadoGrupoMusical(String estado) {
+        SharedPreferences sharedPreferences = getSharedPreferences(FileNameEstado, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("estado", estado);
         editor.commit();
     }
 
@@ -127,13 +135,13 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
 
         mProgress = new ProgressDialog(this);
         rq = Volley.newRequestQueue(getApplicationContext());
-        aSwitchRecordar=findViewById(R.id.switchrecordar);
+        aSwitchRecordar = findViewById(R.id.switchrecordar);
 
         SharedPreferences sr = this.getSharedPreferences(FileNameR, Context.MODE_PRIVATE);
         int active = sr.getInt("swichr", 0);
-        if (active==1) {
+        if (active == 1) {
             aSwitchRecordar.setChecked(true);
-        }else {
+        } else {
             aSwitchRecordar.setChecked(false);
         }
 
@@ -208,13 +216,15 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
                         Toast.makeText(this, "Los datos estan incorrectos", Toast.LENGTH_SHORT).show();
                     } else {
                         guardarIdUsuario(jsonObject.optString("idusuario"));//guardando en SharePreference
+                        guardarIdGrupoMusical(jsonObject.optString("idgrupomusical"));//corregir....
+                        guardarEstadoGrupoMusical(jsonObject.optString("estado"));
                         guardarUsuario(jsonObject.optString("usuario"));//guardando en SharePreference
-                        guardarIdGrupoMusical(jsonObject.optString("idusuario"));
+
                         JSONObject JsonObject = jsonObject;
-                        if (aSwitchRecordar.isChecked()){
+                        if (aSwitchRecordar.isChecked()) {
                             recordarContrasenia(JsonObject.optString("pwd"));
                             switchActivate(1);
-                        }else {
+                        } else {
                             recordarContrasenia("");
                             switchActivate(0);
                         }
@@ -246,7 +256,6 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
             e.printStackTrace();
         }
     }
-
 
 
     public void olvideContrasenia(View view) {

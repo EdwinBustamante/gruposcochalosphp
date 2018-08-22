@@ -23,8 +23,7 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/fotoPortada"
                 android:layout_width="60sp"
-                android:layout_height="60sp"
-                 />
+                android:layout_height="60sp" />
         </LinearLayout>
 
 

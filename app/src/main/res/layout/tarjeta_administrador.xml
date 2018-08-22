@@ -54,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
                     android:layout_weight="2"
-                    android:text=" dado de alta" />
+                    android:text=" DESHABILITADO" />
 
                 <Button
                     android:id="@+id/cambiarEstado"
