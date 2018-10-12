@@ -78,6 +78,7 @@ public class MapsActivityVisitar extends AppCompatActivity implements OnMapReady
     double latitudOrigen, longitudOrigen;
     private boolean dibujado = false;
     private TextView nuevaRuta;
+    private static final String GOOGLE_API_KEY = "AIzaSyC4QP4S06vfGHpEAdSzJIwnnelz1AD1VvE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,12 +192,11 @@ public class MapsActivityVisitar extends AppCompatActivity implements OnMapReady
                     taskRequestDirections.execute(url);
 
                 } else {
-                    Toast.makeText(this, "No tienes conexion a Internet", Toast.LENGTH_SHORT).show();
+                   Toast.makeText(this, "No tienes conexion a Internet", Toast.LENGTH_SHORT).show();
                 }
 
                 dibujado = true;
             }
-
           /*  try {
                 Geocoder geocoder = new Geocoder(this, Locale.getDefault());
                 List<Address> list = geocoder.getFromLocation(
@@ -323,8 +323,10 @@ public class MapsActivityVisitar extends AppCompatActivity implements OnMapReady
         String str_dest = "destination=" + ubicacionVisitante.latitude + "," + ubicacionVisitante.longitude;
         String sensor = "sensor=false";
         String mode = "mode=driving";
-        String param = str_origen + "&" + str_dest + "&" + sensor + "&" + mode;
+        String param = str_origen + "&" + str_dest + "&key=" + GOOGLE_API_KEY;
+        //String param = str_origen + "&" + str_dest + "&" + sensor + "&" + mode;
         String output = "json";
+        // String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + param;
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + param;
         return url;
     }

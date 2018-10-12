@@ -48,13 +48,7 @@ public class MapsActivityAdjuntarUbicacion extends AppCompatActivity implements 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapSect);
         mapFragment.getMapAsync(this);
-
-
-
-
     }
-
-
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_map_add, menu);
@@ -102,13 +96,11 @@ public class MapsActivityAdjuntarUbicacion extends AppCompatActivity implements 
             // for ActivityCompat#requestPermissions for more details.
 
         } else {
-
             googleMap.setMyLocationEnabled(true);
             googleMap.setOnCameraIdleListener(this);
             googleMap.setOnCameraMoveStartedListener(this);
             googleMap.setOnCameraMoveListener(this);
             googleMap.setOnCameraMoveCanceledListener(this);
-
             googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
                 public void onMapClick(LatLng latLng) {
@@ -122,26 +114,20 @@ public class MapsActivityAdjuntarUbicacion extends AppCompatActivity implements 
                         contadorDeTap++;
                     } else {
                         googleMap.clear();
-
                         googleMap.addMarker(new MarkerOptions()
                                 .position(new LatLng(latLng.latitude, latLng.longitude))
                                 .title("Nombre de Grupo"));
                         levantarSnackbar();
                     }
-
-
                 }
             });
         }
-
-
     }
 
     private void levantarSnackbar() {
 
-        Snackbar snackbar = Snackbar.make(findViewById(R.id.mapSect), "Quisieras añadir la ubicacion selecionada a tu publicación..?", Snackbar.LENGTH_INDEFINITE).setDuration(100000)
-                .setText("Quisieras añadir la ubicacion selecionada a tu publicación..?")
-
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.mapSect), "Quisieras añadir la ubicacion selecionada?", Snackbar.LENGTH_INDEFINITE).setDuration(100000)
+                .setText("Quisieras añadir la ubicacion selecionada?")
                 .setAction("Aceptar", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
