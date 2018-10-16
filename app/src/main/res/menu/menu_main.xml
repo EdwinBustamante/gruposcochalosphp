@@ -2,18 +2,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.edwinbustamante.gruposcochalos.SubirFoto">
-
     <item
         android:id="@+id/search_main"
         android:icon="@android:drawable/ic_menu_search"
-        android:title="Search"
+        android:title="Buscar Grupos Musicales"
+        android:orderInCategory="115"
         app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="ifRoom|collapseActionView" />
-
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/grupos_cerca_de_mi"
+        android:icon="@drawable/elegir"
+        android:orderInCategory="115"
+        android:title="Grupos cerca de mi"
+        app:showAsAction="always|collapseActionView" />
     <item
         android:id="@+id/ingresar_al_sistema"
         android:icon="@drawable/ic_usuario_login"
         android:orderInCategory="115"
-        android:title="Buscar"
+        android:title="ingreser al sistema"
         app:showAsAction="always|collapseActionView" />
 </menu>

@@ -1,0 +1,28 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.edwinbustamante.gruposcochalos.VisitarMapa.MapsActivityVisitar">
+    <item
+        android:id="@+id/maps_normalg"
+        android:icon="@drawable/ic_mapa_normal"
+        android:title="vista normal"
+        app:showAsAction="always|collapseActionView" />
+
+    <item
+        android:id="@+id/maps_hibridog"
+        android:icon="@drawable/ic_tierra"
+        android:title="vista híbrido"
+        app:showAsAction="always|collapseActionView" />
+    <item
+        android:id="@+id/maps_satelitalg"
+        android:icon="@drawable/ic_satelital"
+        android:title="vista satelital"
+        app:showAsAction="always|collapseActionView" />
+    <item
+        android:id="@+id/maps_tierrag"
+        android:icon="@drawable/ic_el_planeta_tierra"
+        android:orderInCategory="115"
+        android:title="vista Tierra"
+        app:showAsAction="always|collapseActionView" />
+
+</menu>

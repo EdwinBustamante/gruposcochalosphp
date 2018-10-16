@@ -137,7 +137,14 @@
         </activity>
         <activity android:name=".Administrador.MainAdministrador" />
         <activity android:name=".CuentaUsuarioArchivos.AgendaGrupo" />
-        <activity android:name=".CuentaUsuarioArchivos.AddEvento"></activity>
+        <activity android:name=".CuentaUsuarioArchivos.AddEvento" />
+        <activity
+            android:name=".VisitarMapa.MapsActivityGeolocalizar"
+            android:label="@string/title_activity_maps_geolocalizar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.edwinbustamante.gruposcochalos.Main" />
+        </activity>
     </application>
 
 </manifest>

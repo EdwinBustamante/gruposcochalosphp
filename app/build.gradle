@@ -15,9 +15,9 @@ android {
         multiDexEnabled true
         testApplicationId 'com.edwinbustamante.gruposcochalos.test'
     }
-    testOptions{
-        reportDir ="$project.buildDir/results/report"
-        resultsDir= "$project.buildDir/results"
+    testOptions {
+        reportDir = "$project.buildDir/results/report"
+        resultsDir = "$project.buildDir/results"
     }
     buildTypes {
         release {
@@ -94,6 +94,7 @@ dependencies {
 
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
 }
+
 
 
 

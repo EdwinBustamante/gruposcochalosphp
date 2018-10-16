@@ -20,6 +20,7 @@ import android.view.View;
 
 import android.widget.Toast;
 
+import com.edwinbustamante.gruposcochalos.VisitarMapa.MapsActivityGeolocalizar;
 import com.edwinbustamante.gruposcochalos.domain.GrupoMusical;
 import com.edwinbustamante.gruposcochalos.domain.Resultado;
 import com.edwinbustamante.gruposcochalos.service.ItunesAPI;
@@ -149,6 +150,10 @@ public class Main extends AppCompatActivity {
                 Intent ingresar = new Intent(Main.this, LoginActivity.class);
                 startActivity(ingresar);
 
+                break;
+            case R.id.grupos_cerca_de_mi:
+                Intent cerca_de_mi= new Intent(Main.this, MapsActivityGeolocalizar.class);
+                startActivity(cerca_de_mi);
                 break;
 
 
