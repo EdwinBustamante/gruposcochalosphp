@@ -12,13 +12,17 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.Explode;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -68,7 +72,7 @@ public class MapsActivityGeolocalizar extends AppCompatActivity implements OnMap
     private boolean dibujado = false;
     private static final String GOOGLE_API_KEY = "AIzaSyC4QP4S06vfGHpEAdSzJIwnnelz1AD1VvE";
     List<GrupoMusical> grupoMusicales = new ArrayList<>();
-
+    MapFragment mapFragment;
 
     @Override
     protected void onStart() {
@@ -111,7 +115,7 @@ public class MapsActivityGeolocalizar extends AppCompatActivity implements OnMap
                             @Override
                             public View getInfoContents(Marker marker) {
                                 View infoMarker = null;
-                                if (infoMarker == null&&!marker.getTitle().equals("Tu ubicación actual")) {
+                                if (infoMarker == null && !marker.getTitle().equals("Tu ubicación actual")) {
                                     infoMarker = getLayoutInflater().inflate(R.layout.info_marker, null);
                                 }
                                 if (!marker.getTitle().equals("Tu ubicación actual")) {
@@ -195,7 +199,7 @@ public class MapsActivityGeolocalizar extends AppCompatActivity implements OnMap
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapVisitgeolocalizacion);
+        mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapVisitgeolocalizacion);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         //Todo Aqui estan los destinos implementar
@@ -340,7 +344,7 @@ public class MapsActivityGeolocalizar extends AppCompatActivity implements OnMap
 
         if (marker.getTitle().equals("Tu ubicación actual")) {
             mUiSettings.setMapToolbarEnabled(false);
-        }else{
+        } else {
             mUiSettings.setMapToolbarEnabled(true);
         }
 
@@ -442,7 +446,6 @@ public class MapsActivityGeolocalizar extends AppCompatActivity implements OnMap
 
         return true;
     }
-
 
 
 }
