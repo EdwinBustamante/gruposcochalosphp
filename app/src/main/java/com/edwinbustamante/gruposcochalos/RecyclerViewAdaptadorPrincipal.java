@@ -61,7 +61,6 @@ public class RecyclerViewAdaptadorPrincipal extends RecyclerView.Adapter<Recycle
                 .error(R.drawable.perfilmusic)
                 .placeholder(R.drawable.progress_animation).into(holder.fotoPortada);
 
-
         holder.nombreGrupo.setText(grupoMusical.getNombre());
         holder.tipoMusica.setText(grupoMusical.getGenero());
         holder.cardgrupo.setOnClickListener(new View.OnClickListener() {

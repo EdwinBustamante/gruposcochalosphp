@@ -23,10 +23,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.edwinbustamante.gruposcochalos.Main;
+import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
 import com.edwinbustamante.gruposcochalos.R;
 import com.edwinbustamante.gruposcochalos.VisitanteArchivos.InformacionGrupoVisitante;
 import com.edwinbustamante.gruposcochalos.domain.GrupoMusical;
@@ -43,6 +45,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -64,6 +67,7 @@ public class MapsActivityGeolocalizar extends AppCompatActivity implements OnMap
     private boolean dibujado = false;
     private static final String GOOGLE_API_KEY = "AIzaSyC4QP4S06vfGHpEAdSzJIwnnelz1AD1VvE";
     List<GrupoMusical> grupoMusicales = new ArrayList<>();
+
 
     @Override
     protected void onStart() {
@@ -91,15 +95,61 @@ public class MapsActivityGeolocalizar extends AppCompatActivity implements OnMap
                 Resultado body = response.body();
                 List<GrupoMusical> results = body.getListagrupos();
                 grupoMusicales.addAll(results);
+
                 for (int i = 0; i < grupoMusicales.size(); i++) {
                     if (grupoMusicales.get(i).getLatitudg().equals("no")) {
 
                     } else {
 
+                        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                            @Override
+                            public View getInfoWindow(Marker marker) {
+                                return null;
+                            }
+
+                            @Override
+                            public View getInfoContents(Marker marker) {
+                                View infoMarker = null;
+                                if (infoMarker == null&&!marker.getTitle().equals("Tu ubicación actual")) {
+                                    infoMarker = getLayoutInflater().inflate(R.layout.info_marker, null);
+                                }
+                                if (!marker.getTitle().equals("Tu ubicación actual")) {
+                                    TextView titulo = (TextView) infoMarker.findViewById(R.id.titulo_info);
+                                    titulo.setText(marker.getTitle());
+                                    TextView snippet = (TextView) infoMarker.findViewById(R.id.snippet_info);
+                                    snippet.setText("Click aquí para mas información");
+                                    ImageView markerPerfil = (ImageView) infoMarker.findViewById(R.id.marker_perfil);
+                                    Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + marker.getSnippet())
+                                            .error(R.drawable.perfilmusic)
+                                            .resize(50, 50)
+                                            .into(markerPerfil);
+                                }
+                                return infoMarker;
+                            }
+                        });
+                        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                            @Override
+                            public void onInfoWindowClick(Marker marker) {
+                                boolean encontrado = false;
+                                int i = 0;
+                                while (encontrado == false && i < grupoMusicales.size()) {
+                                    String nombre = grupoMusicales.get(i).getNombre();
+                                    if (nombre.equals(marker.getTitle())) {
+
+                                        Intent intent = new Intent(getApplicationContext(), InformacionGrupoVisitante.class);
+                                        intent.putExtra("grupomusical", grupoMusicales.get(i));
+                                        startActivity(intent);
+                                        encontrado = true;
+                                    }
+                                    i++;
+                                }
+                            }
+                        });
+
                         LatLng ubicacionGrupo = new LatLng(Double.parseDouble(grupoMusicales.get(i).getLatitudg()), Double.parseDouble(grupoMusicales.get(i).getLongitudg()));
                         Marker markerGrupo = mMap.addMarker(new MarkerOptions()
                                 .position(ubicacionGrupo)
-                                .snippet("Click para llegar a ella")
+                                .snippet(grupoMusicales.get(i).getFotoperfil())
                                 .title(grupoMusicales.get(i).getNombre()));
                     }
                 }
@@ -273,6 +323,8 @@ public class MapsActivityGeolocalizar extends AppCompatActivity implements OnMap
         mUiSettings.setMapToolbarEnabled(false);//barra de herramienta cuando se toca en el marker
         mUiSettings.setCompassEnabled(true);//brujula
         mMap.setOnMarkerClickListener(this);
+
+
         // Add a marker in Sydney and move the camera
 /*
         LatLng origen = new LatLng(latitudOrigen, longitudOrigen);
@@ -286,21 +338,11 @@ public class MapsActivityGeolocalizar extends AppCompatActivity implements OnMap
     @Override
     public boolean onMarkerClick(final Marker marker) {
 
-        boolean encontrado = false;
-        int i = 0;
-        while (encontrado == false && i< grupoMusicales.size()) {
-            String nombre = grupoMusicales.get(i).getNombre();
-            if (nombre.equals(marker.getTitle())) {
-                    Intent intent = new Intent(this, InformacionGrupoVisitante.class);
-                    intent.putExtra("grupomusical", grupoMusicales.get(i));
-                    startActivity(intent);
-                    encontrado=true;
-                }
-            i++;
-        }
+        ///cuando se hace click en el marcador
 
         return false;
     }
+
 
     /* Aqui empieza la Clase Localizacion */
     public class Localizacion implements LocationListener {
