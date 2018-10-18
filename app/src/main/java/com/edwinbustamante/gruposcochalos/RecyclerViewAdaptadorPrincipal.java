@@ -107,7 +107,7 @@ public class RecyclerViewAdaptadorPrincipal extends RecyclerView.Adapter<Recycle
 
                     for (GrupoMusical grupomusical : gruposMusicalesLista) {
 
-                        if (grupomusical.getNombre().toLowerCase().contains(charString)) {
+                        if (grupomusical.getNombre().toLowerCase().contains(charString)||grupomusical.getGenero().toLowerCase().contains(charString)) {
 
                             filteredList.add(grupomusical);
                         }
@@ -118,6 +118,8 @@ public class RecyclerViewAdaptadorPrincipal extends RecyclerView.Adapter<Recycle
 
                 FilterResults filterResults = new FilterResults();
                 filterResults.values = mFilteredList;
+
+
                 return filterResults;
             }
 

@@ -219,44 +219,48 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
         String fecha1 = fechaI + "/" + mesI + "/" + anioI;
         String fecha2 = fechaF + "/" + mesF + "/" + anioF;
         if (fechaI != 0 && fechaF != 0 && horaF != -1 && horaI != -1) {
-            switch (compararFechasConDate(fecha1, fecha2)) {
-                case "igual":
-                    if (horaValida(horaI, minutoI, horaF, minutoF)) {
+            if (validoFechaHoy(fecha1)) {
+                switch (compararFechasConDate(fecha1, fecha2)) {
+                    case "igual":
+                        if (horaValida(horaI, minutoI, horaF, minutoF)) {
+                            String defaultValue = "DefaultName";
+                            SharedPreferences sharedPreferences = getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
+                            String idGrupoMusical = sharedPreferences.getString("idgrupomusical", defaultValue);
+
+                            progressDialog.show();
+
+                            String url = Constantes.IP_SERVIDOR + "gruposcochalos/addevento.php?idgrupomusical=" + idGrupoMusical + "&tituloevento=" + tituloEv + "&colorevento=" + colorDelEvento + "&fechai=" + fechaI + "&mesi=" + mesI + "&anioi=" + anioI + "&horai=" + horaI + "&minutoi=" + minutoI + "&fechaf=" + fechaF + "&mesf=" + mesF + "&aniof=" + anioF + "&horaf=" + horaF + "&minutof=" + minutoF;
+                            url = url.replace(" ", "%20");
+                            jsonObjectReques = new JsonObjectRequest(Request.Method.GET, url, null, this, this);//realiza el llamado ala url
+                            requestQueue.add(jsonObjectReques);
+                            ///RESPUESTA
+                            // Toast.makeText(this, tituloEv + "\n" + colorDelEvento + "\n" + fechaI + "" + mesI + "" + anioI + "\n" + fechaF + "" + mesF + "" + anioF, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(this, "Rango de horas del evento incorrecta", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case "correcto":
                         String defaultValue = "DefaultName";
                         SharedPreferences sharedPreferences = getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
                         String idGrupoMusical = sharedPreferences.getString("idgrupomusical", defaultValue);
 
-                        progressDialog.show();
 
+                        progressDialog.show();
                         String url = Constantes.IP_SERVIDOR + "gruposcochalos/addevento.php?idgrupomusical=" + idGrupoMusical + "&tituloevento=" + tituloEv + "&colorevento=" + colorDelEvento + "&fechai=" + fechaI + "&mesi=" + mesI + "&anioi=" + anioI + "&horai=" + horaI + "&minutoi=" + minutoI + "&fechaf=" + fechaF + "&mesf=" + mesF + "&aniof=" + anioF + "&horaf=" + horaF + "&minutof=" + minutoF;
                         url = url.replace(" ", "%20");
                         jsonObjectReques = new JsonObjectRequest(Request.Method.GET, url, null, this, this);//realiza el llamado ala url
                         requestQueue.add(jsonObjectReques);
                         ///RESPUESTA
                         // Toast.makeText(this, tituloEv + "\n" + colorDelEvento + "\n" + fechaI + "" + mesI + "" + anioI + "\n" + fechaF + "" + mesF + "" + anioF, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, "Rango de horas del evento incorrecta", Toast.LENGTH_SHORT).show();
-                    }
-                    break;
-                case "correcto":
-                    String defaultValue = "DefaultName";
-                    SharedPreferences sharedPreferences = getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
-                    String idGrupoMusical = sharedPreferences.getString("idgrupomusical", defaultValue);
 
+                        break;
+                    case "incorrecto":
+                        Toast.makeText(this, "La fecha fin del evento, está antes del inicio del evento", Toast.LENGTH_SHORT).show();
 
-                    progressDialog.show();
-                    String url = Constantes.IP_SERVIDOR + "gruposcochalos/addevento.php?idgrupomusical=" + idGrupoMusical + "&tituloevento=" + tituloEv + "&colorevento=" + colorDelEvento + "&fechai=" + fechaI + "&mesi=" + mesI + "&anioi=" + anioI + "&horai=" + horaI + "&minutoi=" + minutoI + "&fechaf=" + fechaF + "&mesf=" + mesF + "&aniof=" + anioF + "&horaf=" + horaF + "&minutof=" + minutoF;
-                    url = url.replace(" ", "%20");
-                    jsonObjectReques = new JsonObjectRequest(Request.Method.GET, url, null, this, this);//realiza el llamado ala url
-                    requestQueue.add(jsonObjectReques);
-                    ///RESPUESTA
-                    // Toast.makeText(this, tituloEv + "\n" + colorDelEvento + "\n" + fechaI + "" + mesI + "" + anioI + "\n" + fechaF + "" + mesF + "" + anioF, Toast.LENGTH_SHORT).show();
-
-                    break;
-                case "incorrecto":
-                    Toast.makeText(this, "La fecha fin del evento, está antes del inicio del evento", Toast.LENGTH_SHORT).show();
-
-                    break;
+                        break;
+                }
+            } else {
+                Toast.makeText(this, "No puede agregar un evento en el pasado", Toast.LENGTH_SHORT).show();
             }
 
 
@@ -265,6 +269,38 @@ public class AddEvento extends AppCompatActivity implements View.OnClickListener
         }
 
 
+    }
+
+    private boolean validoFechaHoy(String fecha1) {
+        boolean res = false;
+        try {
+            /**Obtenemos las fechas enviadas en el formato a comparar*/
+            SimpleDateFormat formateador = new SimpleDateFormat("dd/MM/yyyy");
+            Date fechaDate1 = formateador.parse(fecha1);
+
+            final Calendar c = Calendar.getInstance();
+            int y = c.get(Calendar.YEAR);
+            int m = c.get(Calendar.MONTH);
+            int d = c.get(Calendar.DAY_OF_MONTH);
+            String fechahoy = d + "/" + m + "/" + y;
+            Date fechaDateHoy = formateador.parse(fechahoy);
+
+            if (fechaDate1.before(fechaDateHoy)) {
+                //  resultado = "La Fecha 1 es menor ";
+                res = false;
+            } else {
+                if (fechaDateHoy.before(fechaDate1)) {
+                    res = true;
+                } else {
+                    // resultado = "Las Fechas Son iguales ";
+                    res = true;
+                }
+            }
+        } catch (ParseException e) {
+            System.out.println("Se Produjo un Error!!!  " + e.getMessage());
+        }
+
+        return res;
     }
 
 

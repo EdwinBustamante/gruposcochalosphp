@@ -2,9 +2,12 @@ package com.edwinbustamante.gruposcochalos;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
@@ -18,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.edwinbustamante.gruposcochalos.VisitarMapa.MapsActivityGeolocalizar;
@@ -44,6 +48,7 @@ public class Main extends AppCompatActivity {
     private String TAG;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,9 +60,9 @@ public class Main extends AppCompatActivity {
 
         recyclerViewAdaptadorPrincipal = new RecyclerViewAdaptadorPrincipal(grupoMusicales, this);
         recyclerViewGrupos.setAdapter(recyclerViewAdaptadorPrincipal);
+        Toolbar toolbarMain = (Toolbar) findViewById(R.id.toolbarm);
+        setSupportActionBar(toolbarMain);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
 
         /*try {
@@ -65,8 +70,6 @@ public class Main extends AppCompatActivity {
         } catch (BadgesNotSupportedException badgesNotSupportedException) {
             Log.d(TAG, badgesNotSupportedException.getMessage());
         }*/
-
-
     }
 
     @Override
@@ -84,7 +87,6 @@ public class Main extends AppCompatActivity {
         }
 
     }
-
 
 
     private void obtenerCanciones() {
@@ -152,7 +154,7 @@ public class Main extends AppCompatActivity {
 
                 break;
             case R.id.grupos_cerca_de_mi:
-                Intent cerca_de_mi= new Intent(Main.this, MapsActivityGeolocalizar.class);
+                Intent cerca_de_mi = new Intent(Main.this, MapsActivityGeolocalizar.class);
                 startActivity(cerca_de_mi);
                 break;
 

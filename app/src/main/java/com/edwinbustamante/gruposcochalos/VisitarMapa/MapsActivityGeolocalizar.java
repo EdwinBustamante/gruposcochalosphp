@@ -42,6 +42,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -324,7 +325,6 @@ public class MapsActivityGeolocalizar extends AppCompatActivity implements OnMap
         mUiSettings.setCompassEnabled(true);//brujula
         mMap.setOnMarkerClickListener(this);
 
-
         // Add a marker in Sydney and move the camera
 /*
         LatLng origen = new LatLng(latitudOrigen, longitudOrigen);
@@ -338,7 +338,11 @@ public class MapsActivityGeolocalizar extends AppCompatActivity implements OnMap
     @Override
     public boolean onMarkerClick(final Marker marker) {
 
-        ///cuando se hace click en el marcador
+        if (marker.getTitle().equals("Tu ubicación actual")) {
+            mUiSettings.setMapToolbarEnabled(false);
+        }else{
+            mUiSettings.setMapToolbarEnabled(true);
+        }
 
         return false;
     }
@@ -439,41 +443,6 @@ public class MapsActivityGeolocalizar extends AppCompatActivity implements OnMap
         return true;
     }
 
-    /**
-     * EL ESCUCHADOR DEL ONCLIK EN LOS MARCADORES
-     *
-     */
 
-    /**
-     *
-
-     public class MarkerDemoActivity extends  android.support.v4.app.FragmentActivity implements GoogleMap.OnMarkerClickListener{
-
-     private  Marker markerGrupo;
-     private  void setUpMap(){
-     mMap.setOnMarkerClickListener(this);
-
-     for (int i = 0; i < grupoMusicales.size(); i++) {
-     if (grupoMusicales.get(i).getLatitudg().equals("no")) {
-
-     } else {
-
-     LatLng ubicacionGrupo = new LatLng(Double.parseDouble(grupoMusicales.get(i).getLatitudg()), Double.parseDouble(grupoMusicales.get(i).getLongitudg()));
-     Marker markerGrupo = mMap.addMarker(new MarkerOptions()
-     .position(ubicacionGrupo)
-     .snippet("clik para llegar a ella")
-     .title(grupoMusicales.get(i).getNombre()));
-     }
-     }
-     }
-     @Override public boolean onMarkerClick(final Marker marker) {
-     if (marker.equals(myMarker)){
-
-     Toast.makeText(this, "hola", Toast.LENGTH_SHORT).show();
-     }
-     return true;
-     }
-     }
-     */
 
 }

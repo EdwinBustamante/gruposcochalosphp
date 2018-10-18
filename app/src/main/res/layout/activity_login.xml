@@ -78,6 +78,7 @@
                     android:hint="Número de móvil o usuario"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
+                    android:imeActionId="6"
                     android:singleLine="true"
                     android:textSize="16dp"
                     android:theme="@style/EditText" />
@@ -98,6 +99,7 @@
                     android:hint="Contraseña (Obligatorio)"
                     android:inputType="textPassword"
                     android:maxLines="1"
+                    android:imeActionId="6"
                     android:singleLine="true"
                     android:textSize="16dp"
                     android:theme="@style/EditText" />
