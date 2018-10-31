@@ -26,19 +26,31 @@ import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
 import com.edwinbustamante.gruposcochalos.R;
 import com.edwinbustamante.gruposcochalos.VisitarMapa.MapsActivityVisitar;
 import com.edwinbustamante.gruposcochalos.domain.GrupoMusical;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.vision.face.Landmark;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
-public class InformacionGrupoVisitante extends AppCompatActivity implements View.OnClickListener {
-    private ImageView imageViewPortada, imageViewPerfil, movil1, movil2, movilwhatsapp, facebook, ubicacion;
+public class InformacionGrupoVisitante extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener {
+    private ImageView imageViewPortada, imageViewPerfil, movil1, movil2, movilwhatsapp, facebook;
     private TextView nombreGrupo, generoGrupo, informacionVisitante, movil1text, movil2text, movilwhatsapptext, linkfacebook, contactosextra, direcciontext, linkYoutubeVisitante;
     private String fotoperfil, latitudg, longitudg, fotoportada;
     private TextView numeroPublic;
     GrupoMusical grupoMusical;
     ImageView agendaVisitante;
     WebView webViewYoutube;
-
+    private GoogleMap mMapPrevia;
+    private UiSettings mUiSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,8 +108,6 @@ public class InformacionGrupoVisitante extends AppCompatActivity implements View
         contactosextra.setText(grupoMusical.getDescripcioncontactos());
         direcciontext = (TextView) findViewById(R.id.texViewDireccion_visitante);
         direcciontext.setText(grupoMusical.getDirecciondescripcion());
-        ubicacion = (ImageView) findViewById(R.id.ubicar_visitante);
-        ubicacion.setOnClickListener(this);
         numeroPublic = (TextView) findViewById(R.id.numerodepublic);
         numeroPublic.setOnClickListener(this);
         latitudg = grupoMusical.getLatitudg();
@@ -113,36 +123,47 @@ public class InformacionGrupoVisitante extends AppCompatActivity implements View
         String urlFinal = "";
         if (grupoMusical.getLinkyoutube().equals("https://www.youtube.com/")) {
             ///no hay video promocional
-            Toast.makeText(this, "El grupo no tiene video promocional", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(this, "El grupo no tiene video promocional", Toast.LENGTH_SHORT).show();
         } else {
             String url = grupoMusical.getLinkyoutube();
             int i = url.length() - 1;
             boolean encontrado = false;
 
             while (encontrado == false) {
-                if (url.charAt(i) == '=') {
+                if (url.charAt(i) == '=' || url.charAt(i) == '/') {
                     encontrado = true;
                 } else {
+
                     String aux = urlFinal;
                     urlFinal = url.charAt(i) + aux;
                 }
                 i--;
             }
         }
-        // Toast.makeText(this, urlFinal, Toast.LENGTH_SHORT).show();
-
-
         webViewYoutube.loadData("<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/" + urlFinal + "\" frameborder=\"0\" allowfullscreen></iframe>", "text/html", "utf-8");
 
         webViewYoutube.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Uri uris = Uri.parse(linkYoutubeVisitante.getText().toString());
-                Intent it = new Intent(Intent.ACTION_VIEW, uris);
-                startActivity(it);
+                if (v.getId() == R.id.webviewyoutube && event.getAction() == MotionEvent.ACTION_DOWN) {
+
+                    if (grupoMusical.getLinkyoutube().equals("https://www.youtube.com/")) {
+
+                        Toast.makeText(InformacionGrupoVisitante.this, "El grupo musical no tiene video promocional", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Uri uris = Uri.parse(linkYoutubeVisitante.getText().toString());
+                        Intent it = new Intent(Intent.ACTION_VIEW, uris);
+                        startActivity(it);
+                    }
+                    // Toast.makeText(InformacionGrupoVisitante.this, "holaaa", Toast.LENGTH_SHORT).show();
+                }
                 return true;
             }
         });
+
+        MapFragment mapFragment = (MapFragment) getFragmentManager()
+                .findFragmentById(R.id.ubicacionprevia);
+        mapFragment.getMapAsync(this);
     }
 
 
@@ -251,20 +272,7 @@ public class InformacionGrupoVisitante extends AppCompatActivity implements View
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(urlPage)));
                 }
                 break;
-            case R.id.ubicar_visitante:
 
-                if (latitudg.equals("no")) {
-                    Toast.makeText(InformacionGrupoVisitante.this, "El grupo " + nombreGrupo.getText().toString() + " no añadio ubicación", Toast.LENGTH_SHORT).show();
-                } else {
-
-                    Intent mapsvisitar = new Intent(InformacionGrupoVisitante.this, MapsActivityVisitar.class);
-                    mapsvisitar.putExtra("latitud", latitudg);
-                    mapsvisitar.putExtra("longitud", longitudg);
-                    mapsvisitar.putExtra("titulomarcador", nombreGrupo.getText().toString());
-                    startActivity(mapsvisitar);
-                }
-
-                break;
             default:
                 break;
         }
@@ -292,4 +300,58 @@ public class InformacionGrupoVisitante extends AppCompatActivity implements View
         startActivity(i);
     }
 
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMapPrevia = googleMap;
+        if (latitudg.equals("no")) {
+           // Toast.makeText(InformacionGrupoVisitante.this, "El grupo " + nombreGrupo.getText().toString() + " no añadio ubicación", Toast.LENGTH_SHORT).show();
+        } else {
+            LatLng previa = new LatLng(Double.parseDouble(latitudg), Double.parseDouble(longitudg));
+            Marker markerPrevia = mMapPrevia.addMarker(new MarkerOptions().position(previa).title(nombreGrupo.getText().toString()));
+            markerPrevia.showInfoWindow();
+            mUiSettings = googleMap.getUiSettings();
+            mUiSettings.setMapToolbarEnabled(false);
+            mUiSettings.setZoomControlsEnabled(false);//Habilita icono de zoon
+            mUiSettings.setCompassEnabled(false);//brujula
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(previa)
+                    .zoom(15)
+                    .tilt(90)
+                    .build();
+            mMapPrevia.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+        mMapPrevia.setOnMapClickListener(this);
+        mMapPrevia.setOnMarkerClickListener(this);
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+        if (latitudg.equals("no")) {
+            Toast.makeText(InformacionGrupoVisitante.this, "El grupo " + nombreGrupo.getText().toString() + " no añadio ubicación", Toast.LENGTH_SHORT).show();
+        } else {
+
+            Intent mapsvisitar = new Intent(InformacionGrupoVisitante.this, MapsActivityVisitar.class);
+            mapsvisitar.putExtra("latitud", latitudg);
+            mapsvisitar.putExtra("longitud", longitudg);
+            mapsvisitar.putExtra("titulomarcador", nombreGrupo.getText().toString());
+            startActivity(mapsvisitar);
+        }
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+
+        if (latitudg.equals("no")) {
+            Toast.makeText(InformacionGrupoVisitante.this, "El grupo " + nombreGrupo.getText().toString() + " no añadio ubicación", Toast.LENGTH_SHORT).show();
+        } else {
+
+            Intent mapsvisitar = new Intent(InformacionGrupoVisitante.this, MapsActivityVisitar.class);
+            mapsvisitar.putExtra("latitud", latitudg);
+            mapsvisitar.putExtra("longitud", longitudg);
+            mapsvisitar.putExtra("titulomarcador", nombreGrupo.getText().toString());
+            startActivity(mapsvisitar);
+        }
+        return false;
+    }
 }

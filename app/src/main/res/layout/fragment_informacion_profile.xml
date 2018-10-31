@@ -219,7 +219,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
-                        android:weightSum="3">
+                        android:weightSum="8">
+
+                        <TextView
+                            android:id="@+id/linkYoutube"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="7"
+                            android:autoLink="web"
+                            android:text=""
+                            android:textSize="12dp" />
 
                         <ImageView
                             android:id="@+id/imageViewYoutube"
@@ -229,17 +239,15 @@
                             android:layout_marginBottom="10dp"
                             android:layout_marginTop="10dp"
                             android:layout_weight="1"
-                            android:src="@drawable/youtube" />
+                            android:src="@drawable/ic_action_edity" />
 
-                        <TextView
-                            android:id="@+id/linkYoutube"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="2"
-                            android:text=""
-                            android:textSize="17dp" />
                     </LinearLayout>
+
+
+                    <WebView
+                        android:id="@+id/webviewyoutubeadmi"
+                        android:layout_width="match_parent"
+                        android:layout_height="180dp"></WebView>
 
 
                 </LinearLayout>
@@ -467,7 +475,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_weight="2"
                             android:text="Ingrese link de su faceboook"
-                            android:textSize="17dp" />
+                            android:textSize="12dp" />
                     </LinearLayout>
 
 
@@ -562,17 +570,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:weightSum="2">
+                        android:weightSum="6">
 
-                        <ImageView
+                        <com.google.android.gms.maps.MapView
                             android:id="@+id/visitarubicacioncasa"
                             android:layout_width="0dp"
-                            android:layout_height="40dp"
-                            android:layout_gravity="center"
-                            android:layout_marginBottom="10dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_weight="1"
-                            android:src="@drawable/ic_mapa_normal" />
+                            android:layout_height="180dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="5"></com.google.android.gms.maps.MapView>
 
                         <ImageView
                             android:id="@+id/anadirubicacioncasa"

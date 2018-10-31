@@ -11,6 +11,8 @@ import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -18,8 +20,11 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -40,6 +45,19 @@ import com.edwinbustamante.gruposcochalos.Objetos.Constantes;
 import com.edwinbustamante.gruposcochalos.R;
 import com.edwinbustamante.gruposcochalos.SelectecDateFragment;
 import com.edwinbustamante.gruposcochalos.VisitarMapa.MapsActivityVisitar;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -50,7 +68,7 @@ import java.util.Calendar;
 import java.util.List;
 
 
-public class InformacionProfileFragment extends Fragment implements View.OnClickListener, Response.ErrorListener, Response.Listener<JSONObject> {
+public class InformacionProfileFragment extends Fragment implements View.OnClickListener, Response.ErrorListener, Response.Listener<JSONObject>, View.OnTouchListener, OnMapReadyCallback {
 
     private String idGrupoMusical = "";
     // UI references. animacion
@@ -62,7 +80,7 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
     private ImageView foto_perfil, foto_portada;
     private TextView usuario, nombreGrupo, generoMusica, movil1, movil2, movilWhatsApp, linkFacebook, linkYoutube;
     private TextView informacionEdit, contactosEdit, direccionEdit;
-    private ImageView imageViewMovil1, imageViewMovil2, imageViewMovilWhasapp, anadirubicaciocasa, visitarubicacioncasa, irfacebook, imageViewYoutube;
+    private ImageView imageViewMovil1, imageViewMovil2, imageViewMovilWhasapp, anadirubicaciocasa, irfacebook, imageViewYoutube;
     String FileName = "myUserId";
     String urlImagen;
     String urlImagenPortada;
@@ -76,6 +94,10 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
     private String longitudg;
     static final int DATE_DIALOG_ID = 999;
     List<Calendar> calendarioguardar;
+    private WebView webadmi;
+    private GoogleMap map;
+    private UiSettings mUiSettings;
+    MapView mapView;
 
     public InformacionProfileFragment() {
         // Required empty public constructor
@@ -143,19 +165,44 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
         imageViewMovilWhasapp = (ImageView) vista.findViewById(R.id.imageViewMovilWhatsapp);
         imageViewMovilWhasapp.setOnClickListener(this);
         anadirubicaciocasa = (ImageView) vista.findViewById(R.id.anadirubicacioncasa);
-        visitarubicacioncasa = (ImageView) vista.findViewById(R.id.visitarubicacioncasa);
+
         anadirubicaciocasa.setOnClickListener(this);
-        visitarubicacioncasa.setOnClickListener(this);
-        visitarubicacioncasa.setVisibility(View.INVISIBLE);
         agendaGrupo = (ImageView) vista.findViewById(R.id.agendaGrupo);
         agendaGrupo.setOnClickListener(this);
         linkYoutube = (TextView) vista.findViewById(R.id.linkYoutube);
         linkYoutube.setOnClickListener(this);
         imageViewYoutube = (ImageView) vista.findViewById(R.id.imageViewYoutube);
         imageViewYoutube.setOnClickListener(this);
+        webadmi = (WebView) vista.findViewById(R.id.webviewyoutubeadmi);
+        webadmi.getSettings().setJavaScriptEnabled(true);
+        webadmi.setWebChromeClient(new WebChromeClient() {
 
+        });
+        webadmi.setOnTouchListener(this);
+        mapView = (MapView) vista.findViewById(R.id.visitarubicacioncasa);
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(this);
+        MapsInitializer.initialize(this.getActivity());
 
         return vista;
+    }
+
+    @Override
+    public void onResume() {
+        mapView.onResume();
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
     }
 
     private void actualizarDatosUsuario(String urls) {
@@ -242,16 +289,16 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                 String idGrupoMusica = sharedPreferences.getString("idgrupomusical", defaultValue);
                 Intent agendaIntent = new Intent(getContext(), AgendaGrupo.class);
                 agendaIntent.putExtra("rol", "usuario");
-                agendaIntent.putExtra("idgrupomusical",idGrupoMusica );
+                agendaIntent.putExtra("idgrupomusical", idGrupoMusica);
                 startActivity(agendaIntent);
                 break;
 
+            /** case R.id.imageViewYoutube:
+             Uri uris = Uri.parse(linkYoutube.getText().toString());
+             Intent it = new Intent(Intent.ACTION_VIEW, uris);
+             startActivity(it);
+             break;*/
             case R.id.imageViewYoutube:
-                Uri uris = Uri.parse(linkYoutube.getText().toString());
-                Intent it = new Intent(Intent.ACTION_VIEW, uris);
-                startActivity(it);
-                break;
-            case R.id.linkYoutube:
                 Intent youtubelink = new Intent(getContext(), EditLinkYoutube.class);
                 youtubelink.putExtra("linkyoutube", linkYoutube.getText().toString());
                 startActivity(youtubelink);
@@ -429,7 +476,7 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                 startActivity(ubicacioncasa);
 
                 break;
-            case R.id.visitarubicacioncasa:
+           /* case R.id.visitarubicacioncasa:
                 if (latitudg.equals("no")) {
                     Toast.makeText(getContext(), "Falta añadir ubicación", Toast.LENGTH_SHORT).show();
                 } else {
@@ -441,7 +488,7 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                     startActivity(mapsvisitar);
                 }
 
-                break;
+                break;*/
             default:
                 break;
         }
@@ -524,21 +571,34 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
 
                     latitudg = jsonObject.getString("latitudg");
                     longitudg = jsonObject.getString("longitudg");
+                    ConfigurarMapa(latitudg,longitudg);
                     linkYoutube.setText(jsonObject.getString("linkyoutube"));
-
+                    AnadirWebView(jsonObject.getString("linkyoutube"));//pasando link de youtuve a webview
+                       /*
                     if (latitudg.equals("no")) {
                         visitarubicacioncasa.setVisibility(View.INVISIBLE);
 
                     } else {
                         visitarubicacioncasa.setVisibility(View.VISIBLE);
 
-                    }
+                    }**/
                 }
 
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void ConfigurarMapa(String latitudg, String longitudg) {
+
+        if (latitudg.equals("no")) {
+            // Toast.makeText(InformacionGrupoVisitante.this, "El grupo " + nombreGrupo.getText().toString() + " no añadio ubicación", Toast.LENGTH_SHORT).show();
+        } else {
+            LatLng ubicacionL = new LatLng(Double.parseDouble(latitudg), Double.parseDouble(longitudg));
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(ubicacionL, 10);
+            map.animateCamera(cameraUpdate);
         }
     }
 
@@ -553,6 +613,103 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
         editor.putString("idgrupomusical", idgrupomusical);
         editor.commit();
     }
+
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+
+        if (v.getId() == R.id.webviewyoutubeadmi && event.getAction() == MotionEvent.ACTION_DOWN) {
+            if (linkYoutube.getText().toString().equals("https://www.youtube.com/")) {
+                Toast.makeText(getContext(), "Primero debes añadir la url de tu video promocional", Toast.LENGTH_SHORT).show();
+            } else {
+                Uri uris = Uri.parse(linkYoutube.getText().toString());
+                Intent it = new Intent(Intent.ACTION_VIEW, uris);
+                startActivity(it);
+            }
+        }
+        return true;
+    }
+
+    private void AnadirWebView(String linkY) {
+        String urlFinal = "";
+        if (linkY.equals("https://www.youtube.com/")) {
+            ///no hay video promocional
+            // Toast.makeText(getContext(), "El grupo no tiene video promocional", Toast.LENGTH_SHORT).show();
+        } else {
+            String url = linkY.toString();
+            int i = url.length() - 1;
+            boolean encontrado = false;
+
+            while (encontrado == false) {
+                if (url.charAt(i) == '=' || url.charAt(i) == '/') {
+                    encontrado = true;
+                } else {
+                    String aux = urlFinal;
+                    urlFinal = url.charAt(i) + aux;
+                }
+                i--;
+            }
+        }
+        webadmi.loadData("<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/" + urlFinal + "\" frameborder=\"0\" allowfullscreen></iframe>", "text/html", "utf-8");
+
+
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+
+    }
+/**
+ @Override public void onMapReady(GoogleMap googleMap) {
+ mMapPreviaCasa = googleMap;
+ if (latitudg.equals("no")) {
+ // Toast.makeText(InformacionGrupoVisitante.this, "El grupo " + nombreGrupo.getText().toString() + " no añadio ubicación", Toast.LENGTH_SHORT).show();
+ } else {
+ LatLng previa = new LatLng(Double.parseDouble(latitudg), Double.parseDouble(longitudg));
+ Marker markerPrevia = mMapPreviaCasa.addMarker(new MarkerOptions().position(previa).title(nombreGrupo.getText().toString()));
+ markerPrevia.showInfoWindow();
+ mUiSettings = googleMap.getUiSettings();
+ mUiSettings.setMapToolbarEnabled(false);
+ mUiSettings.setZoomControlsEnabled(false);//Habilita icono de zoon
+ mUiSettings.setCompassEnabled(false);//brujula
+ CameraPosition cameraPosition = new CameraPosition.Builder()
+ .target(previa)
+ .zoom(15)
+ .tilt(90)
+ .build();
+ mMapPreviaCasa.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+ }
+ mMapPreviaCasa.setOnMapClickListener(this);
+ mMapPreviaCasa.setOnMarkerClickListener(this);
+ }
+
+ @Override public void onMapClick(LatLng latLng) {
+ if (latitudg.equals("no")) {
+ Toast.makeText(getContext(), "Falta añadir ubicación", Toast.LENGTH_SHORT).show();
+ } else {
+
+ Intent mapsvisitar = new Intent(getContext(), MapsActivityVisitar.class);
+ mapsvisitar.putExtra("latitud", latitudg);
+ mapsvisitar.putExtra("longitud", longitudg);
+ mapsvisitar.putExtra("titulomarcador", nombreGrupo.getText().toString());
+ startActivity(mapsvisitar);
+ }
+ }
+
+ @Override public boolean onMarkerClick(Marker marker) {
+ if (latitudg.equals("no")) {
+ Toast.makeText(getContext(), "Falta añadir ubicación", Toast.LENGTH_SHORT).show();
+ } else {
+
+ Intent mapsvisitar = new Intent(getContext(), MapsActivityVisitar.class);
+ mapsvisitar.putExtra("latitud", latitudg);
+ mapsvisitar.putExtra("longitud", longitudg);
+ mapsvisitar.putExtra("titulomarcador", nombreGrupo.getText().toString());
+ startActivity(mapsvisitar);
+ }
+ return false;
+ }*/
 
 
 }
