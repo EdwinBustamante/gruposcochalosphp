@@ -10,8 +10,13 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,12 +31,14 @@ import com.squareup.picasso.Picasso;
 import org.w3c.dom.Text;
 
 public class InformacionGrupoVisitante extends AppCompatActivity implements View.OnClickListener {
-    private ImageView imageViewPortada, imageViewPerfil, movil1, movil2, movilwhatsapp, facebook, ubicacion, imageViewYoutuveV;
+    private ImageView imageViewPortada, imageViewPerfil, movil1, movil2, movilwhatsapp, facebook, ubicacion;
     private TextView nombreGrupo, generoGrupo, informacionVisitante, movil1text, movil2text, movilwhatsapptext, linkfacebook, contactosextra, direcciontext, linkYoutubeVisitante;
     private String fotoperfil, latitudg, longitudg, fotoportada;
     private TextView numeroPublic;
     GrupoMusical grupoMusical;
     ImageView agendaVisitante;
+    WebView webViewYoutube;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +59,10 @@ public class InformacionGrupoVisitante extends AppCompatActivity implements View
         generoGrupo = (TextView) findViewById(R.id.texgeneroMusica_visitante);
         fotoperfil = grupoMusical.getFotoperfil();
         fotoportada = grupoMusical.getFotoportada();
-        imageViewYoutuveV = findViewById(R.id.imageViewYoutubeVisitante);
-        imageViewYoutuveV.setOnClickListener(this);
+
         agendaVisitante = findViewById(R.id.agendaVisitante);
         agendaVisitante.setOnClickListener(this);
+        webViewYoutube = (WebView) findViewById(R.id.webviewyoutube);
 
 
         Picasso.get().load(Constantes.IP_SERVIDOR + "gruposcochalos/" + fotoperfil).error(R.drawable.perfilmusic)
@@ -99,8 +106,45 @@ public class InformacionGrupoVisitante extends AppCompatActivity implements View
 
         linkYoutubeVisitante.setText(grupoMusical.getLinkyoutube());
 
+        webViewYoutube.getSettings().setJavaScriptEnabled(true);
+        webViewYoutube.setWebChromeClient(new WebChromeClient() {
 
+        });
+        String urlFinal = "";
+        if (grupoMusical.getLinkyoutube().equals("https://www.youtube.com/")) {
+            ///no hay video promocional
+            Toast.makeText(this, "El grupo no tiene video promocional", Toast.LENGTH_SHORT).show();
+        } else {
+            String url = grupoMusical.getLinkyoutube();
+            int i = url.length() - 1;
+            boolean encontrado = false;
+
+            while (encontrado == false) {
+                if (url.charAt(i) == '=') {
+                    encontrado = true;
+                } else {
+                    String aux = urlFinal;
+                    urlFinal = url.charAt(i) + aux;
+                }
+                i--;
+            }
+        }
+        // Toast.makeText(this, urlFinal, Toast.LENGTH_SHORT).show();
+
+
+        webViewYoutube.loadData("<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/" + urlFinal + "\" frameborder=\"0\" allowfullscreen></iframe>", "text/html", "utf-8");
+
+        webViewYoutube.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Uri uris = Uri.parse(linkYoutubeVisitante.getText().toString());
+                Intent it = new Intent(Intent.ACTION_VIEW, uris);
+                startActivity(it);
+                return true;
+            }
+        });
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -146,10 +190,11 @@ public class InformacionGrupoVisitante extends AppCompatActivity implements View
                 startActivity(in);
                 //Toast.makeText(this, "perfil", Toast.LENGTH_SHORT).show();
                 break;
+
             case R.id.agendaVisitante:
                 Intent agendaIntent = new Intent(InformacionGrupoVisitante.this, AgendaGrupo.class);
                 agendaIntent.putExtra("rol", "visitante");
-                agendaIntent.putExtra("idgrupomusical",grupoMusical.getIdgrupomusical());
+                agendaIntent.putExtra("idgrupomusical", grupoMusical.getIdgrupomusical());
                 startActivity(agendaIntent);
                 break;
             case R.id.numerodepublic:
@@ -157,11 +202,12 @@ public class InformacionGrupoVisitante extends AppCompatActivity implements View
                 publicacionesvisitar.putExtra("idgrupomusical", grupoMusical.getIdgrupomusical());
                 startActivity(publicacionesvisitar);
                 break;
-            case R.id.imageViewYoutubeVisitante:
+          /* case R.id.youtouch:
                 Uri uris = Uri.parse(linkYoutubeVisitante.getText().toString());
                 Intent it = new Intent(Intent.ACTION_VIEW, uris);
                 startActivity(it);
                 break;
+                 */
             case R.id.imageViewMovil1_visitante:
                 // Toast.makeText(this, "movil 1", Toast.LENGTH_SHORT).show();
                 llamar(movil1text.getText().toString());
@@ -245,4 +291,5 @@ public class InformacionGrupoVisitante extends AppCompatActivity implements View
         }
         startActivity(i);
     }
+
 }

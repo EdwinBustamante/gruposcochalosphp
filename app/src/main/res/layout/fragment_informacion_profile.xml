@@ -201,7 +201,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_margin="2dp"
-                            android:text="MULTIMEDIA"
+                            android:text="VIDEO PROMOCIONAL"
                             android:textColor="@color/negro"
                             android:textSize="18dp"
                             android:textStyle="bold" />
