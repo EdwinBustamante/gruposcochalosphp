@@ -245,8 +245,8 @@ public class AnadirUbicacionCasa extends AppCompatActivity implements Response.E
                 if (contadorDeTap == 0) {
                     Marker marker = mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(latLng.latitude, latLng.longitude))
-                            //.snippet("para la publicación")
-                            .title("Añadir esta ubicación"));
+                            .snippet("Ajuste la ubicación exacta")
+                            .title("UBICACÓN A AÑADIR"));
                     marker.showInfoWindow();
 
 
@@ -255,8 +255,8 @@ public class AnadirUbicacionCasa extends AppCompatActivity implements Response.E
                     mMap.clear();
                     Marker marker = mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(latLng.latitude, latLng.longitude))
-                            .snippet("para la publicación")
-                            .title("Añadir esta ubicación"));
+                            .snippet("Ajuste la ubicación exacta")
+                            .title("UBICACÓN A AÑADIR"));
                     marker.showInfoWindow();
 
 

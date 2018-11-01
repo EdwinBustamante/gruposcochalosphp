@@ -68,7 +68,7 @@ import java.util.Calendar;
 import java.util.List;
 
 
-public class InformacionProfileFragment extends Fragment implements View.OnClickListener, Response.ErrorListener, Response.Listener<JSONObject>, View.OnTouchListener, OnMapReadyCallback {
+public class InformacionProfileFragment extends Fragment implements View.OnClickListener, Response.ErrorListener, Response.Listener<JSONObject>, View.OnTouchListener, OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener {
 
     private String idGrupoMusical = "";
     // UI references. animacion
@@ -571,7 +571,7 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
 
                     latitudg = jsonObject.getString("latitudg");
                     longitudg = jsonObject.getString("longitudg");
-                    ConfigurarMapa(latitudg,longitudg);
+                    ConfigurarMapa(latitudg, longitudg);
                     linkYoutube.setText(jsonObject.getString("linkyoutube"));
                     AnadirWebView(jsonObject.getString("linkyoutube"));//pasando link de youtuve a webview
                        /*
@@ -597,9 +597,22 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
             // Toast.makeText(InformacionGrupoVisitante.this, "El grupo " + nombreGrupo.getText().toString() + " no añadio ubicación", Toast.LENGTH_SHORT).show();
         } else {
             LatLng ubicacionL = new LatLng(Double.parseDouble(latitudg), Double.parseDouble(longitudg));
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(ubicacionL, 10);
-            map.animateCamera(cameraUpdate);
+            Marker markerPrevia = map.addMarker(new MarkerOptions().position(ubicacionL).title(nombreGrupo.getText().toString()));
+            markerPrevia.showInfoWindow();
+            mUiSettings = map.getUiSettings();
+            mUiSettings.setMapToolbarEnabled(false);
+            mUiSettings.setZoomControlsEnabled(false);//Habilita icono de zoon
+            mUiSettings.setCompassEnabled(false);//brujula
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(ubicacionL)
+                    .zoom(15)
+                    .tilt(90)
+                    .build();
+            map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
+        map.setOnMapClickListener(this);
+        map.setOnMarkerClickListener(this);
+
     }
 
     /*
@@ -660,56 +673,31 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
         map = googleMap;
 
     }
-/**
- @Override public void onMapReady(GoogleMap googleMap) {
- mMapPreviaCasa = googleMap;
- if (latitudg.equals("no")) {
- // Toast.makeText(InformacionGrupoVisitante.this, "El grupo " + nombreGrupo.getText().toString() + " no añadio ubicación", Toast.LENGTH_SHORT).show();
- } else {
- LatLng previa = new LatLng(Double.parseDouble(latitudg), Double.parseDouble(longitudg));
- Marker markerPrevia = mMapPreviaCasa.addMarker(new MarkerOptions().position(previa).title(nombreGrupo.getText().toString()));
- markerPrevia.showInfoWindow();
- mUiSettings = googleMap.getUiSettings();
- mUiSettings.setMapToolbarEnabled(false);
- mUiSettings.setZoomControlsEnabled(false);//Habilita icono de zoon
- mUiSettings.setCompassEnabled(false);//brujula
- CameraPosition cameraPosition = new CameraPosition.Builder()
- .target(previa)
- .zoom(15)
- .tilt(90)
- .build();
- mMapPreviaCasa.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
- }
- mMapPreviaCasa.setOnMapClickListener(this);
- mMapPreviaCasa.setOnMarkerClickListener(this);
- }
 
- @Override public void onMapClick(LatLng latLng) {
- if (latitudg.equals("no")) {
- Toast.makeText(getContext(), "Falta añadir ubicación", Toast.LENGTH_SHORT).show();
- } else {
+    @Override
+    public void onMapClick(LatLng latLng) {
+        if (latitudg.equals("no")) {
+            Toast.makeText(getContext(), "Debes añadir tu ubicación para la vista previa", Toast.LENGTH_SHORT).show();
+        } else {
+            Intent mapsvisitar = new Intent(getContext(), MapsActivityVisitar.class);
+            mapsvisitar.putExtra("latitud", latitudg);
+            mapsvisitar.putExtra("longitud", longitudg);
+            mapsvisitar.putExtra("titulomarcador", nombreGrupo.getText().toString());
+            startActivity(mapsvisitar);
+        }
+    }
 
- Intent mapsvisitar = new Intent(getContext(), MapsActivityVisitar.class);
- mapsvisitar.putExtra("latitud", latitudg);
- mapsvisitar.putExtra("longitud", longitudg);
- mapsvisitar.putExtra("titulomarcador", nombreGrupo.getText().toString());
- startActivity(mapsvisitar);
- }
- }
-
- @Override public boolean onMarkerClick(Marker marker) {
- if (latitudg.equals("no")) {
- Toast.makeText(getContext(), "Falta añadir ubicación", Toast.LENGTH_SHORT).show();
- } else {
-
- Intent mapsvisitar = new Intent(getContext(), MapsActivityVisitar.class);
- mapsvisitar.putExtra("latitud", latitudg);
- mapsvisitar.putExtra("longitud", longitudg);
- mapsvisitar.putExtra("titulomarcador", nombreGrupo.getText().toString());
- startActivity(mapsvisitar);
- }
- return false;
- }*/
-
-
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        if (latitudg.equals("no")) {
+            Toast.makeText(getContext(), "Debes añadir tu ubicación para la vista previa", Toast.LENGTH_SHORT).show();
+        } else {
+            Intent mapsvisitar = new Intent(getContext(), MapsActivityVisitar.class);
+            mapsvisitar.putExtra("latitud", latitudg);
+            mapsvisitar.putExtra("longitud", longitudg);
+            mapsvisitar.putExtra("titulomarcador", nombreGrupo.getText().toString());
+            startActivity(mapsvisitar);
+        }
+        return false;
+    }
 }
