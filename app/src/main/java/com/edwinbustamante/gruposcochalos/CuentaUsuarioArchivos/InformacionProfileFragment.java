@@ -240,8 +240,14 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                         String defaultValue = "DefaultName";
                         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
                         String idGrupoMusical = sharedPreferences.getString("idgrupomusical", defaultValue);
-                        String urlActualizacionNombre = Constantes.IP_SERVIDOR + "gruposcochalos/actualizarinformacion/actualizarnombre.php?idgrupomusical=" + idGrupoMusical + "&nombre=" + input.getText().toString();
-                        actualizarDatosUsuario(urlActualizacionNombre);
+                        if (input.getText().toString().isEmpty()) {
+                            String urlActualizacionNombre = Constantes.IP_SERVIDOR + "gruposcochalos/actualizarinformacion/actualizarnombre.php?idgrupomusical=" + idGrupoMusical + "&nombre=" + "Añada nombre de grupo musical";
+                            actualizarDatosUsuario(urlActualizacionNombre);
+                        } else {
+                            String urlActualizacionNombre = Constantes.IP_SERVIDOR + "gruposcochalos/actualizarinformacion/actualizarnombre.php?idgrupomusical=" + idGrupoMusical + "&nombre=" + input.getText().toString();
+                            actualizarDatosUsuario(urlActualizacionNombre);
+                        }
+
                         // Toast.makeText(getContext(), input.getText().toString(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -270,8 +276,14 @@ public class InformacionProfileFragment extends Fragment implements View.OnClick
                         String defaultValue = "DefaultName";
                         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(FileNameGrupo, Context.MODE_PRIVATE);
                         String idGrupoMusical = sharedPreferences.getString("idgrupomusical", defaultValue);
-                        String urlActualizacionNombre = Constantes.IP_SERVIDOR + "gruposcochalos/actualizarinformacion/actualizargenero.php?idgrupomusical=" + idGrupoMusical + "&genero=" + inputGenero.getText().toString();
-                        actualizarDatosUsuario(urlActualizacionNombre);
+                        if (inputGenero.getText().toString().isEmpty()) {
+                            String urlActualizacionNombre = Constantes.IP_SERVIDOR + "gruposcochalos/actualizarinformacion/actualizargenero.php?idgrupomusical=" + idGrupoMusical + "&genero=" + "Añada los generos de música";
+                            actualizarDatosUsuario(urlActualizacionNombre);
+                        } else {
+                            String urlActualizacionNombre = Constantes.IP_SERVIDOR + "gruposcochalos/actualizarinformacion/actualizargenero.php?idgrupomusical=" + idGrupoMusical + "&genero=" + inputGenero.getText().toString();
+                            actualizarDatosUsuario(urlActualizacionNombre);
+                        }
+
                     }
                 });
                 dialogoEditGenero.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
